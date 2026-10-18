@@ -1828,6 +1828,169 @@ var init_polyfill = __esm({
   }
 });
 
+// node_modules/@solana/wallet-adapter-base/node_modules/eventemitter3/index.js
+var require_eventemitter3 = __commonJS({
+  "node_modules/@solana/wallet-adapter-base/node_modules/eventemitter3/index.js"(exports, module) {
+    "use strict";
+    init_polyfill();
+    var has = Object.prototype.hasOwnProperty;
+    var prefix = "~";
+    function Events() {
+    }
+    if (Object.create) {
+      Events.prototype = /* @__PURE__ */ Object.create(null);
+      if (!new Events().__proto__) prefix = false;
+    }
+    function EE(fn, context, once) {
+      this.fn = fn;
+      this.context = context;
+      this.once = once || false;
+    }
+    function addListener(emitter, event, fn, context, once) {
+      if (typeof fn !== "function") {
+        throw new TypeError("The listener must be a function");
+      }
+      var listener = new EE(fn, context || emitter, once), evt = prefix ? prefix + event : event;
+      if (!emitter._events[evt]) emitter._events[evt] = listener, emitter._eventsCount++;
+      else if (!emitter._events[evt].fn) emitter._events[evt].push(listener);
+      else emitter._events[evt] = [emitter._events[evt], listener];
+      return emitter;
+    }
+    function clearEvent(emitter, evt) {
+      if (--emitter._eventsCount === 0) emitter._events = new Events();
+      else delete emitter._events[evt];
+    }
+    function EventEmitter3() {
+      this._events = new Events();
+      this._eventsCount = 0;
+    }
+    EventEmitter3.prototype.eventNames = function eventNames() {
+      var names = [], events, name;
+      if (this._eventsCount === 0) return names;
+      for (name in events = this._events) {
+        if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
+      }
+      if (Object.getOwnPropertySymbols) {
+        return names.concat(Object.getOwnPropertySymbols(events));
+      }
+      return names;
+    };
+    EventEmitter3.prototype.listeners = function listeners2(event) {
+      var evt = prefix ? prefix + event : event, handlers = this._events[evt];
+      if (!handlers) return [];
+      if (handlers.fn) return [handlers.fn];
+      for (var i2 = 0, l2 = handlers.length, ee = new Array(l2); i2 < l2; i2++) {
+        ee[i2] = handlers[i2].fn;
+      }
+      return ee;
+    };
+    EventEmitter3.prototype.listenerCount = function listenerCount(event) {
+      var evt = prefix ? prefix + event : event, listeners2 = this._events[evt];
+      if (!listeners2) return 0;
+      if (listeners2.fn) return 1;
+      return listeners2.length;
+    };
+    EventEmitter3.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+      var evt = prefix ? prefix + event : event;
+      if (!this._events[evt]) return false;
+      var listeners2 = this._events[evt], len = arguments.length, args, i2;
+      if (listeners2.fn) {
+        if (listeners2.once) this.removeListener(event, listeners2.fn, void 0, true);
+        switch (len) {
+          case 1:
+            return listeners2.fn.call(listeners2.context), true;
+          case 2:
+            return listeners2.fn.call(listeners2.context, a1), true;
+          case 3:
+            return listeners2.fn.call(listeners2.context, a1, a2), true;
+          case 4:
+            return listeners2.fn.call(listeners2.context, a1, a2, a3), true;
+          case 5:
+            return listeners2.fn.call(listeners2.context, a1, a2, a3, a4), true;
+          case 6:
+            return listeners2.fn.call(listeners2.context, a1, a2, a3, a4, a5), true;
+        }
+        for (i2 = 1, args = new Array(len - 1); i2 < len; i2++) {
+          args[i2 - 1] = arguments[i2];
+        }
+        listeners2.fn.apply(listeners2.context, args);
+      } else {
+        var length = listeners2.length, j;
+        for (i2 = 0; i2 < length; i2++) {
+          if (listeners2[i2].once) this.removeListener(event, listeners2[i2].fn, void 0, true);
+          switch (len) {
+            case 1:
+              listeners2[i2].fn.call(listeners2[i2].context);
+              break;
+            case 2:
+              listeners2[i2].fn.call(listeners2[i2].context, a1);
+              break;
+            case 3:
+              listeners2[i2].fn.call(listeners2[i2].context, a1, a2);
+              break;
+            case 4:
+              listeners2[i2].fn.call(listeners2[i2].context, a1, a2, a3);
+              break;
+            default:
+              if (!args) for (j = 1, args = new Array(len - 1); j < len; j++) {
+                args[j - 1] = arguments[j];
+              }
+              listeners2[i2].fn.apply(listeners2[i2].context, args);
+          }
+        }
+      }
+      return true;
+    };
+    EventEmitter3.prototype.on = function on2(event, fn, context) {
+      return addListener(this, event, fn, context, false);
+    };
+    EventEmitter3.prototype.once = function once(event, fn, context) {
+      return addListener(this, event, fn, context, true);
+    };
+    EventEmitter3.prototype.removeListener = function removeListener(event, fn, context, once) {
+      var evt = prefix ? prefix + event : event;
+      if (!this._events[evt]) return this;
+      if (!fn) {
+        clearEvent(this, evt);
+        return this;
+      }
+      var listeners2 = this._events[evt];
+      if (listeners2.fn) {
+        if (listeners2.fn === fn && (!once || listeners2.once) && (!context || listeners2.context === context)) {
+          clearEvent(this, evt);
+        }
+      } else {
+        for (var i2 = 0, events = [], length = listeners2.length; i2 < length; i2++) {
+          if (listeners2[i2].fn !== fn || once && !listeners2[i2].once || context && listeners2[i2].context !== context) {
+            events.push(listeners2[i2]);
+          }
+        }
+        if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
+        else clearEvent(this, evt);
+      }
+      return this;
+    };
+    EventEmitter3.prototype.removeAllListeners = function removeAllListeners(event) {
+      var evt;
+      if (event) {
+        evt = prefix ? prefix + event : event;
+        if (this._events[evt]) clearEvent(this, evt);
+      } else {
+        this._events = new Events();
+        this._eventsCount = 0;
+      }
+      return this;
+    };
+    EventEmitter3.prototype.off = EventEmitter3.prototype.removeListener;
+    EventEmitter3.prototype.addListener = EventEmitter3.prototype.on;
+    EventEmitter3.prefixed = prefix;
+    EventEmitter3.EventEmitter = EventEmitter3;
+    if ("undefined" !== typeof module) {
+      module.exports = EventEmitter3;
+    }
+  }
+});
+
 // node_modules/@noble/hashes/crypto.js
 var require_crypto = __commonJS({
   "node_modules/@noble/hashes/crypto.js"(exports) {
@@ -14084,7 +14247,7 @@ var require_browser = __commonJS({
 });
 
 // node_modules/rpc-websockets/node_modules/eventemitter3/index.js
-var require_eventemitter3 = __commonJS({
+var require_eventemitter32 = __commonJS({
   "node_modules/rpc-websockets/node_modules/eventemitter3/index.js"(exports, module) {
     "use strict";
     init_polyfill();
@@ -14115,11 +14278,11 @@ var require_eventemitter3 = __commonJS({
       if (--emitter._eventsCount === 0) emitter._events = new Events();
       else delete emitter._events[evt];
     }
-    function EventEmitter2() {
+    function EventEmitter3() {
       this._events = new Events();
       this._eventsCount = 0;
     }
-    EventEmitter2.prototype.eventNames = function eventNames() {
+    EventEmitter3.prototype.eventNames = function eventNames() {
       var names = [], events, name;
       if (this._eventsCount === 0) return names;
       for (name in events = this._events) {
@@ -14130,7 +14293,7 @@ var require_eventemitter3 = __commonJS({
       }
       return names;
     };
-    EventEmitter2.prototype.listeners = function listeners(event) {
+    EventEmitter3.prototype.listeners = function listeners2(event) {
       var evt = prefix ? prefix + event : event, handlers = this._events[evt];
       if (!handlers) return [];
       if (handlers.fn) return [handlers.fn];
@@ -14139,85 +14302,85 @@ var require_eventemitter3 = __commonJS({
       }
       return ee;
     };
-    EventEmitter2.prototype.listenerCount = function listenerCount(event) {
-      var evt = prefix ? prefix + event : event, listeners = this._events[evt];
-      if (!listeners) return 0;
-      if (listeners.fn) return 1;
-      return listeners.length;
+    EventEmitter3.prototype.listenerCount = function listenerCount(event) {
+      var evt = prefix ? prefix + event : event, listeners2 = this._events[evt];
+      if (!listeners2) return 0;
+      if (listeners2.fn) return 1;
+      return listeners2.length;
     };
-    EventEmitter2.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+    EventEmitter3.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
       var evt = prefix ? prefix + event : event;
       if (!this._events[evt]) return false;
-      var listeners = this._events[evt], len = arguments.length, args, i2;
-      if (listeners.fn) {
-        if (listeners.once) this.removeListener(event, listeners.fn, void 0, true);
+      var listeners2 = this._events[evt], len = arguments.length, args, i2;
+      if (listeners2.fn) {
+        if (listeners2.once) this.removeListener(event, listeners2.fn, void 0, true);
         switch (len) {
           case 1:
-            return listeners.fn.call(listeners.context), true;
+            return listeners2.fn.call(listeners2.context), true;
           case 2:
-            return listeners.fn.call(listeners.context, a1), true;
+            return listeners2.fn.call(listeners2.context, a1), true;
           case 3:
-            return listeners.fn.call(listeners.context, a1, a2), true;
+            return listeners2.fn.call(listeners2.context, a1, a2), true;
           case 4:
-            return listeners.fn.call(listeners.context, a1, a2, a3), true;
+            return listeners2.fn.call(listeners2.context, a1, a2, a3), true;
           case 5:
-            return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
+            return listeners2.fn.call(listeners2.context, a1, a2, a3, a4), true;
           case 6:
-            return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
+            return listeners2.fn.call(listeners2.context, a1, a2, a3, a4, a5), true;
         }
         for (i2 = 1, args = new Array(len - 1); i2 < len; i2++) {
           args[i2 - 1] = arguments[i2];
         }
-        listeners.fn.apply(listeners.context, args);
+        listeners2.fn.apply(listeners2.context, args);
       } else {
-        var length = listeners.length, j;
+        var length = listeners2.length, j;
         for (i2 = 0; i2 < length; i2++) {
-          if (listeners[i2].once) this.removeListener(event, listeners[i2].fn, void 0, true);
+          if (listeners2[i2].once) this.removeListener(event, listeners2[i2].fn, void 0, true);
           switch (len) {
             case 1:
-              listeners[i2].fn.call(listeners[i2].context);
+              listeners2[i2].fn.call(listeners2[i2].context);
               break;
             case 2:
-              listeners[i2].fn.call(listeners[i2].context, a1);
+              listeners2[i2].fn.call(listeners2[i2].context, a1);
               break;
             case 3:
-              listeners[i2].fn.call(listeners[i2].context, a1, a2);
+              listeners2[i2].fn.call(listeners2[i2].context, a1, a2);
               break;
             case 4:
-              listeners[i2].fn.call(listeners[i2].context, a1, a2, a3);
+              listeners2[i2].fn.call(listeners2[i2].context, a1, a2, a3);
               break;
             default:
               if (!args) for (j = 1, args = new Array(len - 1); j < len; j++) {
                 args[j - 1] = arguments[j];
               }
-              listeners[i2].fn.apply(listeners[i2].context, args);
+              listeners2[i2].fn.apply(listeners2[i2].context, args);
           }
         }
       }
       return true;
     };
-    EventEmitter2.prototype.on = function on(event, fn, context) {
+    EventEmitter3.prototype.on = function on2(event, fn, context) {
       return addListener(this, event, fn, context, false);
     };
-    EventEmitter2.prototype.once = function once(event, fn, context) {
+    EventEmitter3.prototype.once = function once(event, fn, context) {
       return addListener(this, event, fn, context, true);
     };
-    EventEmitter2.prototype.removeListener = function removeListener(event, fn, context, once) {
+    EventEmitter3.prototype.removeListener = function removeListener(event, fn, context, once) {
       var evt = prefix ? prefix + event : event;
       if (!this._events[evt]) return this;
       if (!fn) {
         clearEvent(this, evt);
         return this;
       }
-      var listeners = this._events[evt];
-      if (listeners.fn) {
-        if (listeners.fn === fn && (!once || listeners.once) && (!context || listeners.context === context)) {
+      var listeners2 = this._events[evt];
+      if (listeners2.fn) {
+        if (listeners2.fn === fn && (!once || listeners2.once) && (!context || listeners2.context === context)) {
           clearEvent(this, evt);
         }
       } else {
-        for (var i2 = 0, events = [], length = listeners.length; i2 < length; i2++) {
-          if (listeners[i2].fn !== fn || once && !listeners[i2].once || context && listeners[i2].context !== context) {
-            events.push(listeners[i2]);
+        for (var i2 = 0, events = [], length = listeners2.length; i2 < length; i2++) {
+          if (listeners2[i2].fn !== fn || once && !listeners2[i2].once || context && listeners2[i2].context !== context) {
+            events.push(listeners2[i2]);
           }
         }
         if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
@@ -14225,7 +14388,7 @@ var require_eventemitter3 = __commonJS({
       }
       return this;
     };
-    EventEmitter2.prototype.removeAllListeners = function removeAllListeners(event) {
+    EventEmitter3.prototype.removeAllListeners = function removeAllListeners(event) {
       var evt;
       if (event) {
         evt = prefix ? prefix + event : event;
@@ -14236,12 +14399,12 @@ var require_eventemitter3 = __commonJS({
       }
       return this;
     };
-    EventEmitter2.prototype.off = EventEmitter2.prototype.removeListener;
-    EventEmitter2.prototype.addListener = EventEmitter2.prototype.on;
-    EventEmitter2.prefixed = prefix;
-    EventEmitter2.EventEmitter = EventEmitter2;
+    EventEmitter3.prototype.off = EventEmitter3.prototype.removeListener;
+    EventEmitter3.prototype.addListener = EventEmitter3.prototype.on;
+    EventEmitter3.prefixed = prefix;
+    EventEmitter3.EventEmitter = EventEmitter3;
     if ("undefined" !== typeof module) {
-      module.exports = EventEmitter2;
+      module.exports = EventEmitter3;
     }
   }
 });
@@ -14252,7 +14415,7 @@ var require_index_browser4 = __commonJS({
     "use strict";
     init_polyfill();
     var buffer = require_buffer();
-    var eventemitter3 = require_eventemitter3();
+    var eventemitter3 = require_eventemitter32();
     var WebSocketBrowserImpl = class extends eventemitter3.EventEmitter {
       socket;
       /** Instantiate a WebSocket class
@@ -16470,7 +16633,7 @@ var require_index_browser_cjs = __commonJS({
       return value._bn !== void 0;
     }
     var uniquePublicKeyCounter = 1;
-    var PublicKey9 = class _PublicKey2 extends Struct2 {
+    var PublicKey10 = class _PublicKey2 extends Struct2 {
       /**
        * Create a new PublicKey object
        * @param value ed25519 public key as buffer or base-58 encoded string
@@ -16632,9 +16795,9 @@ var require_index_browser_cjs = __commonJS({
         return isOnCurve(pubkey.toBytes());
       }
     };
-    _PublicKey = PublicKey9;
-    PublicKey9.default = new _PublicKey("11111111111111111111111111111111");
-    SOLANA_SCHEMA.set(PublicKey9, {
+    _PublicKey = PublicKey10;
+    PublicKey10.default = new _PublicKey("11111111111111111111111111111111");
+    SOLANA_SCHEMA.set(PublicKey10, {
       kind: "struct",
       fields: [["_bn", "u256"]]
     });
@@ -16666,7 +16829,7 @@ var require_index_browser_cjs = __commonJS({
        * The public key for this account
        */
       get publicKey() {
-        return new PublicKey9(this._publicKey);
+        return new PublicKey10(this._publicKey);
       }
       /**
        * The **unencrypted** secret key for this account. The first 32 bytes
@@ -16677,7 +16840,7 @@ var require_index_browser_cjs = __commonJS({
         return buffer.Buffer.concat([this._secretKey, this._publicKey], 64);
       }
     };
-    var BPF_LOADER_DEPRECATED_PROGRAM_ID = new PublicKey9("BPFLoader1111111111111111111111111111111111");
+    var BPF_LOADER_DEPRECATED_PROGRAM_ID = new PublicKey10("BPFLoader1111111111111111111111111111111111");
     var PACKET_DATA_SIZE = 1280 - 40 - 8;
     var VERSION_PREFIX_MASK = 127;
     var SIGNATURE_LENGTH_IN_BYTES = 64;
@@ -16910,7 +17073,7 @@ var require_index_browser_cjs = __commonJS({
           const [payerAddress] = writableSigners[0];
           assert2(payerAddress === this.payer.toBase58(), "Expected first writable signer key to be the fee payer");
         }
-        const staticAccountKeys = [...writableSigners.map(([address]) => new PublicKey9(address)), ...readonlySigners.map(([address]) => new PublicKey9(address)), ...writableNonSigners.map(([address]) => new PublicKey9(address)), ...readonlyNonSigners.map(([address]) => new PublicKey9(address))];
+        const staticAccountKeys = [...writableSigners.map(([address]) => new PublicKey10(address)), ...readonlySigners.map(([address]) => new PublicKey10(address)), ...writableNonSigners.map(([address]) => new PublicKey10(address)), ...readonlyNonSigners.map(([address]) => new PublicKey10(address))];
         return [header, staticAccountKeys];
       }
       extractTableLookup(lookupTable) {
@@ -16934,7 +17097,7 @@ var require_index_browser_cjs = __commonJS({
         const drainedKeys = new Array();
         for (const [address, keyMeta] of this.keyMetaMap.entries()) {
           if (keyMetaFilter(keyMeta)) {
-            const key = new PublicKey9(address);
+            const key = new PublicKey10(address);
             const lookupTableIndex = lookupTableEntries.findIndex((entry) => entry.equals(key));
             if (lookupTableIndex >= 0) {
               assert2(lookupTableIndex < 256, "Max lookup table index exceeded");
@@ -16969,7 +17132,7 @@ var require_index_browser_cjs = __commonJS({
         this.instructions = void 0;
         this.indexToProgramIds = /* @__PURE__ */ new Map();
         this.header = args.header;
-        this.accountKeys = args.accountKeys.map((account) => new PublicKey9(account));
+        this.accountKeys = args.accountKeys.map((account) => new PublicKey10(account));
         this.recentBlockhash = args.recentBlockhash;
         this.instructions = args.instructions;
         this.instructions.forEach((ix) => this.indexToProgramIds.set(ix.programIdIndex, this.accountKeys[ix.programIdIndex]));
@@ -17095,7 +17258,7 @@ var require_index_browser_cjs = __commonJS({
         let accountKeys = [];
         for (let i2 = 0; i2 < accountCount; i2++) {
           const account = guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH);
-          accountKeys.push(new PublicKey9(buffer.Buffer.from(account)));
+          accountKeys.push(new PublicKey10(buffer.Buffer.from(account)));
         }
         const recentBlockhash = guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH);
         const instructionCount = decodeLength(byteArray);
@@ -17319,7 +17482,7 @@ var require_index_browser_cjs = __commonJS({
         const staticAccountKeys = [];
         const staticAccountKeysLength = decodeLength(byteArray);
         for (let i2 = 0; i2 < staticAccountKeysLength; i2++) {
-          staticAccountKeys.push(new PublicKey9(guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH)));
+          staticAccountKeys.push(new PublicKey10(guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH)));
         }
         const recentBlockhash = bs58__default.default.encode(guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH));
         const instructionCount = decodeLength(byteArray);
@@ -17339,7 +17502,7 @@ var require_index_browser_cjs = __commonJS({
         const addressTableLookupsCount = decodeLength(byteArray);
         const addressTableLookups = [];
         for (let i2 = 0; i2 < addressTableLookupsCount; i2++) {
-          const accountKey = new PublicKey9(guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH));
+          const accountKey = new PublicKey10(guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH));
           const writableIndexesLength = decodeLength(byteArray);
           const writableIndexes = guardedSplice(byteArray, 0, writableIndexesLength);
           const readonlyIndexesLength = decodeLength(byteArray);
@@ -17445,7 +17608,7 @@ var require_index_browser_cjs = __commonJS({
         const staticAccountKeysLength = guardedShift(byteArray);
         const staticAccountKeys = [];
         for (let i2 = 0; i2 < staticAccountKeysLength; i2++) {
-          staticAccountKeys.push(new PublicKey9(guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH)));
+          staticAccountKeys.push(new PublicKey10(guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH)));
         }
         const transactionConfig = {
           computeUnitLimit: null,
@@ -17555,7 +17718,7 @@ var require_index_browser_cjs = __commonJS({
         };
       }
     };
-    var Transaction2 = class _Transaction {
+    var Transaction3 = class _Transaction {
       /**
        * The first (payer) Transaction signature
        *
@@ -17716,7 +17879,7 @@ var require_index_browser_cjs = __commonJS({
         });
         programIds.forEach((programId) => {
           accountMetas.push({
-            pubkey: new PublicKey9(programId),
+            pubkey: new PublicKey10(programId),
             isSigner: false,
             isWritable: false
           });
@@ -18246,7 +18409,7 @@ Missing signature for public key${sigErrors.missing.length === 1 ? "" : "(s)"} [
         });
       }
     };
-    var VersionedTransaction3 = class _VersionedTransaction {
+    var VersionedTransaction4 = class _VersionedTransaction {
       get version() {
         return this.message.version;
       }
@@ -18325,15 +18488,15 @@ Missing signature for public key${sigErrors.missing.length === 1 ? "" : "(s)"} [
     var DEFAULT_TICKS_PER_SLOT = 64;
     var NUM_SLOTS_PER_SECOND = NUM_TICKS_PER_SECOND / DEFAULT_TICKS_PER_SLOT;
     var MS_PER_SLOT = 1e3 / NUM_SLOTS_PER_SECOND;
-    var SYSVAR_CLOCK_PUBKEY = new PublicKey9("SysvarC1ock11111111111111111111111111111111");
-    var SYSVAR_EPOCH_SCHEDULE_PUBKEY = new PublicKey9("SysvarEpochSchedu1e111111111111111111111111");
-    var SYSVAR_INSTRUCTIONS_PUBKEY = new PublicKey9("Sysvar1nstructions1111111111111111111111111");
-    var SYSVAR_RECENT_BLOCKHASHES_PUBKEY = new PublicKey9("SysvarRecentB1ockHashes11111111111111111111");
-    var SYSVAR_RENT_PUBKEY = new PublicKey9("SysvarRent111111111111111111111111111111111");
-    var SYSVAR_REWARDS_PUBKEY = new PublicKey9("SysvarRewards111111111111111111111111111111");
-    var SYSVAR_SLOT_HASHES_PUBKEY = new PublicKey9("SysvarS1otHashes111111111111111111111111111");
-    var SYSVAR_SLOT_HISTORY_PUBKEY = new PublicKey9("SysvarS1otHistory11111111111111111111111111");
-    var SYSVAR_STAKE_HISTORY_PUBKEY = new PublicKey9("SysvarStakeHistory1111111111111111111111111");
+    var SYSVAR_CLOCK_PUBKEY = new PublicKey10("SysvarC1ock11111111111111111111111111111111");
+    var SYSVAR_EPOCH_SCHEDULE_PUBKEY = new PublicKey10("SysvarEpochSchedu1e111111111111111111111111");
+    var SYSVAR_INSTRUCTIONS_PUBKEY = new PublicKey10("Sysvar1nstructions1111111111111111111111111");
+    var SYSVAR_RECENT_BLOCKHASHES_PUBKEY = new PublicKey10("SysvarRecentB1ockHashes11111111111111111111");
+    var SYSVAR_RENT_PUBKEY = new PublicKey10("SysvarRent111111111111111111111111111111111");
+    var SYSVAR_REWARDS_PUBKEY = new PublicKey10("SysvarRewards111111111111111111111111111111");
+    var SYSVAR_SLOT_HASHES_PUBKEY = new PublicKey10("SysvarS1otHashes111111111111111111111111111");
+    var SYSVAR_SLOT_HISTORY_PUBKEY = new PublicKey10("SysvarS1otHistory11111111111111111111111111");
+    var SYSVAR_STAKE_HISTORY_PUBKEY = new PublicKey10("SysvarStakeHistory1111111111111111111111111");
     var SendTransactionError2 = class extends Error {
       constructor({
         action,
@@ -18524,8 +18687,8 @@ Message: ${transactionMessage}.
       static fromAccountData(buffer2) {
         const nonceAccount = NonceAccountLayout.decode(toBuffer(buffer2), 0);
         return new _NonceAccount({
-          authorizedPubkey: new PublicKey9(nonceAccount.authorizedPubkey),
-          nonce: new PublicKey9(nonceAccount.nonce).toString(),
+          authorizedPubkey: new PublicKey10(nonceAccount.authorizedPubkey),
+          nonce: new PublicKey10(nonceAccount.nonce).toString(),
           feeCalculator: nonceAccount.feeCalculator
         });
       }
@@ -18587,7 +18750,7 @@ Message: ${transactionMessage}.
           newAccountPubkey: instruction.keys[1].pubkey,
           lamports,
           space,
-          programId: new PublicKey9(programId)
+          programId: new PublicKey10(programId)
         };
       }
       /**
@@ -18622,7 +18785,7 @@ Message: ${transactionMessage}.
           toPubkey: instruction.keys[2].pubkey,
           lamports,
           seed: seed2,
-          programId: new PublicKey9(programId)
+          programId: new PublicKey10(programId)
         };
       }
       /**
@@ -18653,10 +18816,10 @@ Message: ${transactionMessage}.
         } = decodeData$1(SYSTEM_INSTRUCTION_LAYOUTS.AllocateWithSeed, instruction.data);
         return {
           accountPubkey: instruction.keys[0].pubkey,
-          basePubkey: new PublicKey9(base2),
+          basePubkey: new PublicKey10(base2),
           seed: seed2,
           space,
-          programId: new PublicKey9(programId)
+          programId: new PublicKey10(programId)
         };
       }
       /**
@@ -18670,7 +18833,7 @@ Message: ${transactionMessage}.
         } = decodeData$1(SYSTEM_INSTRUCTION_LAYOUTS.Assign, instruction.data);
         return {
           accountPubkey: instruction.keys[0].pubkey,
-          programId: new PublicKey9(programId)
+          programId: new PublicKey10(programId)
         };
       }
       /**
@@ -18686,9 +18849,9 @@ Message: ${transactionMessage}.
         } = decodeData$1(SYSTEM_INSTRUCTION_LAYOUTS.AssignWithSeed, instruction.data);
         return {
           accountPubkey: instruction.keys[0].pubkey,
-          basePubkey: new PublicKey9(base2),
+          basePubkey: new PublicKey10(base2),
           seed: seed2,
-          programId: new PublicKey9(programId)
+          programId: new PublicKey10(programId)
         };
       }
       /**
@@ -18707,11 +18870,11 @@ Message: ${transactionMessage}.
         return {
           fromPubkey: instruction.keys[0].pubkey,
           newAccountPubkey: instruction.keys[1].pubkey,
-          basePubkey: new PublicKey9(base2),
+          basePubkey: new PublicKey10(base2),
           seed: seed2,
           lamports,
           space,
-          programId: new PublicKey9(programId)
+          programId: new PublicKey10(programId)
         };
       }
       /**
@@ -18725,7 +18888,7 @@ Message: ${transactionMessage}.
         } = decodeData$1(SYSTEM_INSTRUCTION_LAYOUTS.InitializeNonceAccount, instruction.data);
         return {
           noncePubkey: instruction.keys[0].pubkey,
-          authorizedPubkey: new PublicKey9(authorized2)
+          authorizedPubkey: new PublicKey10(authorized2)
         };
       }
       /**
@@ -18768,7 +18931,7 @@ Message: ${transactionMessage}.
         return {
           noncePubkey: instruction.keys[0].pubkey,
           authorizedPubkey: instruction.keys[1].pubkey,
-          newAuthorizedPubkey: new PublicKey9(authorized2)
+          newAuthorizedPubkey: new PublicKey10(authorized2)
         };
       }
       /**
@@ -19000,7 +19163,7 @@ Message: ${transactionMessage}.
        * Generate a transaction that creates a new Nonce account
        */
       static createNonceAccount(params) {
-        const transaction = new Transaction2();
+        const transaction = new Transaction3();
         if ("basePubkey" in params && "seed" in params) {
           transaction.add(_SystemProgram.createAccountWithSeed({
             fromPubkey: params.fromPubkey,
@@ -19177,7 +19340,7 @@ Message: ${transactionMessage}.
         });
       }
     };
-    SystemProgram5.programId = new PublicKey9("11111111111111111111111111111111");
+    SystemProgram5.programId = new PublicKey10("11111111111111111111111111111111");
     var CHUNK_SIZE = PACKET_DATA_SIZE - 300;
     var Loader = class _Loader {
       /**
@@ -19220,21 +19383,21 @@ Message: ${transactionMessage}.
               return false;
             }
             if (programInfo.data.length !== data.length) {
-              transaction = transaction || new Transaction2();
+              transaction = transaction || new Transaction3();
               transaction.add(SystemProgram5.allocate({
                 accountPubkey: program.publicKey,
                 space: data.length
               }));
             }
             if (!programInfo.owner.equals(programId)) {
-              transaction = transaction || new Transaction2();
+              transaction = transaction || new Transaction3();
               transaction.add(SystemProgram5.assign({
                 accountPubkey: program.publicKey,
                 programId
               }));
             }
             if (programInfo.lamports < balanceNeeded) {
-              transaction = transaction || new Transaction2();
+              transaction = transaction || new Transaction3();
               transaction.add(SystemProgram5.transfer({
                 fromPubkey: payer.publicKey,
                 toPubkey: program.publicKey,
@@ -19242,7 +19405,7 @@ Message: ${transactionMessage}.
               }));
             }
           } else {
-            transaction = new Transaction2().add(SystemProgram5.createAccount({
+            transaction = new Transaction3().add(SystemProgram5.createAccount({
               fromPubkey: payer.publicKey,
               newAccountPubkey: program.publicKey,
               lamports: balanceNeeded > 0 ? balanceNeeded : 1,
@@ -19272,7 +19435,7 @@ Message: ${transactionMessage}.
             bytesLength: 0,
             bytesLengthPadding: 0
           }, data2);
-          const transaction = new Transaction2().add({
+          const transaction = new Transaction3().add({
             keys: [{
               pubkey: program.publicKey,
               isSigner: true,
@@ -19299,7 +19462,7 @@ Message: ${transactionMessage}.
             instruction: 1
             // Finalize instruction
           }, data2);
-          const transaction = new Transaction2().add({
+          const transaction = new Transaction3().add({
             keys: [{
               pubkey: program.publicKey,
               isSigner: true,
@@ -19344,7 +19507,7 @@ Message: ${transactionMessage}.
       }
     };
     Loader.chunkSize = CHUNK_SIZE;
-    var BPF_LOADER_PROGRAM_ID = new PublicKey9("BPFLoader2111111111111111111111111111111111");
+    var BPF_LOADER_PROGRAM_ID = new PublicKey10("BPFLoader2111111111111111111111111111111111");
     var BpfLoader = class {
       /**
        * Minimum number of signatures required to load a program not including
@@ -19592,8 +19755,8 @@ Message: ${transactionMessage}.
           deactivationSlot: meta.deactivationSlot,
           lastExtendedSlot: meta.lastExtendedSlot,
           lastExtendedSlotStartIndex: meta.lastExtendedStartIndex,
-          authority: meta.authority.length !== 0 ? new PublicKey9(meta.authority[0]) : void 0,
-          addresses: addresses.map((address) => new PublicKey9(address))
+          authority: meta.authority.length !== 0 ? new PublicKey10(meta.authority[0]) : void 0,
+          addresses: addresses.map((address) => new PublicKey10(address))
         };
       }
     };
@@ -19635,7 +19798,7 @@ Message: ${transactionMessage}.
       );
       return `${protocol}//${hostish}${websocketPort}${rest}`;
     }
-    var PublicKeyFromString = superstruct.coerce(superstruct.instance(PublicKey9), superstruct.string(), (value) => new PublicKey9(value));
+    var PublicKeyFromString = superstruct.coerce(superstruct.instance(PublicKey10), superstruct.string(), (value) => new PublicKey10(value));
     var RawAccountDataResult = superstruct.tuple([superstruct.string(), superstruct.literal("base64")]);
     var BufferFromRawAccountData = superstruct.coerce(superstruct.instance(buffer.Buffer), RawAccountDataResult, (value) => buffer.Buffer.from(value[0], "base64"));
     var BLOCKHASH_CACHE_TIMEOUT_MS = 30 * 1e3;
@@ -19720,7 +19883,7 @@ Message: ${transactionMessage}.
       if (version2 === 0) {
         return new MessageV0({
           header: response.header,
-          staticAccountKeys: response.accountKeys.map((accountKey) => new PublicKey9(accountKey)),
+          staticAccountKeys: response.accountKeys.map((accountKey) => new PublicKey10(accountKey)),
           recentBlockhash: response.recentBlockhash,
           compiledInstructions: response.instructions.map((ix) => ({
             programIdIndex: ix.programIdIndex,
@@ -19736,7 +19899,7 @@ Message: ${transactionMessage}.
         }
         return new MessageV1({
           header: response.header,
-          staticAccountKeys: response.accountKeys.map((accountKey) => new PublicKey9(accountKey)),
+          staticAccountKeys: response.accountKeys.map((accountKey) => new PublicKey10(accountKey)),
           recentBlockhash: response.recentBlockhash,
           compiledInstructions: response.instructions.map((ix) => ({
             programIdIndex: ix.programIdIndex,
@@ -21911,7 +22074,7 @@ Message: ${transactionMessage}.
           }) => {
             return {
               meta,
-              transaction: Transaction2.populate(transaction.message, transaction.signatures)
+              transaction: Transaction3.populate(transaction.message, transaction.signatures)
             };
           })
         };
@@ -21986,7 +22149,7 @@ Message: ${transactionMessage}.
         const signatures = result.transaction.signatures;
         return {
           ...result,
-          transaction: Transaction2.populate(message, signatures)
+          transaction: Transaction3.populate(message, signatures)
         };
       }
       /**
@@ -22273,15 +22436,15 @@ Message: ${transactionMessage}.
           return res2.result;
         }
         let transaction;
-        if (transactionOrMessage instanceof Transaction2) {
+        if (transactionOrMessage instanceof Transaction3) {
           let originalTx = transactionOrMessage;
-          transaction = new Transaction2();
+          transaction = new Transaction3();
           transaction.feePayer = originalTx.feePayer;
           transaction.instructions = transactionOrMessage.instructions;
           transaction.nonceInfo = originalTx.nonceInfo;
           transaction.signatures = originalTx.signatures;
         } else {
-          transaction = Transaction2.populate(transactionOrMessage);
+          transaction = Transaction3.populate(transactionOrMessage);
           transaction._message = transaction._json = void 0;
         }
         if (configOrSigners !== void 0 && !Array.isArray(configOrSigners)) {
@@ -23161,7 +23324,7 @@ Message: ${transactionMessage}.
        * @returns {PublicKey} PublicKey
        */
       get publicKey() {
-        return new PublicKey9(this._keypair.publicKey);
+        return new PublicKey10(this._keypair.publicKey);
       }
       /**
        * The raw secret key for this keypair
@@ -23239,7 +23402,7 @@ Message: ${transactionMessage}.
           lookupTable: instruction.keys[0].pubkey,
           authority: instruction.keys[1].pubkey,
           payer: instruction.keys.length > 2 ? instruction.keys[2].pubkey : void 0,
-          addresses: addresses.map((buffer2) => new PublicKey9(buffer2))
+          addresses: addresses.map((buffer2) => new PublicKey10(buffer2))
         };
       }
       static decodeCloseLookupTable(instruction) {
@@ -23291,7 +23454,7 @@ Message: ${transactionMessage}.
       constructor() {
       }
       static createLookupTable(params) {
-        const [lookupTableAddress, bumpSeed] = PublicKey9.findProgramAddressSync([params.authority.toBuffer(), codecsNumbers.getU64Encoder().encode(params.recentSlot)], this.programId);
+        const [lookupTableAddress, bumpSeed] = PublicKey10.findProgramAddressSync([params.authority.toBuffer(), codecsNumbers.getU64Encoder().encode(params.recentSlot)], this.programId);
         const type2 = LOOKUP_TABLE_INSTRUCTION_LAYOUTS.CreateLookupTable;
         const data = encodeData(type2, {
           recentSlot: BigInt(params.recentSlot),
@@ -23410,7 +23573,7 @@ Message: ${transactionMessage}.
         });
       }
     };
-    AddressLookupTableProgram.programId = new PublicKey9("AddressLookupTab1e1111111111111111111111111");
+    AddressLookupTableProgram.programId = new PublicKey10("AddressLookupTab1e1111111111111111111111111");
     var ComputeBudgetInstruction = class {
       /**
        * @internal
@@ -23564,7 +23727,7 @@ Message: ${transactionMessage}.
         });
       }
     };
-    ComputeBudgetProgram2.programId = new PublicKey9("ComputeBudget111111111111111111111111111111");
+    ComputeBudgetProgram2.programId = new PublicKey10("ComputeBudget111111111111111111111111111111");
     var PRIVATE_KEY_BYTES$1 = 64;
     var PUBLIC_KEY_BYTES$1 = 32;
     var SIGNATURE_BYTES = 64;
@@ -23644,7 +23807,7 @@ Message: ${transactionMessage}.
         }
       }
     };
-    Ed25519Program.programId = new PublicKey9("Ed25519SigVerify111111111111111111111111111");
+    Ed25519Program.programId = new PublicKey10("Ed25519SigVerify111111111111111111111111111");
     var ecdsaSign = (msgHash, privKey) => {
       const signature2 = secp256k1.secp256k1.sign(msgHash, privKey);
       return [signature2.toCompactRawBytes(), signature2.recovery];
@@ -23778,9 +23941,9 @@ Message: ${transactionMessage}.
         }
       }
     };
-    Secp256k1Program.programId = new PublicKey9("KeccakSecp256k11111111111111111111111111111");
+    Secp256k1Program.programId = new PublicKey10("KeccakSecp256k11111111111111111111111111111");
     var _Lockup;
-    var STAKE_CONFIG_ID = new PublicKey9("StakeConfig11111111111111111111111111111111");
+    var STAKE_CONFIG_ID = new PublicKey10("StakeConfig11111111111111111111111111111111");
     var Authorized = class {
       /**
        * Create a new Authorized object
@@ -23811,7 +23974,7 @@ Message: ${transactionMessage}.
        */
     };
     _Lockup = Lockup;
-    Lockup.default = new _Lockup(0, 0, PublicKey9.default);
+    Lockup.default = new _Lockup(0, 0, PublicKey10.default);
     var StakeInstruction = class {
       /**
        * @internal
@@ -23849,8 +24012,8 @@ Message: ${transactionMessage}.
         } = decodeData$1(STAKE_INSTRUCTION_LAYOUTS.Initialize, instruction.data);
         return {
           stakePubkey: instruction.keys[0].pubkey,
-          authorized: new Authorized(new PublicKey9(authorized2.staker), new PublicKey9(authorized2.withdrawer)),
-          lockup: new Lockup(lockup2.unixTimestamp, lockup2.epoch, new PublicKey9(lockup2.custodian))
+          authorized: new Authorized(new PublicKey10(authorized2.staker), new PublicKey10(authorized2.withdrawer)),
+          lockup: new Lockup(lockup2.unixTimestamp, lockup2.epoch, new PublicKey10(lockup2.custodian))
         };
       }
       /**
@@ -23879,7 +24042,7 @@ Message: ${transactionMessage}.
         const o = {
           stakePubkey: instruction.keys[0].pubkey,
           authorizedPubkey: instruction.keys[2].pubkey,
-          newAuthorizedPubkey: new PublicKey9(newAuthorized),
+          newAuthorizedPubkey: new PublicKey10(newAuthorized),
           stakeAuthorizationType: {
             index: stakeAuthorizationType
           }
@@ -23905,8 +24068,8 @@ Message: ${transactionMessage}.
           stakePubkey: instruction.keys[0].pubkey,
           authorityBase: instruction.keys[1].pubkey,
           authoritySeed,
-          authorityOwner: new PublicKey9(authorityOwner),
-          newAuthorizedPubkey: new PublicKey9(newAuthorized),
+          authorityOwner: new PublicKey10(authorityOwner),
+          newAuthorizedPubkey: new PublicKey10(newAuthorized),
           stakeAuthorizationType: {
             index: stakeAuthorizationType
           }
@@ -24087,7 +24250,7 @@ Message: ${transactionMessage}.
        *   an address generated with `from`, a seed, and the Stake programId
        */
       static createAccountWithSeed(params) {
-        const transaction = new Transaction2();
+        const transaction = new Transaction3();
         transaction.add(SystemProgram5.createAccountWithSeed({
           fromPubkey: params.fromPubkey,
           newAccountPubkey: params.stakePubkey,
@@ -24112,7 +24275,7 @@ Message: ${transactionMessage}.
        * Generate a Transaction that creates a new Stake account
        */
       static createAccount(params) {
-        const transaction = new Transaction2();
+        const transaction = new Transaction3();
         transaction.add(SystemProgram5.createAccount({
           fromPubkey: params.fromPubkey,
           newAccountPubkey: params.stakePubkey,
@@ -24144,7 +24307,7 @@ Message: ${transactionMessage}.
         } = params;
         const type2 = STAKE_INSTRUCTION_LAYOUTS.Delegate;
         const data = encodeData(type2);
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys: [{
             pubkey: stakePubkey,
             isSigner: false,
@@ -24211,7 +24374,7 @@ Message: ${transactionMessage}.
             isWritable: false
           });
         }
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys,
           programId: this.programId,
           data
@@ -24258,7 +24421,7 @@ Message: ${transactionMessage}.
             isWritable: false
           });
         }
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys,
           programId: this.programId,
           data
@@ -24300,7 +24463,7 @@ Message: ${transactionMessage}.
        * Generate a Transaction that splits Stake tokens into another stake account
        */
       static split(params, rentExemptReserve) {
-        const transaction = new Transaction2();
+        const transaction = new Transaction3();
         transaction.add(SystemProgram5.createAccount({
           fromPubkey: params.authorizedPubkey,
           newAccountPubkey: params.splitStakePubkey,
@@ -24323,7 +24486,7 @@ Message: ${transactionMessage}.
           seed: seed2,
           lamports
         } = params;
-        const transaction = new Transaction2();
+        const transaction = new Transaction3();
         transaction.add(SystemProgram5.allocate({
           accountPubkey: splitStakePubkey,
           basePubkey,
@@ -24356,7 +24519,7 @@ Message: ${transactionMessage}.
         } = params;
         const type2 = STAKE_INSTRUCTION_LAYOUTS.Merge;
         const data = encodeData(type2);
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys: [{
             pubkey: stakePubkey,
             isSigner: false,
@@ -24425,7 +24588,7 @@ Message: ${transactionMessage}.
             isWritable: false
           });
         }
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys,
           programId: this.programId,
           data
@@ -24441,7 +24604,7 @@ Message: ${transactionMessage}.
         } = params;
         const type2 = STAKE_INSTRUCTION_LAYOUTS.Deactivate;
         const data = encodeData(type2);
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys: [{
             pubkey: stakePubkey,
             isSigner: false,
@@ -24460,7 +24623,7 @@ Message: ${transactionMessage}.
         });
       }
     };
-    StakeProgram.programId = new PublicKey9("Stake11111111111111111111111111111111111111");
+    StakeProgram.programId = new PublicKey10("Stake11111111111111111111111111111111111111");
     StakeProgram.space = 200;
     var VoteInit = class {
       /** [0, 100] */
@@ -24512,7 +24675,7 @@ Message: ${transactionMessage}.
         return {
           votePubkey: instruction.keys[0].pubkey,
           nodePubkey: instruction.keys[3].pubkey,
-          voteInit: new VoteInit(new PublicKey9(voteInit2.nodePubkey), new PublicKey9(voteInit2.authorizedVoter), new PublicKey9(voteInit2.authorizedWithdrawer), voteInit2.commission)
+          voteInit: new VoteInit(new PublicKey10(voteInit2.nodePubkey), new PublicKey10(voteInit2.authorizedVoter), new PublicKey10(voteInit2.authorizedWithdrawer), voteInit2.commission)
         };
       }
       /**
@@ -24528,7 +24691,7 @@ Message: ${transactionMessage}.
         return {
           votePubkey: instruction.keys[0].pubkey,
           authorizedPubkey: instruction.keys[2].pubkey,
-          newAuthorizedPubkey: new PublicKey9(newAuthorized),
+          newAuthorizedPubkey: new PublicKey10(newAuthorized),
           voteAuthorizationType: {
             index: voteAuthorizationType
           }
@@ -24550,9 +24713,9 @@ Message: ${transactionMessage}.
         } = decodeData$1(VOTE_INSTRUCTION_LAYOUTS.AuthorizeWithSeed, instruction.data);
         return {
           currentAuthorityDerivedKeyBasePubkey: instruction.keys[2].pubkey,
-          currentAuthorityDerivedKeyOwnerPubkey: new PublicKey9(currentAuthorityDerivedKeyOwnerPubkey),
+          currentAuthorityDerivedKeyOwnerPubkey: new PublicKey10(currentAuthorityDerivedKeyOwnerPubkey),
           currentAuthorityDerivedKeySeed,
-          newAuthorizedPubkey: new PublicKey9(newAuthorized),
+          newAuthorizedPubkey: new PublicKey10(newAuthorized),
           voteAuthorizationType: {
             index: voteAuthorizationType
           },
@@ -24676,7 +24839,7 @@ Message: ${transactionMessage}.
        * Generate a transaction that creates a new Vote account.
        */
       static createAccount(params) {
-        const transaction = new Transaction2();
+        const transaction = new Transaction3();
         transaction.add(SystemProgram5.createAccount({
           fromPubkey: params.fromPubkey,
           newAccountPubkey: params.votePubkey,
@@ -24718,7 +24881,7 @@ Message: ${transactionMessage}.
           isSigner: true,
           isWritable: false
         }];
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys,
           programId: this.programId,
           data
@@ -24759,7 +24922,7 @@ Message: ${transactionMessage}.
           isSigner: true,
           isWritable: false
         }];
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys,
           programId: this.programId,
           data
@@ -24792,7 +24955,7 @@ Message: ${transactionMessage}.
           isSigner: true,
           isWritable: false
         }];
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys,
           programId: this.programId,
           data
@@ -24836,16 +24999,16 @@ Message: ${transactionMessage}.
           isSigner: true,
           isWritable: false
         }];
-        return new Transaction2().add({
+        return new Transaction3().add({
           keys,
           programId: this.programId,
           data
         });
       }
     };
-    VoteProgram.programId = new PublicKey9("Vote111111111111111111111111111111111111111");
+    VoteProgram.programId = new PublicKey10("Vote111111111111111111111111111111111111111");
     VoteProgram.space = 3762;
-    var VALIDATOR_INFO_KEY = new PublicKey9("Va1idator1nfo111111111111111111111111111111");
+    var VALIDATOR_INFO_KEY = new PublicKey10("Va1idator1nfo111111111111111111111111111111");
     var InfoString = superstruct.type({
       name: superstruct.string(),
       website: superstruct.optional(superstruct.string()),
@@ -24879,7 +25042,7 @@ Message: ${transactionMessage}.
         if (configKeyCount !== 2) return null;
         const configKeys = [];
         for (let i2 = 0; i2 < 2; i2++) {
-          const publicKey5 = new PublicKey9(guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH));
+          const publicKey5 = new PublicKey10(guardedSplice(byteArray, 0, PUBLIC_KEY_LENGTH));
           const isSigner = guardedShift(byteArray) === 1;
           configKeys.push({
             publicKey: publicKey5,
@@ -24897,7 +25060,7 @@ Message: ${transactionMessage}.
         return null;
       }
     };
-    var VOTE_PROGRAM_ID = new PublicKey9("Vote111111111111111111111111111111111111111");
+    var VOTE_PROGRAM_ID = new PublicKey10("Vote111111111111111111111111111111111111111");
     var VoteAccountLayout = BufferLayout__namespace.struct([
       publicKey4("nodePubkey"),
       publicKey4("authorizedWithdrawer"),
@@ -24954,8 +25117,8 @@ Message: ${transactionMessage}.
           rootSlot = null;
         }
         return new _VoteAccount({
-          nodePubkey: new PublicKey9(va.nodePubkey),
-          authorizedWithdrawer: new PublicKey9(va.authorizedWithdrawer),
+          nodePubkey: new PublicKey10(va.nodePubkey),
+          authorizedWithdrawer: new PublicKey10(va.authorizedWithdrawer),
           commission: va.commission,
           votes: va.votes,
           rootSlot,
@@ -24972,7 +25135,7 @@ Message: ${transactionMessage}.
     }) {
       return {
         epoch,
-        authorizedVoter: new PublicKey9(authorizedVoter)
+        authorizedVoter: new PublicKey10(authorizedVoter)
       };
     }
     function parsePriorVoters({
@@ -24981,7 +25144,7 @@ Message: ${transactionMessage}.
       targetEpoch
     }) {
       return {
-        authorizedPubkey: new PublicKey9(authorizedPubkey),
+        authorizedPubkey: new PublicKey10(authorizedPubkey),
         epochOfLastAuthorizedSwitch,
         targetEpoch
       };
@@ -25084,7 +25247,7 @@ Message: ${transactionMessage}.
     exports.NonceAccount = NonceAccount;
     exports.PACKET_DATA_SIZE = PACKET_DATA_SIZE;
     exports.PUBLIC_KEY_LENGTH = PUBLIC_KEY_LENGTH;
-    exports.PublicKey = PublicKey9;
+    exports.PublicKey = PublicKey10;
     exports.SIGNATURE_LENGTH_IN_BYTES = SIGNATURE_LENGTH_IN_BYTES;
     exports.SOLANA_SCHEMA = SOLANA_SCHEMA;
     exports.STAKE_CONFIG_ID = STAKE_CONFIG_ID;
@@ -25109,7 +25272,7 @@ Message: ${transactionMessage}.
     exports.Struct = Struct2;
     exports.SystemInstruction = SystemInstruction;
     exports.SystemProgram = SystemProgram5;
-    exports.Transaction = Transaction2;
+    exports.Transaction = Transaction3;
     exports.TransactionExpiredBlockheightExceededError = TransactionExpiredBlockheightExceededError;
     exports.TransactionExpiredNonceInvalidError = TransactionExpiredNonceInvalidError;
     exports.TransactionExpiredTimeoutError = TransactionExpiredTimeoutError;
@@ -25123,7 +25286,7 @@ Message: ${transactionMessage}.
     exports.VOTE_PROGRAM_ID = VOTE_PROGRAM_ID;
     exports.ValidatorInfo = ValidatorInfo;
     exports.VersionedMessage = VersionedMessage;
-    exports.VersionedTransaction = VersionedTransaction3;
+    exports.VersionedTransaction = VersionedTransaction4;
     exports.VoteAccount = VoteAccount;
     exports.VoteAuthorizationLayout = VoteAuthorizationLayout;
     exports.VoteInit = VoteInit;
@@ -27176,7 +27339,7 @@ var require_dist2 = __commonJS({
 });
 
 // node_modules/eventemitter3/index.js
-var require_eventemitter32 = __commonJS({
+var require_eventemitter33 = __commonJS({
   "node_modules/eventemitter3/index.js"(exports, module) {
     "use strict";
     init_polyfill();
@@ -27207,11 +27370,11 @@ var require_eventemitter32 = __commonJS({
       if (--emitter._eventsCount === 0) emitter._events = new Events();
       else delete emitter._events[evt];
     }
-    function EventEmitter2() {
+    function EventEmitter3() {
       this._events = new Events();
       this._eventsCount = 0;
     }
-    EventEmitter2.prototype.eventNames = function eventNames() {
+    EventEmitter3.prototype.eventNames = function eventNames() {
       var names = [], events, name;
       if (this._eventsCount === 0) return names;
       for (name in events = this._events) {
@@ -27222,7 +27385,7 @@ var require_eventemitter32 = __commonJS({
       }
       return names;
     };
-    EventEmitter2.prototype.listeners = function listeners(event) {
+    EventEmitter3.prototype.listeners = function listeners2(event) {
       var evt = prefix ? prefix + event : event, handlers = this._events[evt];
       if (!handlers) return [];
       if (handlers.fn) return [handlers.fn];
@@ -27231,85 +27394,85 @@ var require_eventemitter32 = __commonJS({
       }
       return ee;
     };
-    EventEmitter2.prototype.listenerCount = function listenerCount(event) {
-      var evt = prefix ? prefix + event : event, listeners = this._events[evt];
-      if (!listeners) return 0;
-      if (listeners.fn) return 1;
-      return listeners.length;
+    EventEmitter3.prototype.listenerCount = function listenerCount(event) {
+      var evt = prefix ? prefix + event : event, listeners2 = this._events[evt];
+      if (!listeners2) return 0;
+      if (listeners2.fn) return 1;
+      return listeners2.length;
     };
-    EventEmitter2.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+    EventEmitter3.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
       var evt = prefix ? prefix + event : event;
       if (!this._events[evt]) return false;
-      var listeners = this._events[evt], len = arguments.length, args, i2;
-      if (listeners.fn) {
-        if (listeners.once) this.removeListener(event, listeners.fn, void 0, true);
+      var listeners2 = this._events[evt], len = arguments.length, args, i2;
+      if (listeners2.fn) {
+        if (listeners2.once) this.removeListener(event, listeners2.fn, void 0, true);
         switch (len) {
           case 1:
-            return listeners.fn.call(listeners.context), true;
+            return listeners2.fn.call(listeners2.context), true;
           case 2:
-            return listeners.fn.call(listeners.context, a1), true;
+            return listeners2.fn.call(listeners2.context, a1), true;
           case 3:
-            return listeners.fn.call(listeners.context, a1, a2), true;
+            return listeners2.fn.call(listeners2.context, a1, a2), true;
           case 4:
-            return listeners.fn.call(listeners.context, a1, a2, a3), true;
+            return listeners2.fn.call(listeners2.context, a1, a2, a3), true;
           case 5:
-            return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
+            return listeners2.fn.call(listeners2.context, a1, a2, a3, a4), true;
           case 6:
-            return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
+            return listeners2.fn.call(listeners2.context, a1, a2, a3, a4, a5), true;
         }
         for (i2 = 1, args = new Array(len - 1); i2 < len; i2++) {
           args[i2 - 1] = arguments[i2];
         }
-        listeners.fn.apply(listeners.context, args);
+        listeners2.fn.apply(listeners2.context, args);
       } else {
-        var length = listeners.length, j;
+        var length = listeners2.length, j;
         for (i2 = 0; i2 < length; i2++) {
-          if (listeners[i2].once) this.removeListener(event, listeners[i2].fn, void 0, true);
+          if (listeners2[i2].once) this.removeListener(event, listeners2[i2].fn, void 0, true);
           switch (len) {
             case 1:
-              listeners[i2].fn.call(listeners[i2].context);
+              listeners2[i2].fn.call(listeners2[i2].context);
               break;
             case 2:
-              listeners[i2].fn.call(listeners[i2].context, a1);
+              listeners2[i2].fn.call(listeners2[i2].context, a1);
               break;
             case 3:
-              listeners[i2].fn.call(listeners[i2].context, a1, a2);
+              listeners2[i2].fn.call(listeners2[i2].context, a1, a2);
               break;
             case 4:
-              listeners[i2].fn.call(listeners[i2].context, a1, a2, a3);
+              listeners2[i2].fn.call(listeners2[i2].context, a1, a2, a3);
               break;
             default:
               if (!args) for (j = 1, args = new Array(len - 1); j < len; j++) {
                 args[j - 1] = arguments[j];
               }
-              listeners[i2].fn.apply(listeners[i2].context, args);
+              listeners2[i2].fn.apply(listeners2[i2].context, args);
           }
         }
       }
       return true;
     };
-    EventEmitter2.prototype.on = function on(event, fn, context) {
+    EventEmitter3.prototype.on = function on2(event, fn, context) {
       return addListener(this, event, fn, context, false);
     };
-    EventEmitter2.prototype.once = function once(event, fn, context) {
+    EventEmitter3.prototype.once = function once(event, fn, context) {
       return addListener(this, event, fn, context, true);
     };
-    EventEmitter2.prototype.removeListener = function removeListener(event, fn, context, once) {
+    EventEmitter3.prototype.removeListener = function removeListener(event, fn, context, once) {
       var evt = prefix ? prefix + event : event;
       if (!this._events[evt]) return this;
       if (!fn) {
         clearEvent(this, evt);
         return this;
       }
-      var listeners = this._events[evt];
-      if (listeners.fn) {
-        if (listeners.fn === fn && (!once || listeners.once) && (!context || listeners.context === context)) {
+      var listeners2 = this._events[evt];
+      if (listeners2.fn) {
+        if (listeners2.fn === fn && (!once || listeners2.once) && (!context || listeners2.context === context)) {
           clearEvent(this, evt);
         }
       } else {
-        for (var i2 = 0, events = [], length = listeners.length; i2 < length; i2++) {
-          if (listeners[i2].fn !== fn || once && !listeners[i2].once || context && listeners[i2].context !== context) {
-            events.push(listeners[i2]);
+        for (var i2 = 0, events = [], length = listeners2.length; i2 < length; i2++) {
+          if (listeners2[i2].fn !== fn || once && !listeners2[i2].once || context && listeners2[i2].context !== context) {
+            events.push(listeners2[i2]);
           }
         }
         if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
@@ -27317,7 +27480,7 @@ var require_eventemitter32 = __commonJS({
       }
       return this;
     };
-    EventEmitter2.prototype.removeAllListeners = function removeAllListeners(event) {
+    EventEmitter3.prototype.removeAllListeners = function removeAllListeners(event) {
       var evt;
       if (event) {
         evt = prefix ? prefix + event : event;
@@ -27328,12 +27491,12 @@ var require_eventemitter32 = __commonJS({
       }
       return this;
     };
-    EventEmitter2.prototype.off = EventEmitter2.prototype.removeListener;
-    EventEmitter2.prototype.addListener = EventEmitter2.prototype.on;
-    EventEmitter2.prefixed = prefix;
-    EventEmitter2.EventEmitter = EventEmitter2;
+    EventEmitter3.prototype.off = EventEmitter3.prototype.removeListener;
+    EventEmitter3.prototype.addListener = EventEmitter3.prototype.on;
+    EventEmitter3.prefixed = prefix;
+    EventEmitter3.EventEmitter = EventEmitter3;
     if ("undefined" !== typeof module) {
-      module.exports = EventEmitter2;
+      module.exports = EventEmitter3;
     }
   }
 });
@@ -27461,6 +27624,855 @@ async function launchToken(input, deps) {
   }
 }
 
+// node_modules/@wallet-standard/app/lib/esm/wallets.js
+init_polyfill();
+var __classPrivateFieldGet = function(receiver, state, kind, f3) {
+  if (kind === "a" && !f3) throw new TypeError("Private accessor was defined without a getter");
+  if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+  return kind === "m" ? f3 : kind === "a" ? f3.call(receiver) : f3 ? f3.value : state.get(receiver);
+};
+var __classPrivateFieldSet = function(receiver, state, value, kind, f3) {
+  if (kind === "m") throw new TypeError("Private method is not writable");
+  if (kind === "a" && !f3) throw new TypeError("Private accessor was defined without a setter");
+  if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+  return kind === "a" ? f3.call(receiver, value) : f3 ? f3.value = value : state.set(receiver, value), value;
+};
+var _AppReadyEvent_detail;
+var wallets = void 0;
+var registeredWalletsSet = /* @__PURE__ */ new Set();
+function addRegisteredWallet(wallet2) {
+  cachedWalletsArray = void 0;
+  registeredWalletsSet.add(wallet2);
+}
+function removeRegisteredWallet(wallet2) {
+  cachedWalletsArray = void 0;
+  registeredWalletsSet.delete(wallet2);
+}
+var listeners = {};
+function getWallets() {
+  if (wallets)
+    return wallets;
+  wallets = Object.freeze({ register, get, on });
+  if (typeof window === "undefined")
+    return wallets;
+  const api = Object.freeze({ register });
+  try {
+    window.addEventListener("wallet-standard:register-wallet", ({ detail: callback }) => callback(api));
+  } catch (error) {
+    console.error("wallet-standard:register-wallet event listener could not be added\n", error);
+  }
+  try {
+    window.dispatchEvent(new AppReadyEvent(api));
+  } catch (error) {
+    console.error("wallet-standard:app-ready event could not be dispatched\n", error);
+  }
+  return wallets;
+}
+function register(...wallets2) {
+  wallets2 = wallets2.filter((wallet2) => !registeredWalletsSet.has(wallet2));
+  if (!wallets2.length)
+    return () => {
+    };
+  wallets2.forEach((wallet2) => addRegisteredWallet(wallet2));
+  listeners["register"]?.forEach((listener) => guard(() => listener(...wallets2)));
+  return function unregister() {
+    wallets2.forEach((wallet2) => removeRegisteredWallet(wallet2));
+    listeners["unregister"]?.forEach((listener) => guard(() => listener(...wallets2)));
+  };
+}
+var cachedWalletsArray;
+function get() {
+  if (!cachedWalletsArray) {
+    cachedWalletsArray = [...registeredWalletsSet];
+  }
+  return cachedWalletsArray;
+}
+function on(event, listener) {
+  listeners[event]?.push(listener) || (listeners[event] = [listener]);
+  return function off() {
+    listeners[event] = listeners[event]?.filter((existingListener) => listener !== existingListener);
+  };
+}
+function guard(callback) {
+  try {
+    callback();
+  } catch (error) {
+    console.error(error);
+  }
+}
+var AppReadyEvent = class extends Event {
+  get detail() {
+    return __classPrivateFieldGet(this, _AppReadyEvent_detail, "f");
+  }
+  get type() {
+    return "wallet-standard:app-ready";
+  }
+  constructor(api) {
+    super("wallet-standard:app-ready", {
+      bubbles: false,
+      cancelable: false,
+      composed: false
+    });
+    _AppReadyEvent_detail.set(this, void 0);
+    __classPrivateFieldSet(this, _AppReadyEvent_detail, api, "f");
+  }
+  /** @deprecated */
+  preventDefault() {
+    throw new Error("preventDefault cannot be called");
+  }
+  /** @deprecated */
+  stopImmediatePropagation() {
+    throw new Error("stopImmediatePropagation cannot be called");
+  }
+  /** @deprecated */
+  stopPropagation() {
+    throw new Error("stopPropagation cannot be called");
+  }
+};
+_AppReadyEvent_detail = /* @__PURE__ */ new WeakMap();
+
+// node_modules/@solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
+init_polyfill();
+
+// node_modules/@solana/wallet-adapter-base/lib/esm/adapter.js
+init_polyfill();
+
+// node_modules/@solana/wallet-adapter-base/node_modules/eventemitter3/index.mjs
+init_polyfill();
+var import_index = __toESM(require_eventemitter3(), 1);
+var eventemitter3_default = import_index.default;
+
+// node_modules/@solana/wallet-adapter-base/lib/esm/errors.js
+init_polyfill();
+var WalletError = class extends Error {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  constructor(message, error) {
+    super(message);
+    this.error = error;
+  }
+};
+var WalletNotReadyError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletNotReadyError";
+  }
+};
+var WalletConfigError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletConfigError";
+  }
+};
+var WalletConnectionError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletConnectionError";
+  }
+};
+var WalletDisconnectedError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletDisconnectedError";
+  }
+};
+var WalletDisconnectionError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletDisconnectionError";
+  }
+};
+var WalletAccountError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletAccountError";
+  }
+};
+var WalletPublicKeyError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletPublicKeyError";
+  }
+};
+var WalletNotConnectedError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletNotConnectedError";
+  }
+};
+var WalletSendTransactionError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletSendTransactionError";
+  }
+};
+var WalletSignTransactionError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletSignTransactionError";
+  }
+};
+var WalletSignMessageError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletSignMessageError";
+  }
+};
+var WalletSignInError = class extends WalletError {
+  constructor() {
+    super(...arguments);
+    this.name = "WalletSignInError";
+  }
+};
+
+// node_modules/@solana/wallet-adapter-base/lib/esm/adapter.js
+var WalletReadyState;
+(function(WalletReadyState2) {
+  WalletReadyState2["Installed"] = "Installed";
+  WalletReadyState2["NotDetected"] = "NotDetected";
+  WalletReadyState2["Loadable"] = "Loadable";
+  WalletReadyState2["Unsupported"] = "Unsupported";
+})(WalletReadyState || (WalletReadyState = {}));
+var BaseWalletAdapter = class extends eventemitter3_default {
+  get connected() {
+    return !!this.publicKey;
+  }
+  async autoConnect() {
+    await this.connect();
+  }
+  async prepareTransaction(transaction, connection, options = {}) {
+    const publicKey4 = this.publicKey;
+    if (!publicKey4)
+      throw new WalletNotConnectedError();
+    transaction.feePayer = transaction.feePayer || publicKey4;
+    transaction.recentBlockhash = transaction.recentBlockhash || (await connection.getLatestBlockhash({
+      commitment: options.preflightCommitment,
+      minContextSlot: options.minContextSlot
+    })).blockhash;
+    return transaction;
+  }
+};
+
+// node_modules/@solana/wallet-adapter-base/lib/esm/transaction.js
+init_polyfill();
+function isVersionedTransaction(transaction) {
+  return "version" in transaction;
+}
+
+// node_modules/@solana/wallet-standard-features/lib/esm/signAndSendTransaction.js
+init_polyfill();
+var SolanaSignAndSendTransaction = "solana:signAndSendTransaction";
+
+// node_modules/@solana/wallet-standard-features/lib/esm/signIn.js
+init_polyfill();
+var SolanaSignIn = "solana:signIn";
+
+// node_modules/@solana/wallet-standard-features/lib/esm/signMessage.js
+init_polyfill();
+var SolanaSignMessage = "solana:signMessage";
+
+// node_modules/@solana/wallet-standard-features/lib/esm/signTransaction.js
+init_polyfill();
+var SolanaSignTransaction = "solana:signTransaction";
+
+// node_modules/@wallet-standard/features/lib/esm/connect.js
+init_polyfill();
+var StandardConnect = "standard:connect";
+
+// node_modules/@wallet-standard/features/lib/esm/disconnect.js
+init_polyfill();
+var StandardDisconnect = "standard:disconnect";
+
+// node_modules/@wallet-standard/features/lib/esm/events.js
+init_polyfill();
+var StandardEvents = "standard:events";
+
+// node_modules/@solana/wallet-standard-util/lib/esm/commitment.js
+init_polyfill();
+function getCommitment(commitment) {
+  switch (commitment) {
+    case "processed":
+    case "confirmed":
+    case "finalized":
+    case void 0:
+      return commitment;
+    case "recent":
+      return "processed";
+    case "single":
+    case "singleGossip":
+      return "confirmed";
+    case "max":
+    case "root":
+      return "finalized";
+    default:
+      return void 0;
+  }
+}
+
+// node_modules/@solana/wallet-standard-util/lib/esm/endpoint.js
+init_polyfill();
+
+// node_modules/@solana/wallet-standard-chains/lib/esm/index.js
+init_polyfill();
+var SOLANA_MAINNET_CHAIN = "solana:mainnet";
+var SOLANA_DEVNET_CHAIN = "solana:devnet";
+var SOLANA_TESTNET_CHAIN = "solana:testnet";
+var SOLANA_LOCALNET_CHAIN = "solana:localnet";
+
+// node_modules/@solana/wallet-standard-util/lib/esm/endpoint.js
+var MAINNET_ENDPOINT = "https://api.mainnet-beta.solana.com";
+function getChainForEndpoint(endpoint) {
+  if (endpoint.includes(MAINNET_ENDPOINT))
+    return SOLANA_MAINNET_CHAIN;
+  if (/\bdevnet\b/i.test(endpoint))
+    return SOLANA_DEVNET_CHAIN;
+  if (/\btestnet\b/i.test(endpoint))
+    return SOLANA_TESTNET_CHAIN;
+  if (/\blocalhost\b/i.test(endpoint) || /\b127\.0\.0\.1\b/.test(endpoint))
+    return SOLANA_LOCALNET_CHAIN;
+  return SOLANA_MAINNET_CHAIN;
+}
+
+// node_modules/@solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
+var import_web3 = __toESM(require_index_browser_cjs(), 1);
+
+// node_modules/@wallet-standard/wallet/lib/esm/util.js
+init_polyfill();
+var _ReadonlyWalletAccount_address;
+var _ReadonlyWalletAccount_publicKey;
+var _ReadonlyWalletAccount_chains;
+var _ReadonlyWalletAccount_features;
+var _ReadonlyWalletAccount_label;
+var _ReadonlyWalletAccount_icon;
+_ReadonlyWalletAccount_address = /* @__PURE__ */ new WeakMap(), _ReadonlyWalletAccount_publicKey = /* @__PURE__ */ new WeakMap(), _ReadonlyWalletAccount_chains = /* @__PURE__ */ new WeakMap(), _ReadonlyWalletAccount_features = /* @__PURE__ */ new WeakMap(), _ReadonlyWalletAccount_label = /* @__PURE__ */ new WeakMap(), _ReadonlyWalletAccount_icon = /* @__PURE__ */ new WeakMap();
+function arraysEqual(a2, b2) {
+  if (a2 === b2)
+    return true;
+  const length = a2.length;
+  if (length !== b2.length)
+    return false;
+  for (let i2 = 0; i2 < length; i2++) {
+    if (a2[i2] !== b2[i2])
+      return false;
+  }
+  return true;
+}
+
+// node_modules/bs58/src/esm/index.js
+init_polyfill();
+
+// node_modules/base-x/src/esm/index.js
+init_polyfill();
+function base(ALPHABET2) {
+  if (ALPHABET2.length >= 255) {
+    throw new TypeError("Alphabet too long");
+  }
+  const BASE_MAP = new Uint8Array(256);
+  for (let j = 0; j < BASE_MAP.length; j++) {
+    BASE_MAP[j] = 255;
+  }
+  for (let i2 = 0; i2 < ALPHABET2.length; i2++) {
+    const x = ALPHABET2.charAt(i2);
+    const xc = x.charCodeAt(0);
+    if (BASE_MAP[xc] !== 255) {
+      throw new TypeError(x + " is ambiguous");
+    }
+    BASE_MAP[xc] = i2;
+  }
+  const BASE2 = ALPHABET2.length;
+  const LEADER = ALPHABET2.charAt(0);
+  const FACTOR = Math.log(BASE2) / Math.log(256);
+  const iFACTOR = Math.log(256) / Math.log(BASE2);
+  function encode(source) {
+    if (source instanceof Uint8Array) {
+    } else if (ArrayBuffer.isView(source)) {
+      source = new Uint8Array(source.buffer, source.byteOffset, source.byteLength);
+    } else if (Array.isArray(source)) {
+      source = Uint8Array.from(source);
+    }
+    if (!(source instanceof Uint8Array)) {
+      throw new TypeError("Expected Uint8Array");
+    }
+    if (source.length === 0) {
+      return "";
+    }
+    let zeroes = 0;
+    let length = 0;
+    let pbegin = 0;
+    const pend = source.length;
+    while (pbegin !== pend && source[pbegin] === 0) {
+      pbegin++;
+      zeroes++;
+    }
+    const size = (pend - pbegin) * iFACTOR + 1 >>> 0;
+    const b58 = new Uint8Array(size);
+    while (pbegin !== pend) {
+      let carry = source[pbegin];
+      let i2 = 0;
+      for (let it1 = size - 1; (carry !== 0 || i2 < length) && it1 !== -1; it1--, i2++) {
+        carry += 256 * b58[it1] >>> 0;
+        b58[it1] = carry % BASE2 >>> 0;
+        carry = carry / BASE2 >>> 0;
+      }
+      if (carry !== 0) {
+        throw new Error("Non-zero carry");
+      }
+      length = i2;
+      pbegin++;
+    }
+    let it2 = size - length;
+    while (it2 !== size && b58[it2] === 0) {
+      it2++;
+    }
+    let str2 = LEADER.repeat(zeroes);
+    for (; it2 < size; ++it2) {
+      str2 += ALPHABET2.charAt(b58[it2]);
+    }
+    return str2;
+  }
+  function decodeUnsafe(source) {
+    if (typeof source !== "string") {
+      throw new TypeError("Expected String");
+    }
+    if (source.length === 0) {
+      return new Uint8Array();
+    }
+    let psz = 0;
+    let zeroes = 0;
+    let length = 0;
+    while (source[psz] === LEADER) {
+      zeroes++;
+      psz++;
+    }
+    const size = (source.length - psz) * FACTOR + 1 >>> 0;
+    const b256 = new Uint8Array(size);
+    while (psz < source.length) {
+      const charCode = source.charCodeAt(psz);
+      if (charCode > 255) {
+        return;
+      }
+      let carry = BASE_MAP[charCode];
+      if (carry === 255) {
+        return;
+      }
+      let i2 = 0;
+      for (let it3 = size - 1; (carry !== 0 || i2 < length) && it3 !== -1; it3--, i2++) {
+        carry += BASE2 * b256[it3] >>> 0;
+        b256[it3] = carry % 256 >>> 0;
+        carry = carry / 256 >>> 0;
+      }
+      if (carry !== 0) {
+        throw new Error("Non-zero carry");
+      }
+      length = i2;
+      psz++;
+    }
+    let it4 = size - length;
+    while (it4 !== size && b256[it4] === 0) {
+      it4++;
+    }
+    const vch = new Uint8Array(zeroes + (size - it4));
+    let j = zeroes;
+    while (it4 !== size) {
+      vch[j++] = b256[it4++];
+    }
+    return vch;
+  }
+  function decode2(string2) {
+    const buffer = decodeUnsafe(string2);
+    if (buffer) {
+      return buffer;
+    }
+    throw new Error("Non-base" + BASE2 + " character");
+  }
+  return {
+    encode,
+    decodeUnsafe,
+    decode: decode2
+  };
+}
+var esm_default = base;
+
+// node_modules/bs58/src/esm/index.js
+var ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+var esm_default2 = esm_default(ALPHABET);
+
+// node_modules/@solana/wallet-standard-wallet-adapter-base/lib/esm/adapter.js
+var __classPrivateFieldGet2 = function(receiver, state, kind, f3) {
+  if (kind === "a" && !f3) throw new TypeError("Private accessor was defined without a getter");
+  if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+  return kind === "m" ? f3 : kind === "a" ? f3.call(receiver) : f3 ? f3.value : state.get(receiver);
+};
+var __classPrivateFieldSet2 = function(receiver, state, value, kind, f3) {
+  if (kind === "m") throw new TypeError("Private method is not writable");
+  if (kind === "a" && !f3) throw new TypeError("Private accessor was defined without a setter");
+  if (typeof state === "function" ? receiver !== state || !f3 : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+  return kind === "a" ? f3.call(receiver, value) : f3 ? f3.value = value : state.set(receiver, value), value;
+};
+var _StandardWalletAdapter_instances;
+var _StandardWalletAdapter_account;
+var _StandardWalletAdapter_publicKey;
+var _StandardWalletAdapter_connecting;
+var _StandardWalletAdapter_disconnecting;
+var _StandardWalletAdapter_off;
+var _StandardWalletAdapter_supportedTransactionVersions;
+var _StandardWalletAdapter_wallet;
+var _StandardWalletAdapter_readyState;
+var _StandardWalletAdapter_connect;
+var _StandardWalletAdapter_connected;
+var _StandardWalletAdapter_disconnected;
+var _StandardWalletAdapter_reset;
+var _StandardWalletAdapter_changed;
+var _StandardWalletAdapter_signTransaction;
+var _StandardWalletAdapter_signAllTransactions;
+var _StandardWalletAdapter_signMessage;
+var _StandardWalletAdapter_signIn;
+var StandardWalletAdapter = class extends BaseWalletAdapter {
+  get name() {
+    return __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").name;
+  }
+  get url() {
+    return "https://github.com/solana-labs/wallet-standard";
+  }
+  get icon() {
+    return __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").icon;
+  }
+  get readyState() {
+    return __classPrivateFieldGet2(this, _StandardWalletAdapter_readyState, "f");
+  }
+  get publicKey() {
+    return __classPrivateFieldGet2(this, _StandardWalletAdapter_publicKey, "f");
+  }
+  get connecting() {
+    return __classPrivateFieldGet2(this, _StandardWalletAdapter_connecting, "f");
+  }
+  get supportedTransactionVersions() {
+    return __classPrivateFieldGet2(this, _StandardWalletAdapter_supportedTransactionVersions, "f");
+  }
+  get wallet() {
+    return __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f");
+  }
+  get standard() {
+    return true;
+  }
+  constructor({ wallet: wallet2 }) {
+    super();
+    _StandardWalletAdapter_instances.add(this);
+    _StandardWalletAdapter_account.set(this, void 0);
+    _StandardWalletAdapter_publicKey.set(this, void 0);
+    _StandardWalletAdapter_connecting.set(this, void 0);
+    _StandardWalletAdapter_disconnecting.set(this, void 0);
+    _StandardWalletAdapter_off.set(this, void 0);
+    _StandardWalletAdapter_supportedTransactionVersions.set(this, void 0);
+    _StandardWalletAdapter_wallet.set(this, void 0);
+    _StandardWalletAdapter_readyState.set(this, typeof window === "undefined" || typeof document === "undefined" ? WalletReadyState.Unsupported : WalletReadyState.Installed);
+    _StandardWalletAdapter_changed.set(this, (properties) => {
+      if ("accounts" in properties) {
+        const account = __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").accounts[0];
+        if (__classPrivateFieldGet2(this, _StandardWalletAdapter_account, "f") && !__classPrivateFieldGet2(this, _StandardWalletAdapter_disconnecting, "f") && account !== __classPrivateFieldGet2(this, _StandardWalletAdapter_account, "f")) {
+          if (account) {
+            __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_connected).call(this, account);
+          } else {
+            this.emit("error", new WalletDisconnectedError());
+            __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_disconnected).call(this);
+          }
+        }
+      }
+      if ("features" in properties) {
+        __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_reset).call(this);
+      }
+    });
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_wallet, wallet2, "f");
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_account, null, "f");
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_publicKey, null, "f");
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_connecting, false, "f");
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_disconnecting, false, "f");
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_off, __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[StandardEvents].on("change", __classPrivateFieldGet2(this, _StandardWalletAdapter_changed, "f")), "f");
+    __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_reset).call(this);
+  }
+  destroy() {
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_account, null, "f");
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_publicKey, null, "f");
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_connecting, false, "f");
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_disconnecting, false, "f");
+    const off = __classPrivateFieldGet2(this, _StandardWalletAdapter_off, "f");
+    if (off) {
+      __classPrivateFieldSet2(this, _StandardWalletAdapter_off, null, "f");
+      off();
+    }
+  }
+  async autoConnect() {
+    return __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_connect).call(this, { silent: true });
+  }
+  async connect() {
+    return __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_connect).call(this);
+  }
+  async disconnect() {
+    if (StandardDisconnect in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features) {
+      try {
+        __classPrivateFieldSet2(this, _StandardWalletAdapter_disconnecting, true, "f");
+        await __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[StandardDisconnect].disconnect();
+      } catch (error) {
+        this.emit("error", new WalletDisconnectionError(error?.message, error));
+      } finally {
+        __classPrivateFieldSet2(this, _StandardWalletAdapter_disconnecting, false, "f");
+      }
+    }
+    __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_disconnected).call(this);
+  }
+  async sendTransaction(transaction, connection, options = {}) {
+    try {
+      const account = __classPrivateFieldGet2(this, _StandardWalletAdapter_account, "f");
+      if (!account)
+        throw new WalletNotConnectedError();
+      let feature;
+      if (SolanaSignAndSendTransaction in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features) {
+        if (account.features.includes(SolanaSignAndSendTransaction)) {
+          feature = SolanaSignAndSendTransaction;
+        } else if (SolanaSignTransaction in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features && account.features.includes(SolanaSignTransaction)) {
+          feature = SolanaSignTransaction;
+        } else {
+          throw new WalletAccountError();
+        }
+      } else if (SolanaSignTransaction in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features) {
+        if (!account.features.includes(SolanaSignTransaction))
+          throw new WalletAccountError();
+        feature = SolanaSignTransaction;
+      } else {
+        throw new WalletConfigError();
+      }
+      const chain = getChainForEndpoint(connection.rpcEndpoint);
+      if (!account.chains.includes(chain))
+        throw new WalletSendTransactionError();
+      try {
+        const { signers, ...sendOptions } = options;
+        let serializedTransaction;
+        if (isVersionedTransaction(transaction)) {
+          signers?.length && transaction.sign(signers);
+          serializedTransaction = transaction.serialize();
+        } else {
+          transaction = await this.prepareTransaction(transaction, connection, sendOptions);
+          signers?.length && transaction.partialSign(...signers);
+          serializedTransaction = new Uint8Array(transaction.serialize({
+            requireAllSignatures: false,
+            verifySignatures: false
+          }));
+        }
+        if (feature === SolanaSignAndSendTransaction) {
+          const [output] = await __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[SolanaSignAndSendTransaction].signAndSendTransaction({
+            account,
+            chain,
+            transaction: serializedTransaction,
+            options: {
+              preflightCommitment: getCommitment(sendOptions.preflightCommitment || connection.commitment),
+              skipPreflight: sendOptions.skipPreflight,
+              maxRetries: sendOptions.maxRetries,
+              minContextSlot: sendOptions.minContextSlot
+            }
+          });
+          return esm_default2.encode(output.signature);
+        } else {
+          const [output] = await __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[SolanaSignTransaction].signTransaction({
+            account,
+            chain,
+            transaction: serializedTransaction,
+            options: {
+              preflightCommitment: getCommitment(sendOptions.preflightCommitment || connection.commitment),
+              minContextSlot: sendOptions.minContextSlot
+            }
+          });
+          return await connection.sendRawTransaction(output.signedTransaction, {
+            ...sendOptions,
+            preflightCommitment: getCommitment(sendOptions.preflightCommitment || connection.commitment)
+          });
+        }
+      } catch (error) {
+        if (error instanceof WalletError)
+          throw error;
+        throw new WalletSendTransactionError(error?.message, error);
+      }
+    } catch (error) {
+      this.emit("error", error);
+      throw error;
+    }
+  }
+};
+_StandardWalletAdapter_account = /* @__PURE__ */ new WeakMap(), _StandardWalletAdapter_publicKey = /* @__PURE__ */ new WeakMap(), _StandardWalletAdapter_connecting = /* @__PURE__ */ new WeakMap(), _StandardWalletAdapter_disconnecting = /* @__PURE__ */ new WeakMap(), _StandardWalletAdapter_off = /* @__PURE__ */ new WeakMap(), _StandardWalletAdapter_supportedTransactionVersions = /* @__PURE__ */ new WeakMap(), _StandardWalletAdapter_wallet = /* @__PURE__ */ new WeakMap(), _StandardWalletAdapter_readyState = /* @__PURE__ */ new WeakMap(), _StandardWalletAdapter_changed = /* @__PURE__ */ new WeakMap(), _StandardWalletAdapter_instances = /* @__PURE__ */ new WeakSet(), _StandardWalletAdapter_connect = async function _StandardWalletAdapter_connect2(input) {
+  try {
+    if (this.connected || this.connecting)
+      return;
+    if (__classPrivateFieldGet2(this, _StandardWalletAdapter_readyState, "f") !== WalletReadyState.Installed)
+      throw new WalletNotReadyError();
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_connecting, true, "f");
+    if (!__classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").accounts.length) {
+      try {
+        await __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[StandardConnect].connect(input);
+      } catch (error) {
+        throw new WalletConnectionError(error?.message, error);
+      }
+    }
+    const account = __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").accounts[0];
+    if (!account)
+      throw new WalletAccountError();
+    __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_connected).call(this, account);
+  } catch (error) {
+    this.emit("error", error);
+    throw error;
+  } finally {
+    __classPrivateFieldSet2(this, _StandardWalletAdapter_connecting, false, "f");
+  }
+}, _StandardWalletAdapter_connected = function _StandardWalletAdapter_connected2(account) {
+  let publicKey4;
+  try {
+    publicKey4 = new import_web3.PublicKey(account.address);
+  } catch (error) {
+    throw new WalletPublicKeyError(error?.message, error);
+  }
+  __classPrivateFieldSet2(this, _StandardWalletAdapter_account, account, "f");
+  __classPrivateFieldSet2(this, _StandardWalletAdapter_publicKey, publicKey4, "f");
+  __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_reset).call(this);
+  this.emit("connect", publicKey4);
+}, _StandardWalletAdapter_disconnected = function _StandardWalletAdapter_disconnected2() {
+  __classPrivateFieldSet2(this, _StandardWalletAdapter_account, null, "f");
+  __classPrivateFieldSet2(this, _StandardWalletAdapter_publicKey, null, "f");
+  __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_reset).call(this);
+  this.emit("disconnect");
+}, _StandardWalletAdapter_reset = function _StandardWalletAdapter_reset2() {
+  const supportedTransactionVersions = SolanaSignAndSendTransaction in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features ? __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[SolanaSignAndSendTransaction].supportedTransactionVersions : __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[SolanaSignTransaction].supportedTransactionVersions;
+  __classPrivateFieldSet2(this, _StandardWalletAdapter_supportedTransactionVersions, arraysEqual(supportedTransactionVersions, ["legacy"]) ? null : new Set(supportedTransactionVersions), "f");
+  if (SolanaSignTransaction in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features && __classPrivateFieldGet2(this, _StandardWalletAdapter_account, "f")?.features.includes(SolanaSignTransaction)) {
+    this.signTransaction = __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_signTransaction);
+    this.signAllTransactions = __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_signAllTransactions);
+  } else {
+    delete this.signTransaction;
+    delete this.signAllTransactions;
+  }
+  if (SolanaSignMessage in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features && __classPrivateFieldGet2(this, _StandardWalletAdapter_account, "f")?.features.includes(SolanaSignMessage)) {
+    this.signMessage = __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_signMessage);
+  } else {
+    delete this.signMessage;
+  }
+  if (SolanaSignIn in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features) {
+    this.signIn = __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_signIn);
+  } else {
+    delete this.signIn;
+  }
+}, _StandardWalletAdapter_signTransaction = async function _StandardWalletAdapter_signTransaction2(transaction) {
+  try {
+    const account = __classPrivateFieldGet2(this, _StandardWalletAdapter_account, "f");
+    if (!account)
+      throw new WalletNotConnectedError();
+    if (!(SolanaSignTransaction in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features))
+      throw new WalletConfigError();
+    if (!account.features.includes(SolanaSignTransaction))
+      throw new WalletAccountError();
+    try {
+      const signedTransactions = await __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[SolanaSignTransaction].signTransaction({
+        account,
+        transaction: isVersionedTransaction(transaction) ? transaction.serialize() : new Uint8Array(transaction.serialize({
+          requireAllSignatures: false,
+          verifySignatures: false
+        }))
+      });
+      const serializedTransaction = signedTransactions[0].signedTransaction;
+      return isVersionedTransaction(transaction) ? import_web3.VersionedTransaction.deserialize(serializedTransaction) : import_web3.Transaction.from(serializedTransaction);
+    } catch (error) {
+      if (error instanceof WalletError)
+        throw error;
+      throw new WalletSignTransactionError(error?.message, error);
+    }
+  } catch (error) {
+    this.emit("error", error);
+    throw error;
+  }
+}, _StandardWalletAdapter_signAllTransactions = async function _StandardWalletAdapter_signAllTransactions2(transactions) {
+  try {
+    const account = __classPrivateFieldGet2(this, _StandardWalletAdapter_account, "f");
+    if (!account)
+      throw new WalletNotConnectedError();
+    if (!(SolanaSignTransaction in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features))
+      throw new WalletConfigError();
+    if (!account.features.includes(SolanaSignTransaction))
+      throw new WalletAccountError();
+    try {
+      const signedTransactions = await __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[SolanaSignTransaction].signTransaction(...transactions.map((transaction) => ({
+        account,
+        transaction: isVersionedTransaction(transaction) ? transaction.serialize() : new Uint8Array(transaction.serialize({
+          requireAllSignatures: false,
+          verifySignatures: false
+        }))
+      })));
+      return transactions.map((transaction, index) => {
+        const signedTransaction = signedTransactions[index].signedTransaction;
+        return isVersionedTransaction(transaction) ? import_web3.VersionedTransaction.deserialize(signedTransaction) : import_web3.Transaction.from(signedTransaction);
+      });
+    } catch (error) {
+      throw new WalletSignTransactionError(error?.message, error);
+    }
+  } catch (error) {
+    this.emit("error", error);
+    throw error;
+  }
+}, _StandardWalletAdapter_signMessage = async function _StandardWalletAdapter_signMessage2(message) {
+  try {
+    const account = __classPrivateFieldGet2(this, _StandardWalletAdapter_account, "f");
+    if (!account)
+      throw new WalletNotConnectedError();
+    if (!(SolanaSignMessage in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features))
+      throw new WalletConfigError();
+    if (!account.features.includes(SolanaSignMessage))
+      throw new WalletAccountError();
+    try {
+      const signedMessages = await __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[SolanaSignMessage].signMessage({
+        account,
+        message
+      });
+      return signedMessages[0].signature;
+    } catch (error) {
+      throw new WalletSignMessageError(error?.message, error);
+    }
+  } catch (error) {
+    this.emit("error", error);
+    throw error;
+  }
+}, _StandardWalletAdapter_signIn = async function _StandardWalletAdapter_signIn2(input = {}) {
+  try {
+    if (!(SolanaSignIn in __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features))
+      throw new WalletConfigError();
+    let output;
+    try {
+      [output] = await __classPrivateFieldGet2(this, _StandardWalletAdapter_wallet, "f").features[SolanaSignIn].signIn(input);
+    } catch (error) {
+      throw new WalletSignInError(error?.message, error);
+    }
+    if (!output)
+      throw new WalletSignInError();
+    __classPrivateFieldGet2(this, _StandardWalletAdapter_instances, "m", _StandardWalletAdapter_connected).call(this, output.account);
+    return output;
+  } catch (error) {
+    this.emit("error", error);
+    throw error;
+  }
+};
+
+// src/wallets.mjs
+init_polyfill();
+function eligibleWallets(wallets2) {
+  return wallets2.filter((w2) => w2.chains?.includes("solana:mainnet") && w2.features?.["standard:connect"] && w2.features?.["standard:events"] && w2.features?.["solana:signMessage"] && w2.features?.["solana:signTransaction"]?.supportedTransactionVersions?.includes(0));
+}
+async function connectStandardWallet(wallet2, Adapter) {
+  const adapter = new Adapter({ wallet: wallet2 });
+  adapter.on("error", () => {
+  });
+  try {
+    await adapter.connect();
+    if (!adapter.publicKey || typeof adapter.signMessage !== "function" || typeof adapter.signTransaction !== "function") throw Error("This account must support the ability to sign messages and transactions.");
+    return adapter;
+  } catch (error) {
+    adapter.destroy();
+    throw error;
+  }
+}
+
 // src/quote.mjs
 init_polyfill();
 async function resolveQuote(address, sdk, publicKey4) {
@@ -27491,15 +28503,15 @@ async function buildPumpInstruction({ name, symbol, uri, wallet: wallet2, mint, 
 
 // src/solana.mjs
 init_polyfill();
-var import_web3 = __toESM(require_index_browser_cjs(), 1);
+var import_web32 = __toESM(require_index_browser_cjs(), 1);
 var MAINNET_GENESIS = "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d";
 async function prepareSolanaLaunch(input, quote, uri, wallet2, { connection, buildInstruction }) {
   if (await connection.getGenesisHash() !== MAINNET_GENESIS) throw Error("Wallet launch requires the Solana mainnet network.");
-  const mint = import_web3.Keypair.generate();
+  const mint = import_web32.Keypair.generate();
   const instruction = await buildInstruction({ name: input.name.trim(), symbol: input.symbol.trim(), uri, wallet: wallet2, mint: mint.publicKey, quote });
   const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
-  const message = new import_web3.TransactionMessage({ payerKey: wallet2, recentBlockhash: blockhash, instructions: [instruction] }).compileToV0Message();
-  const transaction = new import_web3.VersionedTransaction(message);
+  const message = new import_web32.TransactionMessage({ payerKey: wallet2, recentBlockhash: blockhash, instructions: [instruction] }).compileToV0Message();
+  const transaction = new import_web32.VersionedTransaction(message);
   transaction.sign([mint]);
   const balance = await connection.getBalance(wallet2, "confirmed");
   const sim = await connection.simulateTransaction(transaction, { commitment: "confirmed", sigVerify: false, accounts: { encoding: "base64", addresses: [wallet2.toBase58()] } });
@@ -27528,19 +28540,19 @@ async function verifySignedTransaction(transaction, expectedMessage, cryptoApi =
 }
 
 // src/ui.mjs
-var import_web326 = __toESM(require_index_browser_cjs(), 1);
+var import_web327 = __toESM(require_index_browser_cjs(), 1);
 
 // node_modules/@pump-fun/pump-sdk/dist/esm/index.js
 init_polyfill();
 
 // node_modules/@solana/spl-token/lib/esm/constants.js
 init_polyfill();
-var import_web32 = __toESM(require_index_browser_cjs(), 1);
-var TOKEN_PROGRAM_ID = new import_web32.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
-var TOKEN_2022_PROGRAM_ID = new import_web32.PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
-var ASSOCIATED_TOKEN_PROGRAM_ID = new import_web32.PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
-var NATIVE_MINT = new import_web32.PublicKey("So11111111111111111111111111111111111111112");
-var NATIVE_MINT_2022 = new import_web32.PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXejP");
+var import_web33 = __toESM(require_index_browser_cjs(), 1);
+var TOKEN_PROGRAM_ID = new import_web33.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+var TOKEN_2022_PROGRAM_ID = new import_web33.PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
+var ASSOCIATED_TOKEN_PROGRAM_ID = new import_web33.PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
+var NATIVE_MINT = new import_web33.PublicKey("So11111111111111111111111111111111111111112");
+var NATIVE_MINT_2022 = new import_web33.PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXejP");
 
 // node_modules/@solana/buffer-layout-utils/lib/esm/index.mjs
 init_polyfill();
@@ -28964,14 +29976,14 @@ var bool = (property) => {
 // node_modules/@solana/buffer-layout-utils/lib/esm/web3.mjs
 init_polyfill();
 var import_buffer_layout3 = __toESM(require_Layout(), 1);
-var import_web33 = __toESM(require_index_browser_cjs(), 1);
+var import_web34 = __toESM(require_index_browser_cjs(), 1);
 var publicKey = (property) => {
   const layout = (0, import_buffer_layout3.blob)(32, property);
   const { encode, decode: decode2 } = encodeDecode(layout);
   const publicKeyLayout = layout;
   publicKeyLayout.decode = (buffer, offset2) => {
     const src = decode2(buffer, offset2);
-    return new import_web33.PublicKey(src);
+    return new import_web34.PublicKey(src);
   };
   publicKeyLayout.encode = (publicKey4, buffer, offset2) => {
     const src = publicKey4.toBuffer();
@@ -29077,7 +30089,7 @@ var TokenInstruction;
 // node_modules/@solana/spl-token/lib/esm/state/mint.js
 init_polyfill();
 var import_buffer_layout6 = __toESM(require_Layout(), 1);
-var import_web35 = __toESM(require_index_browser_cjs(), 1);
+var import_web36 = __toESM(require_index_browser_cjs(), 1);
 
 // node_modules/@solana/spl-token/lib/esm/extensions/accountType.js
 init_polyfill();
@@ -29169,13 +30181,13 @@ function unpackAccount(address, info, programId = TOKEN_PROGRAM_ID) {
 
 // node_modules/@solana/spl-token/lib/esm/instructions/internal.js
 init_polyfill();
-var import_web34 = __toESM(require_index_browser_cjs(), 1);
+var import_web35 = __toESM(require_index_browser_cjs(), 1);
 function addSigners(keys, ownerOrAuthority, multiSigners) {
   if (multiSigners.length) {
     keys.push({ pubkey: ownerOrAuthority, isSigner: false, isWritable: false });
     for (const signer of multiSigners) {
       keys.push({
-        pubkey: signer instanceof import_web34.PublicKey ? signer : signer.publicKey,
+        pubkey: signer instanceof import_web35.PublicKey ? signer : signer.publicKey,
         isSigner: true,
         isWritable: false
       });
@@ -29226,16 +30238,16 @@ function unpackMint(address, info, programId = TOKEN_PROGRAM_ID) {
   };
 }
 function getAssociatedTokenAddressSync(mint, owner, allowOwnerOffCurve = false, programId = TOKEN_PROGRAM_ID, associatedTokenProgramId = ASSOCIATED_TOKEN_PROGRAM_ID) {
-  if (!allowOwnerOffCurve && !import_web35.PublicKey.isOnCurve(owner.toBuffer()))
+  if (!allowOwnerOffCurve && !import_web36.PublicKey.isOnCurve(owner.toBuffer()))
     throw new TokenOwnerOffCurveError();
-  const [address] = import_web35.PublicKey.findProgramAddressSync([owner.toBuffer(), programId.toBuffer(), mint.toBuffer()], associatedTokenProgramId);
+  const [address] = import_web36.PublicKey.findProgramAddressSync([owner.toBuffer(), programId.toBuffer(), mint.toBuffer()], associatedTokenProgramId);
   return address;
 }
 
 // node_modules/@solana/spl-token/lib/esm/instructions/closeAccount.js
 init_polyfill();
 var import_buffer_layout7 = __toESM(require_Layout(), 1);
-var import_web36 = __toESM(require_index_browser_cjs(), 1);
+var import_web37 = __toESM(require_index_browser_cjs(), 1);
 var closeAccountInstructionData = (0, import_buffer_layout7.struct)([(0, import_buffer_layout7.u8)("instruction")]);
 function createCloseAccountInstruction(account, destination, authority, multiSigners = [], programId = TOKEN_PROGRAM_ID) {
   const keys = addSigners([
@@ -29244,12 +30256,12 @@ function createCloseAccountInstruction(account, destination, authority, multiSig
   ], authority, multiSigners);
   const data = import_buffer.Buffer.alloc(closeAccountInstructionData.span);
   closeAccountInstructionData.encode({ instruction: TokenInstruction.CloseAccount }, data);
-  return new import_web36.TransactionInstruction({ keys, programId, data });
+  return new import_web37.TransactionInstruction({ keys, programId, data });
 }
 
 // node_modules/@solana/spl-token/lib/esm/instructions/associatedTokenAccount.js
 init_polyfill();
-var import_web37 = __toESM(require_index_browser_cjs(), 1);
+var import_web38 = __toESM(require_index_browser_cjs(), 1);
 function createAssociatedTokenAccountIdempotentInstruction(payer, associatedToken, owner, mint, programId = TOKEN_PROGRAM_ID, associatedTokenProgramId = ASSOCIATED_TOKEN_PROGRAM_ID) {
   return buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, mint, import_buffer.Buffer.from([1]), programId, associatedTokenProgramId);
 }
@@ -29259,10 +30271,10 @@ function buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, m
     { pubkey: associatedToken, isSigner: false, isWritable: true },
     { pubkey: owner, isSigner: false, isWritable: false },
     { pubkey: mint, isSigner: false, isWritable: false },
-    { pubkey: import_web37.SystemProgram.programId, isSigner: false, isWritable: false },
+    { pubkey: import_web38.SystemProgram.programId, isSigner: false, isWritable: false },
     { pubkey: programId, isSigner: false, isWritable: false }
   ];
-  return new import_web37.TransactionInstruction({
+  return new import_web38.TransactionInstruction({
     keys,
     programId: associatedTokenProgramId,
     data: instructionData
@@ -29272,24 +30284,24 @@ function buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, m
 // node_modules/@solana/spl-token/lib/esm/instructions/syncNative.js
 init_polyfill();
 var import_buffer_layout8 = __toESM(require_Layout(), 1);
-var import_web38 = __toESM(require_index_browser_cjs(), 1);
+var import_web39 = __toESM(require_index_browser_cjs(), 1);
 var syncNativeInstructionData = (0, import_buffer_layout8.struct)([(0, import_buffer_layout8.u8)("instruction")]);
 function createSyncNativeInstruction(account, programId = TOKEN_PROGRAM_ID) {
   const keys = [{ pubkey: account, isSigner: false, isWritable: true }];
   const data = import_buffer.Buffer.alloc(syncNativeInstructionData.span);
   syncNativeInstructionData.encode({ instruction: TokenInstruction.SyncNative }, data);
-  return new import_web38.TransactionInstruction({ keys, programId, data });
+  return new import_web39.TransactionInstruction({ keys, programId, data });
 }
 
 // node_modules/@pump-fun/pump-sdk/dist/esm/index.js
-var import_web321 = __toESM(require_index_browser_cjs());
-var import_bn13 = __toESM(require_bn());
 var import_web322 = __toESM(require_index_browser_cjs());
+var import_bn13 = __toESM(require_bn());
+var import_web323 = __toESM(require_index_browser_cjs());
 var import_bn14 = __toESM(require_bn());
 
 // node_modules/@pump-fun/pump-swap-sdk/dist/esm/index.js
 init_polyfill();
-var import_web310 = __toESM(require_index_browser_cjs());
+var import_web311 = __toESM(require_index_browser_cjs());
 var import_bn3 = __toESM(require_bn());
 var import_bn4 = __toESM(require_bn());
 var import_bn5 = __toESM(require_bn());
@@ -29298,10 +30310,10 @@ var import_bn5 = __toESM(require_bn());
 init_polyfill();
 var import_bn = __toESM(require_bn());
 var import_bn2 = __toESM(require_bn());
-var import_web39 = __toESM(require_index_browser_cjs());
+var import_web310 = __toESM(require_index_browser_cjs());
 var web3_js = __toESM(require_index_browser_cjs());
 var import_buffer3 = __toESM(require_buffer());
-var import_bs58 = __toESM(require_bs583());
+var import_bs582 = __toESM(require_bs583());
 var import_camelcase = __toESM(require_camelcase());
 var borsh = __toESM(require_dist2());
 
@@ -33517,11 +34529,11 @@ var { Inflate, inflate, inflateRaw, ungzip } = inflate_1$1;
 var inflate_1 = inflate;
 
 // node_modules/@coral-xyz/anchor/dist/browser/index.js
-var import_eventemitter3 = __toESM(require_eventemitter32());
+var import_eventemitter32 = __toESM(require_eventemitter33());
 function chunks(array3, size) {
   return Array.apply(0, new Array(Math.ceil(array3.length / size))).map((_, index) => array3.slice(index * size, (index + 1) * size));
 }
-var isVersionedTransaction = (tx) => {
+var isVersionedTransaction2 = (tx) => {
   return "version" in tx;
 };
 function decode$2(array3) {
@@ -33529,7 +34541,7 @@ function decode$2(array3) {
   return decoder.decode(array3);
 }
 function encode$1(data) {
-  return import_bs58.default.encode(data);
+  return import_bs582.default.encode(data);
 }
 function decode(data) {
   return import_buffer3.Buffer.from(data, "base64");
@@ -33538,8 +34550,8 @@ function isCompositeAccounts(accountItem) {
   return "accounts" in accountItem;
 }
 async function idlAddress(programId) {
-  const base2 = (await import_web39.PublicKey.findProgramAddress([], programId))[0];
-  return await import_web39.PublicKey.createWithSeed(base2, seed(), programId);
+  const base2 = (await import_web310.PublicKey.findProgramAddress([], programId))[0];
+  return await import_web310.PublicKey.createWithSeed(base2, seed(), programId);
 }
 function seed() {
   return "anchor:idl";
@@ -33611,7 +34623,7 @@ function validateAccounts(ixAccounts, accounts = {}) {
   });
 }
 function translateAddress(address) {
-  return address instanceof import_web39.PublicKey ? address : new import_web39.PublicKey(address);
+  return address instanceof import_web310.PublicKey ? address : new import_web310.PublicKey(address);
 }
 var StructError = class extends TypeError {
   constructor(failure, failures) {
@@ -34084,7 +35096,7 @@ async function simulateTransaction(connection, transaction, signers, commitment,
         console.error(res.error.message, logTrace);
       }
     }
-    throw new import_web39.SendTransactionError("failed to simulate transaction: " + res.error.message, logs);
+    throw new import_web310.SendTransactionError("failed to simulate transaction: " + res.error.message, logs);
   }
   return res.result;
 }
@@ -34193,7 +35205,7 @@ var AnchorProvider = class _AnchorProvider {
     if (opts === void 0) {
       opts = this.opts;
     }
-    if (isVersionedTransaction(tx)) {
+    if (isVersionedTransaction2(tx)) {
       if (signers) {
         tx.sign(signers);
       }
@@ -34212,8 +35224,8 @@ var AnchorProvider = class _AnchorProvider {
       return await sendAndConfirmRawTransaction(this.connection, rawTx, opts);
     } catch (err2) {
       if (err2 instanceof ConfirmError) {
-        const txSig = encode$1(isVersionedTransaction(tx) ? ((_b = tx.signatures) === null || _b === void 0 ? void 0 : _b[0]) || new Uint8Array() : (_c = tx.signature) !== null && _c !== void 0 ? _c : new Uint8Array());
-        const maxVer = isVersionedTransaction(tx) ? 0 : void 0;
+        const txSig = encode$1(isVersionedTransaction2(tx) ? ((_b = tx.signatures) === null || _b === void 0 ? void 0 : _b[0]) || new Uint8Array() : (_c = tx.signature) !== null && _c !== void 0 ? _c : new Uint8Array());
+        const maxVer = isVersionedTransaction2(tx) ? 0 : void 0;
         const failedTx = await this.connection.getTransaction(txSig, {
           commitment: "confirmed",
           maxSupportedTransactionVersion: maxVer
@@ -34222,7 +35234,7 @@ var AnchorProvider = class _AnchorProvider {
           throw err2;
         } else {
           const logs = (_d = failedTx.meta) === null || _d === void 0 ? void 0 : _d.logMessages;
-          throw !logs ? err2 : new import_web39.SendTransactionError(err2.message, logs);
+          throw !logs ? err2 : new import_web310.SendTransactionError(err2.message, logs);
         }
       } else {
         throw err2;
@@ -34244,7 +35256,7 @@ var AnchorProvider = class _AnchorProvider {
     const recentBlockhash = (await this.connection.getLatestBlockhash(opts.preflightCommitment)).blockhash;
     let txs = txWithSigners.map((r) => {
       var _a2, _b2;
-      if (isVersionedTransaction(r.tx)) {
+      if (isVersionedTransaction2(r.tx)) {
         let tx = r.tx;
         if (r.signers) {
           tx.sign(r.signers);
@@ -34270,8 +35282,8 @@ var AnchorProvider = class _AnchorProvider {
         sigs.push(await sendAndConfirmRawTransaction(this.connection, rawTx, opts));
       } catch (err2) {
         if (err2 instanceof ConfirmError) {
-          const txSig = encode$1(isVersionedTransaction(tx) ? ((_a = tx.signatures) === null || _a === void 0 ? void 0 : _a[0]) || new Uint8Array() : (_b = tx.signature) !== null && _b !== void 0 ? _b : new Uint8Array());
-          const maxVer = isVersionedTransaction(tx) ? 0 : void 0;
+          const txSig = encode$1(isVersionedTransaction2(tx) ? ((_a = tx.signatures) === null || _a === void 0 ? void 0 : _a[0]) || new Uint8Array() : (_b = tx.signature) !== null && _b !== void 0 ? _b : new Uint8Array());
+          const maxVer = isVersionedTransaction2(tx) ? 0 : void 0;
           const failedTx = await this.connection.getTransaction(txSig, {
             commitment: "confirmed",
             maxSupportedTransactionVersion: maxVer
@@ -34280,7 +35292,7 @@ var AnchorProvider = class _AnchorProvider {
             throw err2;
           } else {
             const logs = (_c = failedTx.meta) === null || _c === void 0 ? void 0 : _c.logMessages;
-            throw !logs ? err2 : new import_web39.SendTransactionError(err2.message, logs);
+            throw !logs ? err2 : new import_web310.SendTransactionError(err2.message, logs);
           }
         } else {
           throw err2;
@@ -34302,7 +35314,7 @@ var AnchorProvider = class _AnchorProvider {
   async simulate(tx, signers, commitment, includeAccounts) {
     let recentBlockhash = (await this.connection.getLatestBlockhash(commitment !== null && commitment !== void 0 ? commitment : this.connection.commitment)).blockhash;
     let result;
-    if (isVersionedTransaction(tx)) {
+    if (isVersionedTransaction2(tx)) {
       if (signers && signers.length > 0) {
         tx.sign(signers);
         tx = await this.wallet.signTransaction(tx);
@@ -34488,7 +35500,7 @@ var ProgramErrorStack = class _ProgramErrorStack {
       if (!programKey) {
         continue;
       }
-      programStack.push(new import_web39.PublicKey(programKey));
+      programStack.push(new import_web310.PublicKey(programKey));
     }
     return new _ProgramErrorStack(programStack);
   }
@@ -34518,8 +35530,8 @@ var AnchorError = class _AnchorError extends Error {
         const leftPubkey = pubkeyRegex.exec(logs[anchorErrorLogIndex + 2])[1];
         const rightPubkey = pubkeyRegex.exec(logs[anchorErrorLogIndex + 4])[1];
         comparedValues = [
-          new import_web39.PublicKey(leftPubkey),
-          new import_web39.PublicKey(rightPubkey)
+          new import_web310.PublicKey(leftPubkey),
+          new import_web310.PublicKey(rightPubkey)
         ];
         errorLogs.push(...logs.slice(anchorErrorLogIndex + 1, anchorErrorLogIndex + 5));
       } else if (logs[anchorErrorLogIndex + 1].startsWith("Program log: Left:")) {
@@ -35384,7 +36396,7 @@ var BorshInstructionCoder = class {
    */
   decode(ix, encoding = "hex") {
     if (typeof ix === "string") {
-      ix = encoding === "hex" ? import_buffer3.Buffer.from(ix, "hex") : import_bs58.default.decode(ix);
+      ix = encoding === "hex" ? import_buffer3.Buffer.from(ix, "hex") : import_bs582.default.decode(ix);
     }
     for (const [name, layout] of this.ixLayouts) {
       const givenDisc = ix.subarray(0, layout.discriminator.length);
@@ -35625,7 +36637,7 @@ var BorshAccountsCoder = class {
     const discriminator = this.accountDiscriminator(accountName);
     return {
       offset: 0,
-      bytes: import_bs58.default.encode(appendData ? import_buffer3.Buffer.concat([discriminator, appendData]) : discriminator)
+      bytes: import_bs582.default.encode(appendData ? import_buffer3.Buffer.concat([discriminator, appendData]) : discriminator)
     };
   }
   size(accountName) {
@@ -36658,7 +37670,7 @@ var WrappedLayout$1 = class extends Layout_2 {
   }
 };
 function publicKey$1(property) {
-  return new WrappedLayout$1(blob3(32), (b2) => new import_web39.PublicKey(b2), (key) => key.toBuffer(), property);
+  return new WrappedLayout$1(blob3(32), (b2) => new import_web310.PublicKey(b2), (key) => key.toBuffer(), property);
 }
 var NONCE_ACCOUNT_LAYOUT = struct7([
   u324("version"),
@@ -36667,8 +37679,8 @@ var NONCE_ACCOUNT_LAYOUT = struct7([
   publicKey$1("nonce"),
   struct7([nu64("lamportsPerSignature")], "feeCalculator")
 ]);
-var TOKEN_PROGRAM_ID2 = new import_web39.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
-var ASSOCIATED_PROGRAM_ID = new import_web39.PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
+var TOKEN_PROGRAM_ID2 = new import_web310.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+var ASSOCIATED_PROGRAM_ID = new import_web310.PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
 var browserPonyfill = { exports: {} };
 (function(module, exports) {
   var global2 = typeof self !== "undefined" ? self : commonjsGlobal;
@@ -37189,14 +38201,14 @@ var EventManager = class {
       throw new Error(`Event listener ${listener} doesn't exist!`);
     }
     const [eventName] = callback;
-    let listeners = this._eventListeners.get(eventName);
-    if (!listeners) {
+    let listeners2 = this._eventListeners.get(eventName);
+    if (!listeners2) {
       throw new Error(`Event listeners don't exist for ${eventName}!`);
     }
     this._eventCallbacks.delete(listener);
-    listeners = listeners.filter((l2) => l2 !== listener);
-    this._eventListeners.set(eventName, listeners);
-    if (listeners.length === 0) {
+    listeners2 = listeners2.filter((l2) => l2 !== listener);
+    this._eventListeners.set(eventName, listeners2);
+    if (listeners2.length === 0) {
       this._eventListeners.delete(eventName);
     }
     if (this._eventCallbacks.size === 0) {
@@ -37343,7 +38355,7 @@ var InstructionNamespaceFactory = class _InstructionNamespaceFactory {
       if (isSet("debug-logs")) {
         console.log("Outgoing account metas:", keys);
       }
-      return new import_web39.TransactionInstruction({
+      return new import_web310.TransactionInstruction({
         keys,
         programId,
         data: encodeFn(idlIx.name, toInstruction(idlIx, ...ixArgs))
@@ -37387,7 +38399,7 @@ var TransactionFactory = class {
     const txFn = (...args) => {
       var _a, _b, _c;
       const [, ctx] = splitArgsAndCtx(idlIx, [...args]);
-      const tx = new import_web39.Transaction();
+      const tx = new import_web310.Transaction();
       if (ctx.preInstructions && ctx.instructions) {
         throw new Error("instructions is deprecated, use preInstructions");
       }
@@ -37579,7 +38591,7 @@ var AccountClient = class {
     if (sub) {
       return sub.ee;
     }
-    const ee = new import_eventemitter3.default();
+    const ee = new import_eventemitter32.default();
     address = translateAddress(address);
     const listener = this._provider.connection.onAccountChange(address, (acc) => {
       const account = this._coder.accounts.decode(this._idlAccount.name, acc.data);
@@ -37614,7 +38626,7 @@ var AccountClient = class {
     if (this._provider.publicKey === void 0) {
       throw new Error("This function requires the Provider interface implementor to have a 'publicKey' field.");
     }
-    return import_web39.SystemProgram.createAccount({
+    return import_web310.SystemProgram.createAccount({
       fromPubkey: this._provider.publicKey,
       newAccountPubkey: signer.publicKey,
       space: sizeOverride !== null && sizeOverride !== void 0 ? sizeOverride : size,
@@ -37668,7 +38680,7 @@ function uint64(property) {
   return new WrappedLayout(blob3(8), (b2) => u643.fromBuffer(b2), (n) => n.toBuffer(), property);
 }
 function publicKey3(property) {
-  return new WrappedLayout(blob3(32), (b2) => new import_web39.PublicKey(b2), (key) => key.toBuffer(), property);
+  return new WrappedLayout(blob3(32), (b2) => new import_web310.PublicKey(b2), (key) => key.toBuffer(), property);
 }
 function coption(layout, property) {
   return new COptionLayout(layout, property);
@@ -37893,7 +38905,7 @@ var AccountsResolver = class {
         const currentPath = [...path, currentName];
         const nextPath = [...path, nextName];
         if (!this.get(currentPath)) {
-          this.set(currentPath, import_web39.PublicKey.findProgramAddressSync([import_buffer.Buffer.from("__event_authority")], this._programId)[0]);
+          this.set(currentPath, import_web310.PublicKey.findProgramAddressSync([import_buffer.Buffer.from("__event_authority")], this._programId)[0]);
         }
         if (!this.get(nextPath)) {
           this.set(nextPath, this._programId);
@@ -37940,7 +38952,7 @@ var AccountsResolver = class {
                 continue;
               }
               const programId = await this.parseProgramId(account, path);
-              const [pubkey] = import_web39.PublicKey.findProgramAddressSync(seeds, programId);
+              const [pubkey] = import_web310.PublicKey.findProgramAddressSync(seeds, programId);
               this.set([...path, name], pubkey);
             }
           } catch {
@@ -37971,7 +38983,7 @@ var AccountsResolver = class {
     if (!buf) {
       throw new Error(`Program seed not resolved: ${account.name}`);
     }
-    return new import_web39.PublicKey(buf);
+    return new import_web310.PublicKey(buf);
   }
   async toBuffer(seed2, path = []) {
     switch (seed2.kind) {
@@ -38606,19 +39618,19 @@ var Program = class _Program {
     return await this._events.removeEventListener(listener);
   }
 };
-new import_web39.PublicKey("11111111111111111111111111111111");
+new import_web310.PublicKey("11111111111111111111111111111111");
 
 // node_modules/@pump-fun/pump-swap-sdk/dist/esm/index.js
-var import_web311 = __toESM(require_index_browser_cjs());
+var import_web312 = __toESM(require_index_browser_cjs());
 var import_bn6 = __toESM(require_bn());
 var import_bn7 = __toESM(require_bn());
 var import_bn8 = __toESM(require_bn());
-var import_web312 = __toESM(require_index_browser_cjs());
 var import_web313 = __toESM(require_index_browser_cjs());
-var import_bn9 = __toESM(require_bn());
 var import_web314 = __toESM(require_index_browser_cjs());
-var import_bn10 = __toESM(require_bn());
+var import_bn9 = __toESM(require_bn());
 var import_web315 = __toESM(require_index_browser_cjs());
+var import_bn10 = __toESM(require_bn());
+var import_web316 = __toESM(require_index_browser_cjs());
 var import_bn11 = __toESM(require_bn());
 var import_bn12 = __toESM(require_bn());
 var __create2 = Object.create;
@@ -40418,27 +41430,27 @@ var require_buffer3 = __commonJS2({
   }
 });
 var import_buffer4 = __toESM2(require_buffer3());
-var PUMP_PROGRAM_ID = new import_web310.PublicKey(
+var PUMP_PROGRAM_ID = new import_web311.PublicKey(
   "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
 );
-var PUMP_AMM_PROGRAM_ID = new import_web310.PublicKey(
+var PUMP_AMM_PROGRAM_ID = new import_web311.PublicKey(
   "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
 );
-var PUMP_FEE_PROGRAM_ID = new import_web310.PublicKey(
+var PUMP_FEE_PROGRAM_ID = new import_web311.PublicKey(
   "pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ"
 );
-var PUMP_MINT = new import_web310.PublicKey(
+var PUMP_MINT = new import_web311.PublicKey(
   "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn"
 );
 var CANONICAL_POOL_INDEX = 0;
 function pumpPda(seeds) {
-  return import_web310.PublicKey.findProgramAddressSync(seeds, PUMP_PROGRAM_ID)[0];
+  return import_web311.PublicKey.findProgramAddressSync(seeds, PUMP_PROGRAM_ID)[0];
 }
 function pumpAmmPda(seeds) {
-  return import_web310.PublicKey.findProgramAddressSync(seeds, PUMP_AMM_PROGRAM_ID)[0];
+  return import_web311.PublicKey.findProgramAddressSync(seeds, PUMP_AMM_PROGRAM_ID)[0];
 }
 function pumpFeePda(seeds) {
-  return import_web310.PublicKey.findProgramAddressSync(seeds, PUMP_FEE_PROGRAM_ID)[0];
+  return import_web311.PublicKey.findProgramAddressSync(seeds, PUMP_FEE_PROGRAM_ID)[0];
 }
 var GLOBAL_CONFIG_PDA = pumpAmmPda([import_buffer4.Buffer.from("global_config")]);
 var PUMP_AMM_EVENT_AUTHORITY_PDA = pumpAmmPda([
@@ -40463,14 +41475,14 @@ function poolPda(index, owner, baseMint, quoteMint) {
 function pumpPoolAuthorityPda(mint) {
   return pumpPda([import_buffer4.Buffer.from("pool-authority"), mint.toBuffer()]);
 }
-var MPL_TOKEN_METADATA_PROGRAM_ID = new import_web310.PublicKey(
+var MPL_TOKEN_METADATA_PROGRAM_ID = new import_web311.PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
 function bondingCurvePda(mint) {
   return pumpPda([import_buffer4.Buffer.from("bonding-curve"), mint.toBuffer()]);
 }
 function metadataPda(mint) {
-  return import_web310.PublicKey.findProgramAddressSync(
+  return import_web311.PublicKey.findProgramAddressSync(
     [
       import_buffer4.Buffer.from("metadata"),
       MPL_TOKEN_METADATA_PROGRAM_ID.toBuffer(),
@@ -40480,7 +41492,7 @@ function metadataPda(mint) {
   )[0];
 }
 function canonicalPoolQuoteMint(bondingCurveQuoteMint) {
-  return bondingCurveQuoteMint.equals(import_web310.PublicKey.default) ? NATIVE_MINT : bondingCurveQuoteMint;
+  return bondingCurveQuoteMint.equals(import_web311.PublicKey.default) ? NATIVE_MINT : bondingCurveQuoteMint;
 }
 function canonicalPumpPoolPda(mint, quoteMint = NATIVE_MINT) {
   return poolPda(
@@ -48357,14 +49369,14 @@ function withdraw(lpAmount, slippage, baseReserve, quoteReserve, totalLpTokens) 
     minQuote
   };
 }
-var USDC_MINT = new import_web313.PublicKey(
+var USDC_MINT = new import_web314.PublicKey(
   "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 );
 var STABLE_QUOTE_MINTS = Object.freeze([
   USDC_MINT
 ]);
 var SOL_LIKE_QUOTE_MINTS = Object.freeze([
-  import_web313.PublicKey.default,
+  import_web314.PublicKey.default,
   NATIVE_MINT,
   NATIVE_MINT_2022
 ]);
@@ -48511,7 +49523,7 @@ function buyBaseInput({
   });
   const lpFee = fee(quoteAmountIn, lpFeeBps);
   const protocolFee = fee(quoteAmountIn, protocolFeeBps);
-  const coinCreatorFee = import_web312.PublicKey.default.equals(coinCreator) ? new import_bn8.default(0) : fee(quoteAmountIn, coinCreatorFeeBps);
+  const coinCreatorFee = import_web313.PublicKey.default.equals(coinCreator) ? new import_bn8.default(0) : fee(quoteAmountIn, coinCreatorFeeBps);
   const totalQuote = quoteAmountIn.add(lpFee).add(protocolFee).add(coinCreatorFee);
   const precision = new import_bn8.default(1e9);
   const slippageFactorFloat = (1 + slippage / 100) * 1e9;
@@ -48562,12 +49574,12 @@ function buyQuoteInput({
     isMayhemMode,
     creatorFeeBps
   });
-  const totalFeeBps = lpFeeBps.add(protocolFeeBps).add(import_web312.PublicKey.default.equals(coinCreator) ? new import_bn8.default(0) : coinCreatorFeeBps);
+  const totalFeeBps = lpFeeBps.add(protocolFeeBps).add(import_web313.PublicKey.default.equals(coinCreator) ? new import_bn8.default(0) : coinCreatorFeeBps);
   const denominator = new import_bn8.default(1e4).add(totalFeeBps);
   let effectiveQuote = quote.mul(new import_bn8.default(1e4)).div(denominator);
   const lpFee = fee(effectiveQuote, lpFeeBps);
   const protocolFee = fee(effectiveQuote, protocolFeeBps);
-  const coinCreatorFee = import_web312.PublicKey.default.equals(coinCreator) ? new import_bn8.default(0) : fee(effectiveQuote, coinCreatorFeeBps);
+  const coinCreatorFee = import_web313.PublicKey.default.equals(coinCreator) ? new import_bn8.default(0) : fee(effectiveQuote, coinCreatorFeeBps);
   const totalWithFees = effectiveQuote.add(lpFee).add(protocolFee).add(coinCreatorFee);
   if (totalWithFees.gt(quote)) {
     effectiveQuote = effectiveQuote.sub(totalWithFees.sub(quote));
@@ -48632,7 +49644,7 @@ function sellBaseInput({
   });
   const lpFee = fee(quoteAmountOut, lpFeeBps);
   const protocolFee = fee(quoteAmountOut, protocolFeeBps);
-  const coinCreatorFee = import_web314.PublicKey.default.equals(coinCreator) ? new import_bn9.default(0) : fee(quoteAmountOut, coinCreatorFeeBps);
+  const coinCreatorFee = import_web315.PublicKey.default.equals(coinCreator) ? new import_bn9.default(0) : fee(quoteAmountOut, coinCreatorFeeBps);
   if (quoteReserve.lt(quoteAmountOut.sub(lpFee))) {
     throw new Error(
       "Insufficient real quote reserves to cover the sell output."
@@ -48707,7 +49719,7 @@ function sellQuoteInput({
     quote,
     lpFeeBps,
     protocolFeeBps,
-    import_web314.PublicKey.default.equals(coinCreator) ? new import_bn9.default(0) : coinCreatorFeeBps
+    import_web315.PublicKey.default.equals(coinCreator) ? new import_bn9.default(0) : coinCreatorFeeBps
   );
   if (rawQuote.gte(effectiveQuoteReserve)) {
     throw new Error(
@@ -48903,7 +49915,7 @@ var PumpAmmSdk = class {
             index,
             baseIn,
             quoteIn,
-            import_web311.SystemProgram.programId,
+            import_web312.SystemProgram.programId,
             false,
             { 0: false },
             { 0: creatorFeeBps },
@@ -49027,7 +50039,7 @@ var PumpAmmSdk = class {
       );
       if (amount.gtn(0)) {
         instructions.push(
-          import_web311.SystemProgram.transfer({
+          import_web312.SystemProgram.transfer({
             fromPubkey: user,
             toPubkey: ata,
             lamports: BigInt(amount.toString())
@@ -49263,7 +50275,7 @@ var PumpAmmSdk = class {
             isSigner: false
           });
         }
-        if (!pool.coinCreator.equals(import_web311.PublicKey.default)) {
+        if (!pool.coinCreator.equals(import_web312.PublicKey.default)) {
           remainingAccounts.push({
             pubkey: poolV2PdaKey,
             isWritable: false,
@@ -49434,7 +50446,7 @@ var PumpAmmSdk = class {
             }
           );
         }
-        if (!pool.coinCreator.equals(import_web311.PublicKey.default)) {
+        if (!pool.coinCreator.equals(import_web312.PublicKey.default)) {
           remainingAccounts.push({
             pubkey: poolV2PdaKey,
             isWritable: false,
@@ -49765,7 +50777,7 @@ var PumpAmmSdk = class {
       ),
       baseTokenProgram,
       quoteTokenProgram,
-      systemProgram: import_web311.SystemProgram.programId,
+      systemProgram: import_web312.SystemProgram.programId,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
       eventAuthority: PUMP_AMM_EVENT_AUTHORITY_PDA,
       program: PUMP_AMM_PROGRAM_ID,
@@ -50706,7 +51718,7 @@ var OnlinePumpAmmSdk = class {
   }
   async claimTokenIncentives(user, payer) {
     const { mint } = await this.fetchGlobalVolumeAccumulator();
-    if (mint.equals(import_web315.PublicKey.default)) {
+    if (mint.equals(import_web316.PublicKey.default)) {
       return [];
     }
     const [mintAccountInfo, userAccumulatorAccountInfo] = await this.connection.getMultipleAccountsInfo([
@@ -50769,27 +51781,27 @@ var OnlinePumpAmmSdk = class {
 };
 
 // node_modules/@pump-fun/pump-sdk/dist/esm/index.js
-var import_web323 = __toESM(require_index_browser_cjs());
+var import_web324 = __toESM(require_index_browser_cjs());
 var import_buffer5 = __toESM(require_buffer());
 
 // node_modules/@pump-fun/agent-payments-sdk/dist/index.js
 init_polyfill();
-var import_web316 = __toESM(require_index_browser_cjs(), 1);
 var import_web317 = __toESM(require_index_browser_cjs(), 1);
 var import_web318 = __toESM(require_index_browser_cjs(), 1);
 var import_web319 = __toESM(require_index_browser_cjs(), 1);
 var import_web320 = __toESM(require_index_browser_cjs(), 1);
+var import_web321 = __toESM(require_index_browser_cjs(), 1);
 var w = { address: "pUmPFn9WvfaN2WTVGnCEtJTd2ATTpvpsKRz6jVzu6u4", metadata: { name: "pump_agent_payments", version: "0.1.0", spec: "0.1.0", description: "Created with Anchor" }, instructions: [{ name: "agent_accept_payment", discriminator: [34, 157, 64, 220, 74, 32, 48, 225], accounts: [{ name: "user", writable: true, signer: true }, { name: "user_token_account", writable: true }, { name: "token_agent_payments" }, { name: "token_agent_associated_account", writable: true, pda: { seeds: [{ kind: "account", path: "token_agent_payments" }, { kind: "const", value: [6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169] }, { kind: "account", path: "currency_mint" }], program: { kind: "const", value: [140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142, 13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216, 219, 233, 248, 89] } } }, { name: "token_agent_payment_in_currency", writable: true, pda: { seeds: [{ kind: "const", value: [112, 97, 121, 109, 101, 110, 116, 45, 105, 110, 45, 99, 117, 114, 114, 101, 110, 99, 121] }, { kind: "account", path: "token_agent_payments.mint", account: "TokenAgentPayments" }, { kind: "account", path: "currency_mint" }] } }, { name: "global_config", pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "invoice_id" }, { name: "currency_mint" }, { name: "token_program" }, { name: "associated_token_program", address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL" }, { name: "system_program", address: "11111111111111111111111111111111" }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [{ name: "amount", type: "u64" }, { name: "memo", type: "u64" }, { name: "start_time", type: "i64" }, { name: "end_time", type: "i64" }] }, { name: "agent_buyback_trigger", discriminator: [95, 231, 193, 2, 245, 75, 125, 155], accounts: [{ name: "global_buyback_authority", writable: true, signer: true }, { name: "mint", writable: true }, { name: "token_agent_payments", pda: { seeds: [{ kind: "const", value: [116, 111, 107, 101, 110, 45, 97, 103, 101, 110, 116, 45, 112, 97, 121, 109, 101, 110, 116, 115] }, { kind: "account", path: "mint" }] } }, { name: "token_agent_payment_in_currency", writable: true, pda: { seeds: [{ kind: "const", value: [112, 97, 121, 109, 101, 110, 116, 45, 105, 110, 45, 99, 117, 114, 114, 101, 110, 99, 121] }, { kind: "account", path: "token_agent_payments.mint", account: "TokenAgentPayments" }, { kind: "account", path: "currency_mint" }] } }, { name: "currency_mint" }, { name: "global_config", pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "swap_program_to_invoke" }, { name: "burn_authority", docs: ["Intentionally called burn_authority", "TO avoid any confusion with the global buyback authority."], pda: { seeds: [{ kind: "const", value: [98, 117, 121, 98, 97, 99, 107, 45, 97, 117, 116, 104, 111, 114, 105, 116, 121] }, { kind: "account", path: "token_agent_payments.mint", account: "TokenAgentPayments" }] } }, { name: "burn_mint_vault", writable: true, pda: { seeds: [{ kind: "account", path: "burn_authority" }, { kind: "const", value: [6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169] }, { kind: "account", path: "mint" }], program: { kind: "const", value: [140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142, 13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216, 219, 233, 248, 89] } } }, { name: "token_program" }, { name: "associated_token_program", address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL" }, { name: "system_program", address: "11111111111111111111111111111111" }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [{ name: "swap_instruction_data", type: "bytes" }] }, { name: "agent_distribute_payments", discriminator: [145, 44, 246, 47, 192, 204, 95, 32], accounts: [{ name: "user", writable: true, signer: true }, { name: "global_config", pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "currency_mint" }, { name: "token_agent_payments" }, { name: "token_agent_payment_in_currency", writable: true, pda: { seeds: [{ kind: "const", value: [112, 97, 121, 109, 101, 110, 116, 45, 105, 110, 45, 99, 117, 114, 114, 101, 110, 99, 121] }, { kind: "account", path: "token_agent_payments.mint", account: "TokenAgentPayments" }, { kind: "account", path: "currency_mint" }] } }, { name: "token_agent_associated_account", writable: true, pda: { seeds: [{ kind: "account", path: "token_agent_payments" }, { kind: "const", value: [6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169] }, { kind: "account", path: "currency_mint" }], program: { kind: "const", value: [140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142, 13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216, 219, 233, 248, 89] } } }, { name: "buyback_authority", pda: { seeds: [{ kind: "const", value: [98, 117, 121, 98, 97, 99, 107, 45, 97, 117, 116, 104, 111, 114, 105, 116, 121] }, { kind: "account", path: "token_agent_payments.mint", account: "TokenAgentPayments" }] } }, { name: "withdraw_authority", pda: { seeds: [{ kind: "const", value: [119, 105, 116, 104, 100, 114, 97, 119, 45, 97, 117, 116, 104, 111, 114, 105, 116, 121] }, { kind: "account", path: "token_agent_payments.mint", account: "TokenAgentPayments" }] } }, { name: "buyback_vault", writable: true, pda: { seeds: [{ kind: "account", path: "buyback_authority" }, { kind: "const", value: [6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169] }, { kind: "account", path: "currency_mint" }], program: { kind: "const", value: [140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142, 13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216, 219, 233, 248, 89] } } }, { name: "withdraw_vault", writable: true, pda: { seeds: [{ kind: "account", path: "withdraw_authority" }, { kind: "const", value: [6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169] }, { kind: "account", path: "currency_mint" }], program: { kind: "const", value: [140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142, 13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216, 219, 233, 248, 89] } } }, { name: "token_program" }, { name: "associated_token_program", address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL" }, { name: "system_program", address: "11111111111111111111111111111111" }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [] }, { name: "agent_initialize", discriminator: [180, 248, 163, 8, 49, 94, 126, 96], accounts: [{ name: "authority", writable: true, signer: true }, { name: "bonding_curve", pda: { seeds: [{ kind: "const", value: [98, 111, 110, 100, 105, 110, 103, 45, 99, 117, 114, 118, 101] }, { kind: "account", path: "mint" }], program: { kind: "const", value: [1, 86, 224, 246, 147, 102, 90, 207, 68, 219, 21, 104, 191, 23, 91, 170, 81, 137, 203, 151, 245, 210, 255, 59, 101, 93, 43, 182, 253, 109, 24, 176] } } }, { name: "global_config", writable: true, pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "mint" }, { name: "token_agent_payments", writable: true, pda: { seeds: [{ kind: "const", value: [116, 111, 107, 101, 110, 45, 97, 103, 101, 110, 116, 45, 112, 97, 121, 109, 101, 110, 116, 115] }, { kind: "account", path: "mint" }] } }, { name: "system_program", address: "11111111111111111111111111111111" }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [{ name: "authority", type: "pubkey" }, { name: "buyback_bps", type: "u16" }] }, { name: "agent_update_authority", discriminator: [237, 228, 227, 224, 226, 198, 167, 83], accounts: [{ name: "authority", writable: true, signer: true }, { name: "global_config", pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "token_agent_payments", writable: true }, { name: "system_program", address: "11111111111111111111111111111111" }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [{ name: "new_authority", type: "pubkey" }] }, { name: "agent_update_buyback_bps", discriminator: [41, 28, 118, 90, 53, 24, 63, 160], accounts: [{ name: "authority", writable: true, signer: true }, { name: "token_agent_payments", writable: true }, { name: "global_config", pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [{ name: "buyback_bps", type: "u16" }] }, { name: "agent_withdraw", discriminator: [13, 149, 99, 245, 171, 171, 185, 53], accounts: [{ name: "authority", writable: true, signer: true }, { name: "token_agent_payments" }, { name: "currency_mint" }, { name: "withdraw_authority", pda: { seeds: [{ kind: "const", value: [119, 105, 116, 104, 100, 114, 97, 119, 45, 97, 117, 116, 104, 111, 114, 105, 116, 121] }, { kind: "account", path: "token_agent_payments.mint", account: "TokenAgentPayments" }] } }, { name: "withdraw_vault", writable: true, pda: { seeds: [{ kind: "account", path: "withdraw_authority" }, { kind: "const", value: [6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133, 126, 255, 0, 169] }, { kind: "account", path: "currency_mint" }], program: { kind: "const", value: [140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142, 13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216, 219, 233, 248, 89] } } }, { name: "receiver_ata", writable: true }, { name: "token_program" }, { name: "associated_token_program", address: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL" }, { name: "system_program", address: "11111111111111111111111111111111" }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [] }, { name: "close_account", discriminator: [125, 255, 149, 14, 110, 34, 72, 24], accounts: [{ name: "account", writable: true }, { name: "user", writable: true, signer: true }, { name: "global_config", pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "system_program", address: "11111111111111111111111111111111" }], args: [] }, { name: "extend_account", discriminator: [234, 102, 194, 203, 150, 72, 62, 229], accounts: [{ name: "account", writable: true }, { name: "user", writable: true, signer: true }, { name: "system_program", address: "11111111111111111111111111111111" }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [] }, { name: "global_add_new_currency", discriminator: [46, 135, 47, 120, 118, 204, 177, 224], accounts: [{ name: "authority", writable: true, signer: true }, { name: "global_config", writable: true, pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "mint" }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [] }, { name: "global_config_initialize", discriminator: [61, 23, 208, 192, 232, 52, 8, 66], accounts: [{ name: "authority", writable: true, signer: true }, { name: "global_config", writable: true, pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "system_program", address: "11111111111111111111111111111111" }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [{ name: "protocol_authority", type: "pubkey" }, { name: "buyback_authority", type: "pubkey" }] }, { name: "global_update_authorities", discriminator: [91, 137, 72, 77, 183, 184, 168, 125], accounts: [{ name: "authority", writable: true, signer: true }, { name: "global_config", writable: true, pda: { seeds: [{ kind: "const", value: [103, 108, 111, 98, 97, 108, 45, 99, 111, 110, 102, 105, 103] }] } }, { name: "event_authority", pda: { seeds: [{ kind: "const", value: [95, 95, 101, 118, 101, 110, 116, 95, 97, 117, 116, 104, 111, 114, 105, 116, 121] }] } }, { name: "program" }], args: [{ name: "protocol_authority", type: { option: "pubkey" } }, { name: "buyback_authority", type: { option: "pubkey" } }] }], accounts: [{ name: "BondingCurve", discriminator: [23, 183, 248, 55, 96, 216, 172, 96] }, { name: "GlobalConfig", discriminator: [149, 8, 156, 202, 160, 252, 176, 217] }, { name: "TokenAgentPaymentInCurrency", discriminator: [225, 195, 81, 227, 115, 43, 25, 177] }, { name: "TokenAgentPayments", discriminator: [136, 241, 242, 217, 173, 77, 112, 186] }], events: [{ name: "AgentAcceptPaymentEvent", discriminator: [114, 190, 188, 192, 105, 79, 41, 147] }, { name: "AgentBuybackTriggerEvent", discriminator: [139, 240, 9, 225, 214, 63, 232, 165] }, { name: "AgentDistributePaymentsEvent", discriminator: [137, 116, 114, 140, 54, 111, 230, 26] }, { name: "AgentInitializeEvent", discriminator: [192, 5, 183, 151, 0, 64, 100, 207] }, { name: "AgentUpdateAuthorityEvent", discriminator: [36, 212, 117, 235, 74, 166, 60, 16] }, { name: "AgentUpdateBuybackBpsEvent", discriminator: [165, 251, 40, 19, 114, 26, 128, 232] }, { name: "AgentWithdrawEvent", discriminator: [174, 231, 201, 69, 254, 183, 49, 85] }, { name: "ExtendAccountEvent", discriminator: [97, 97, 215, 144, 93, 146, 22, 124] }, { name: "GlobalAddNewCurrencyEvent", discriminator: [130, 202, 37, 248, 241, 182, 233, 35] }, { name: "GlobalConfigInitializeEvent", discriminator: [241, 51, 222, 190, 142, 245, 176, 53] }, { name: "GlobalUpdateAuthoritiesEvent", discriminator: [82, 27, 22, 232, 53, 66, 35, 207] }], errors: [{ code: 6e3, name: "UnauthorizedSigner", msg: "The given account is not authorized to execute this instruction." }, { code: 6001, name: "CurrencyAlreadySupported", msg: "The given currency is already supported." }, { code: 6002, name: "MaxCurrenciesReached", msg: "The maximum number of currencies has been reached." }, { code: 6003, name: "InvalidBuybackBps", msg: "The buyback basis points is greater than 10000." }, { code: 6004, name: "CurrencyNotSupported", msg: "The given currency is not supported." }, { code: 6005, name: "MathOverflow", msg: "Math overflow." }, { code: 6006, name: "InvalidRemainingAccountAddress", msg: "The given remaining account address is invalid." }, { code: 6007, name: "PaymentVaultNotEmpty", msg: "The payment vault is not empty. Distribute the payments first." }, { code: 6008, name: "InvalidInvoiceAccount", msg: "The invoice account does not match the expected PDA seeds" }, { code: 6009, name: "InvalidProgramToInvoke", msg: "The program to invoke is not allowed." }, { code: 6010, name: "InvalidCallbackProgram", msg: "The callback program is invalid." }, { code: 6011, name: "SwapFailedAmountDidNotIncrease", msg: "The swap failed and the amount did not increase." }, { code: 6012, name: "AccountTypeNotSupported", msg: "The account type is not supported for extension." }], types: [{ name: "AgentAcceptPaymentEvent", type: { kind: "struct", fields: [{ name: "user", type: "pubkey" }, { name: "tokenized_agent_mint", type: "pubkey" }, { name: "token_agent_payments", type: "pubkey" }, { name: "currency_mint", type: "pubkey" }, { name: "amount", type: "u64" }, { name: "memo", type: "u64" }, { name: "start_time", type: "i64" }, { name: "end_time", type: "i64" }, { name: "invoice_id", type: "pubkey" }, { name: "agent_post_balance", type: "u64" }, { name: "timestamp", type: "i64" }] } }, { name: "AgentBuybackTriggerEvent", type: { kind: "struct", fields: [{ name: "token_agent_payments", type: "pubkey" }, { name: "mint", type: "pubkey" }, { name: "amount_burned", type: "u64" }, { name: "swap_program", type: "pubkey" }, { name: "new_tokens_bought_and_burned_for_currency", type: "u64" }, { name: "timestamp", type: "i64" }] } }, { name: "AgentDistributePaymentsEvent", type: { kind: "struct", fields: [{ name: "token_agent_payments", type: "pubkey" }, { name: "currency_mint", type: "pubkey" }, { name: "buyback_bps", type: "u16" }, { name: "buyback_amount", type: "u64" }, { name: "withdraw_amount", type: "u64" }, { name: "timestamp", type: "i64" }] } }, { name: "AgentInitializeEvent", type: { kind: "struct", fields: [{ name: "token_agent_payments", type: "pubkey" }, { name: "mint", type: "pubkey" }, { name: "authority", type: "pubkey" }, { name: "buyback_bps", type: "u16" }, { name: "timestamp", type: "i64" }, { name: "tokenized_agent_sequence", type: "u64" }] } }, { name: "AgentUpdateAuthorityEvent", type: { kind: "struct", fields: [{ name: "token_agent_payments", type: "pubkey" }, { name: "old_authority", type: "pubkey" }, { name: "new_authority", type: "pubkey" }, { name: "timestamp", type: "i64" }] } }, { name: "AgentUpdateBuybackBpsEvent", type: { kind: "struct", fields: [{ name: "token_agent_payments", type: "pubkey" }, { name: "mint", type: "pubkey" }, { name: "old_buyback_bps", type: "u16" }, { name: "new_buyback_bps", type: "u16" }, { name: "timestamp", type: "i64" }] } }, { name: "AgentWithdrawEvent", type: { kind: "struct", fields: [{ name: "token_agent_payments", type: "pubkey" }, { name: "currency_mint", type: "pubkey" }, { name: "amount", type: "u64" }, { name: "receiver", type: "pubkey" }, { name: "timestamp", type: "i64" }] } }, { name: "BondingCurve", type: { kind: "struct", fields: [{ name: "virtual_token_reserves", type: "u64" }, { name: "virtual_sol_reserves", type: "u64" }, { name: "real_token_reserves", type: "u64" }, { name: "real_sol_reserves", type: "u64" }, { name: "token_total_supply", type: "u64" }, { name: "complete", type: "bool" }, { name: "creator", type: "pubkey" }, { name: "is_mayhem_mode", type: "bool" }] } }, { name: "ExtendAccountEvent", type: { kind: "struct", fields: [{ name: "account", type: "pubkey" }, { name: "user", type: "pubkey" }, { name: "current_size", type: "u64" }, { name: "new_size", type: "u64" }, { name: "timestamp", type: "i64" }] } }, { name: "GlobalAddNewCurrencyEvent", type: { kind: "struct", fields: [{ name: "global_config", type: "pubkey" }, { name: "currency_mint", type: "pubkey" }, { name: "timestamp", type: "i64" }] } }, { name: "GlobalConfig", type: { kind: "struct", fields: [{ name: "bump", type: "u8" }, { name: "protocol_authority", type: "pubkey" }, { name: "buyback_authority", type: "pubkey" }, { name: "supported_currencies_mint", type: { array: ["pubkey", 10] } }, { name: "tokenized_agent_sequence", type: "u64" }] } }, { name: "GlobalConfigInitializeEvent", type: { kind: "struct", fields: [{ name: "global_config", type: "pubkey" }, { name: "protocol_authority", type: "pubkey" }, { name: "buyback_authority", type: "pubkey" }, { name: "timestamp", type: "i64" }] } }, { name: "GlobalUpdateAuthoritiesEvent", type: { kind: "struct", fields: [{ name: "global_config", type: "pubkey" }, { name: "protocol_authority", type: { option: "pubkey" } }, { name: "buyback_authority", type: { option: "pubkey" } }, { name: "timestamp", type: "i64" }] } }, { name: "TokenAgentPaymentInCurrency", type: { kind: "struct", fields: [{ name: "mint", type: "pubkey" }, { name: "currency_mint", type: "pubkey" }, { name: "total_invoice_payments_made", type: "u64" }, { name: "total_buyback", type: "u64" }, { name: "total_withdrawals", type: "u64" }, { name: "tokens_bought_back_and_burned", type: "u64" }] } }, { name: "TokenAgentPayments", type: { kind: "struct", fields: [{ name: "bump", type: "u8" }, { name: "mint", type: "pubkey" }, { name: "authority", type: "pubkey" }, { name: "buyback_bps", type: "u16" }] } }] };
 function h(a2) {
-  let e = { publicKey: import_web317.PublicKey.default, signTransaction: () => Promise.reject(), signAllTransactions: () => Promise.reject() };
+  let e = { publicKey: import_web318.PublicKey.default, signTransaction: () => Promise.reject(), signAllTransactions: () => Promise.reject() };
   return new Program(w, new AnchorProvider(a2, e, {}));
 }
 var g = h(null);
 function P(a2) {
   return a2 ? h(a2) : g;
 }
-var l = new import_web319.PublicKey("pUmPFn9WvfaN2WTVGnCEtJTd2ATTpvpsKRz6jVzu6u4");
-var G = new import_web319.PublicKey("6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P");
+var l = new import_web320.PublicKey("pUmPFn9WvfaN2WTVGnCEtJTd2ATTpvpsKRz6jVzu6u4");
+var G = new import_web320.PublicKey("6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P");
 var O = import_buffer.Buffer.from("global-config");
 var R = import_buffer.Buffer.from("token-agent-payments");
 var U = import_buffer.Buffer.from("payment-in-currency");
@@ -50798,25 +51810,25 @@ var S = import_buffer.Buffer.from("buyback-authority");
 var K = import_buffer.Buffer.from("withdraw-authority");
 var W = import_buffer.Buffer.from("bonding-curve");
 function k() {
-  return import_web318.PublicKey.findProgramAddressSync([O], l);
+  return import_web319.PublicKey.findProgramAddressSync([O], l);
 }
 function p(a2) {
-  return import_web318.PublicKey.findProgramAddressSync([R, a2.toBuffer()], l);
+  return import_web319.PublicKey.findProgramAddressSync([R, a2.toBuffer()], l);
 }
 function T(a2, e) {
-  return import_web318.PublicKey.findProgramAddressSync([U, a2.toBuffer(), e.toBuffer()], l);
+  return import_web319.PublicKey.findProgramAddressSync([U, a2.toBuffer(), e.toBuffer()], l);
 }
 function V(a2, e, n, t, r, o) {
-  return import_web318.PublicKey.findProgramAddressSync([M, a2.toBuffer(), e.toBuffer(), n.toArrayLike(import_buffer.Buffer, "le", 8), t.toArrayLike(import_buffer.Buffer, "le", 8), r.toArrayLike(import_buffer.Buffer, "le", 8), o.toArrayLike(import_buffer.Buffer, "le", 8)], l);
+  return import_web319.PublicKey.findProgramAddressSync([M, a2.toBuffer(), e.toBuffer(), n.toArrayLike(import_buffer.Buffer, "le", 8), t.toArrayLike(import_buffer.Buffer, "le", 8), r.toArrayLike(import_buffer.Buffer, "le", 8), o.toArrayLike(import_buffer.Buffer, "le", 8)], l);
 }
 function A(a2) {
-  return import_web318.PublicKey.findProgramAddressSync([S, a2.toBuffer()], l);
+  return import_web319.PublicKey.findProgramAddressSync([S, a2.toBuffer()], l);
 }
 function f2(a2) {
-  return import_web318.PublicKey.findProgramAddressSync([K, a2.toBuffer()], l);
+  return import_web319.PublicKey.findProgramAddressSync([K, a2.toBuffer()], l);
 }
 function F(a2) {
-  return import_web318.PublicKey.findProgramAddressSync([W, a2.toBuffer()], G);
+  return import_web319.PublicKey.findProgramAddressSync([W, a2.toBuffer()], G);
 }
 function C(a2) {
   return new import_bn2.default(a2.toString());
@@ -50841,7 +51853,7 @@ var v = class a {
     if (!o) throw new Error("PumpAgentOffline.updateBuybackBps requires options.supportedCurrenciesMint.");
     let [i2] = p(this.mint), [s] = k(), m = [];
     for (let u of o) {
-      if (u.equals(import_web320.PublicKey.default)) continue;
+      if (u.equals(import_web321.PublicKey.default)) continue;
       let c = getAssociatedTokenAddressSync(u, i2, true);
       m.push({ pubkey: c, isWritable: false, isSigner: false });
     }
@@ -50872,12 +51884,12 @@ var v = class a {
     return this.program.methods.agentUpdateAuthority(t).accountsPartial({ authority: n, tokenAgentPayments: r }).instruction();
   }
 };
-var Be = new import_web316.PublicKey(w.address);
+var Be = new import_web317.PublicKey(w.address);
 
 // node_modules/@pump-fun/pump-sdk/dist/esm/index.js
-var import_web324 = __toESM(require_index_browser_cjs());
-var import_bn15 = __toESM(require_bn());
 var import_web325 = __toESM(require_index_browser_cjs());
+var import_bn15 = __toESM(require_bn());
+var import_web326 = __toESM(require_index_browser_cjs());
 var import_bn16 = __toESM(require_bn());
 var import_bn17 = __toESM(require_bn());
 var pump_default = {
@@ -66106,17 +67118,17 @@ var QuotePoolNotFoundError = class extends Error {
 };
 var ONE_BILLION_SUPPLY = new import_bn14.default(1e15);
 var SOL_LIKE_QUOTE_MINTS2 = Object.freeze([
-  import_web322.PublicKey.default,
+  import_web323.PublicKey.default,
   NATIVE_MINT,
   NATIVE_MINT_2022
 ]);
 var STABLE_QUOTE_MINTS2 = Object.freeze([
-  new import_web322.PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
+  new import_web323.PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
 ]);
 function getFeeRecipient2(global2, mayhemMode) {
   const [primary, ...others] = mayhemMode ? [global2.reservedFeeRecipient, ...global2.reservedFeeRecipients] : [global2.feeRecipient, ...global2.feeRecipients];
   const feeRecipients = [primary, ...others].filter(
-    (key) => !key.equals(import_web322.PublicKey.default)
+    (key) => !key.equals(import_web323.PublicKey.default)
   );
   if (feeRecipients.length === 0) {
     return primary;
@@ -81890,11 +82902,11 @@ function readPoolFields({ data }) {
   if (data.length < 211) {
     return null;
   }
-  const key = (offset2) => new import_web325.PublicKey(data.subarray(offset2, offset2 + 32));
+  const key = (offset2) => new import_web326.PublicKey(data.subarray(offset2, offset2 + 32));
   return {
     baseVault: key(139),
     quoteVault: key(171),
-    coinCreator: data.length >= 243 ? key(211) : import_web325.PublicKey.default,
+    coinCreator: data.length >= 243 ? key(211) : import_web326.PublicKey.default,
     isMayhemMode: data.length >= 244 && data[243] !== 0,
     isCashbackCoin: data.length >= 245 && data[244] !== 0,
     virtualQuoteReserves: data.length >= 261 ? new import_bn16.default(data.subarray(245, 261), "le").fromTwos(128) : new import_bn16.default(0),
@@ -82764,7 +83776,7 @@ var OnlinePumpSdk = class {
       canonicalPumpPoolPdaWithQuote(mint, quoteMint)
     );
     return [
-      import_web325.ComputeBudgetProgram.setComputeUnitLimit({
+      import_web326.ComputeBudgetProgram.setComputeUnitLimit({
         units: ADMIN_CTO_COMPUTE_UNIT_LIMIT
       }),
       ...await creatorFeeSweepInstructions({
@@ -83053,13 +84065,13 @@ var OnlinePumpSdk = class {
     }
     const preInfo = await this.connection.getAccountInfo(outAta);
     const before = tokenAccountAmount(outAta, preInfo, output.tokenProgram);
-    const transaction = new import_web325.VersionedTransaction(
-      new import_web325.TransactionMessage({
+    const transaction = new import_web326.VersionedTransaction(
+      new import_web326.TransactionMessage({
         payerKey: user,
         // Replaced by the node (`replaceRecentBlockhash`).
-        recentBlockhash: import_web325.PublicKey.default.toBase58(),
+        recentBlockhash: import_web326.PublicKey.default.toBase58(),
         instructions: [
-          import_web325.ComputeBudgetProgram.setComputeUnitLimit({ units: 14e5 }),
+          import_web326.ComputeBudgetProgram.setComputeUnitLimit({ units: 14e5 }),
           ...instructions
         ]
       }).compileToV0Message(addressLookupTables)
@@ -83095,7 +84107,7 @@ ${(value.logs ?? []).join("\n")}`
     }
     const afterInfo = {
       ...after,
-      owner: new import_web325.PublicKey(after.owner),
+      owner: new import_web326.PublicKey(after.owner),
       data: import_buffer.Buffer.from(after.data[0], "base64")
     };
     return tokenAccountAmount(outAta, afterInfo, output.tokenProgram).sub(
@@ -83150,7 +84162,7 @@ ${(value.logs ?? []).join("\n")}`
   }
   async claimTokenIncentives(user, payer) {
     const { mint } = await this.fetchGlobalVolumeAccumulator();
-    if (mint.equals(import_web325.PublicKey.default)) {
+    if (mint.equals(import_web326.PublicKey.default)) {
       return [];
     }
     const [mintAccountInfo, userAccumulatorAccountInfo] = await this.connection.getMultipleAccountsInfo([
@@ -83267,7 +84279,7 @@ ${(value.logs ?? []).join("\n")}`
    *   may initialize the pump vault ATA; defaults to `simulationSigner`.
    * @returns The minimum distributable fee information including whether distribution is possible
    */
-  async getMinimumDistributableFee(mint, simulationSigner = new import_web325.PublicKey(
+  async getMinimumDistributableFee(mint, simulationSigner = new import_web326.PublicKey(
     "UqN2p5bAzBqYdHXcgB6WLtuVrdvmy9JSAtgqZb3CMKw"
   ), options = {}) {
     const state = await this.fetchDistributionState(mint, options);
@@ -83287,8 +84299,8 @@ ${(value.logs ?? []).join("\n")}`
       })
     );
     const { blockhash } = await this.connection.getLatestBlockhash();
-    const tx = new import_web325.VersionedTransaction(
-      new import_web325.TransactionMessage({
+    const tx = new import_web326.VersionedTransaction(
+      new import_web326.TransactionMessage({
         payerKey: simulationSigner,
         recentBlockhash: blockhash,
         instructions
@@ -83484,7 +84496,7 @@ function getPumpProgram(connection) {
     new AnchorProvider(connection, null, {})
   );
 }
-var PUMP_PROGRAM_ID2 = new import_web324.PublicKey(
+var PUMP_PROGRAM_ID2 = new import_web325.PublicKey(
   "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
 );
 function getPumpAmmProgram2(connection) {
@@ -83493,13 +84505,13 @@ function getPumpAmmProgram2(connection) {
     new AnchorProvider(connection, null, {})
   );
 }
-var PUMP_AMM_PROGRAM_ID2 = new import_web324.PublicKey(
+var PUMP_AMM_PROGRAM_ID2 = new import_web325.PublicKey(
   "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
 );
-var MAYHEM_PROGRAM_ID = new import_web324.PublicKey(
+var MAYHEM_PROGRAM_ID = new import_web325.PublicKey(
   "MAyhSmzXzV1pTf7LsNkrNwkWKTo4ougAJ1PPg47MD4e"
 );
-var PUMP_FEE_PROGRAM_ID2 = new import_web324.PublicKey(
+var PUMP_FEE_PROGRAM_ID2 = new import_web325.PublicKey(
   "pfeeUxB6jkeY1Hxd7CsFCAjcbHA9rWtchMGdZ6VojVZ"
 );
 var BONDING_CURVE_SIZE = 166;
@@ -83579,7 +84591,7 @@ function assertCreateV2FlagsAllowed({
 function createdCurveCreator(mint, creator, holderReward) {
   return holderReward ? holderRewardsPda(mint) : creator;
 }
-var PUMP_TOKEN_MINT = new import_web324.PublicKey(
+var PUMP_TOKEN_MINT = new import_web325.PublicKey(
   "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn"
 );
 var MAX_SHAREHOLDERS = 10;
@@ -83642,11 +84654,11 @@ function createAndBuyQuote(quoteMint, quoteTokenProgram) {
 var DEFAULT_VAULT_QUOTE_CANDIDATES = Object.freeze([
   { mint: NATIVE_MINT, tokenProgram: TOKEN_PROGRAM_ID },
   {
-    mint: new import_web324.PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+    mint: new import_web325.PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
     tokenProgram: TOKEN_PROGRAM_ID
   },
   {
-    mint: new import_web324.PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"),
+    mint: new import_web325.PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"),
     tokenProgram: TOKEN_PROGRAM_ID
   }
 ]);
@@ -84747,7 +85759,7 @@ var PumpSdk = class {
       poolBaseTokenAccount,
       pool,
       poolAuthority,
-      systemProgram: import_web324.SystemProgram.programId,
+      systemProgram: import_web325.SystemProgram.programId,
       pumpAmm: PUMP_AMM_PROGRAM_ID2,
       pumpAmmEventAuthority: getEventAuthorityPda(PUMP_AMM_PROGRAM_ID2),
       eventAuthority: getEventAuthorityPda(PUMP_PROGRAM_ID2),
@@ -84953,7 +85965,7 @@ var PumpSdk = class {
       quoteMint,
       quoteTokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      systemProgram: import_web324.SystemProgram.programId,
+      systemProgram: import_web325.SystemProgram.programId,
       bondingCurve: bondingCurvePda2(mint),
       currentCreator,
       currentCreatorQuoteTokenAccount: ata(currentCreator),
@@ -84974,7 +85986,7 @@ var PumpSdk = class {
       eventAuthority: PUMP_EVENT_AUTHORITY_PDA,
       program: PUMP_PROGRAM_ID2
     }).instruction();
-    if (!currentCreator.equals(import_web324.PublicKey.default)) {
+    if (!currentCreator.equals(import_web325.PublicKey.default)) {
       for (const key of instruction.keys) {
         if (key.pubkey.equals(currentCreator)) {
           key.isWritable = true;
@@ -85033,7 +86045,7 @@ var PumpSdk = class {
       quoteMint,
       quoteTokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      systemProgram: import_web324.SystemProgram.programId,
+      systemProgram: import_web325.SystemProgram.programId,
       eventAuthority: PUMP_EVENT_AUTHORITY_PDA,
       program: PUMP_PROGRAM_ID2
     }).remainingAccounts(remainingAccounts).instruction();
@@ -86031,7 +87043,7 @@ var PumpSdk = class {
     return [
       ...solIn ? [createAta(input)] : [],
       ...wrapsInput ? [
-        import_web324.SystemProgram.transfer({
+        import_web325.SystemProgram.transfer({
           fromPubkey: user,
           toPubkey: ata(input),
           lamports: BigInt(params.amountIn.toString())
@@ -86300,7 +87312,7 @@ var PumpSdk = class {
       quoteMint,
       tokenProgram: quoteTokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      systemProgram: import_web324.SystemProgram.programId
+      systemProgram: import_web325.SystemProgram.programId
     }).remainingAccounts([...remainingAccounts]).instruction();
   }
   /**
@@ -86418,7 +87430,7 @@ var PumpSdk = class {
       quoteMint,
       quoteTokenProgram,
       associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      systemProgram: import_web324.SystemProgram.programId,
+      systemProgram: import_web325.SystemProgram.programId,
       payer
     }).remainingAccounts([...remainingAccounts]).instruction();
   }
@@ -86648,7 +87660,7 @@ var PUMP_EVENT_AUTHORITY_PDA = getEventAuthorityPda(PUMP_PROGRAM_ID2);
 var PUMP_AMM_EVENT_AUTHORITY_PDA2 = getEventAuthorityPda(PUMP_AMM_PROGRAM_ID2);
 var PUMP_FEE_EVENT_AUTHORITY_PDA = getEventAuthorityPda(PUMP_FEE_PROGRAM_ID2);
 function getEventAuthorityPda(programId) {
-  return import_web323.PublicKey.findProgramAddressSync(
+  return import_web324.PublicKey.findProgramAddressSync(
     [import_buffer5.Buffer.from("__event_authority")],
     programId
   )[0];
@@ -86656,13 +87668,13 @@ function getEventAuthorityPda(programId) {
 function bondingCurvePda2(mint) {
   return pumpPda([
     import_buffer5.Buffer.from("bonding-curve"),
-    new import_web323.PublicKey(mint).toBuffer()
+    new import_web324.PublicKey(mint).toBuffer()
   ]);
 }
 function bondingCurveV2Pda(mint) {
   return pumpPda([
     import_buffer5.Buffer.from("bonding-curve-v2"),
-    new import_web323.PublicKey(mint).toBuffer()
+    new import_web324.PublicKey(mint).toBuffer()
   ]);
 }
 function creatorVaultPda(creator) {
@@ -86701,19 +87713,19 @@ function userVolumeAccumulatorPda2(user, program = PUMP_PROGRAM_ID2) {
   return pumpAmmPda([import_buffer5.Buffer.from("user_volume_accumulator"), user.toBuffer()]);
 }
 var getGlobalParamsPda = () => {
-  return import_web323.PublicKey.findProgramAddressSync(
+  return import_web324.PublicKey.findProgramAddressSync(
     [import_buffer5.Buffer.from("global-params")],
     MAYHEM_PROGRAM_ID
   )[0];
 };
 var getMayhemStatePda = (mint) => {
-  return import_web323.PublicKey.findProgramAddressSync(
+  return import_web324.PublicKey.findProgramAddressSync(
     [import_buffer5.Buffer.from("mayhem-state"), mint.toBuffer()],
     MAYHEM_PROGRAM_ID
   )[0];
 };
 var getSolVaultPda = () => {
-  return import_web323.PublicKey.findProgramAddressSync(
+  return import_web324.PublicKey.findProgramAddressSync(
     [import_buffer5.Buffer.from("sol-vault")],
     MAYHEM_PROGRAM_ID
   )[0];
@@ -86729,11 +87741,11 @@ var getTokenVaultPda = (mintPubkey) => {
 var feeSharingConfigPda2 = (mint) => {
   return pumpFeePda([import_buffer5.Buffer.from("sharing-config"), mint.toBuffer()]);
 };
-var isLegacyQuoteMint = (quoteMint) => quoteMint.equals(NATIVE_MINT) || quoteMint.equals(import_web323.PublicKey.default);
+var isLegacyQuoteMint = (quoteMint) => quoteMint.equals(NATIVE_MINT) || quoteMint.equals(import_web324.PublicKey.default);
 var normalizeQuoteMint = (quoteMint) => !quoteMint || isLegacyQuoteMint(quoteMint) ? NATIVE_MINT : quoteMint;
 var quoteAta = (owner, quoteMint, quoteTokenProgram) => getAssociatedTokenAddressSync(quoteMint, owner, true, quoteTokenProgram);
 var ammCreatorVaultPda = (creator) => {
-  return import_web323.PublicKey.findProgramAddressSync(
+  return import_web324.PublicKey.findProgramAddressSync(
     [import_buffer5.Buffer.from("creator_vault"), creator.toBuffer()],
     PUMP_AMM_PROGRAM_ID2
   )[0];
@@ -86752,14 +87764,14 @@ var donationFeePda = (mint, configId) => {
     configId.toBuffer()
   ]);
 };
-var DONATION_RELAY_PROGRAM_ID_MAINNET = new import_web323.PublicKey(
+var DONATION_RELAY_PROGRAM_ID_MAINNET = new import_web324.PublicKey(
   "RLAYHr9TRFcKB2ubYQhspcnXiaGpaVzNQvHytt47RZu"
 );
-var DONATION_RELAY_PROGRAM_ID_DEVNET = new import_web323.PublicKey(
+var DONATION_RELAY_PROGRAM_ID_DEVNET = new import_web324.PublicKey(
   "DRLYxueWz6iymdsaRCER6iv6v9zL7gFWANwDL2V5VUx1"
 );
 var donationRelayPda = (seeds, donationRelayProgramId) => {
-  return import_web323.PublicKey.findProgramAddressSync(seeds, donationRelayProgramId)[0];
+  return import_web324.PublicKey.findProgramAddressSync(seeds, donationRelayProgramId)[0];
 };
 var donationRelayEpochTrackerPda = (configId, quoteMint, donationRelayProgramId) => {
   return donationRelayPda(
@@ -86822,7 +87834,7 @@ function pumpQuoteChain(quote) {
 }
 function rootTarget(global2, root, quoteControl) {
   const curve = root.bondingCurve;
-  if (curve.quoteMint.equals(import_web321.PublicKey.default)) {
+  if (curve.quoteMint.equals(import_web322.PublicKey.default)) {
     return global2.initialVirtualSolReserves;
   }
   if (global2.whitelistedQuoteMints.some((m) => m.equals(curve.quoteMint))) {
@@ -86910,7 +87922,7 @@ function chainCoinHop(global2, coin) {
       return remaining;
     }
     const poolQuote = curve.realQuoteReserves.add(remainderPrice).sub(
-      curve.quoteMint.equals(import_web321.PublicKey.default) ? global2.poolMigrationFee : new import_bn13.default(0)
+      curve.quoteMint.equals(import_web322.PublicKey.default) ? global2.poolMigrationFee : new import_bn13.default(0)
     );
     if (poolQuote.isNeg()) {
       throw new Error(
@@ -86957,7 +87969,7 @@ function getBuyTokenAmountFromSolAmountQuote({
 }
 function getStaticRandomFeeRecipient() {
   const randomIndex = Math.floor(Math.random() * CURRENT_FEE_RECIPIENTS.length);
-  return new import_web321.PublicKey(CURRENT_FEE_RECIPIENTS[randomIndex]);
+  return new import_web322.PublicKey(CURRENT_FEE_RECIPIENTS[randomIndex]);
 }
 var CURRENT_FEE_RECIPIENTS = [
   "62qc2CNXwrYqQScmEdiZFFAnJR262PxWEuNQtxfafNgV",
@@ -86973,10 +87985,10 @@ function getStaticRandomFeeRecipientForBuyback() {
   const randomIndex = Math.floor(
     Math.random() * CURRENT_FEE_RECIPIENTS_FOR_BUYBACK.length
   );
-  return new import_web321.PublicKey(CURRENT_FEE_RECIPIENTS_FOR_BUYBACK[randomIndex]);
+  return new import_web322.PublicKey(CURRENT_FEE_RECIPIENTS_FOR_BUYBACK[randomIndex]);
 }
 function getBuybackFeeRecipientForTokenQuote() {
-  return new import_web321.PublicKey(CURRENT_FEE_RECIPIENTS_FOR_BUYBACK[0]);
+  return new import_web322.PublicKey(CURRENT_FEE_RECIPIENTS_FOR_BUYBACK[0]);
 }
 var CURRENT_FEE_RECIPIENTS_FOR_BUYBACK = [
   "5YxQFdt3Tr9zJLvkFccqXVUwhdTWJQc1fFg2YPbxvxeD",
@@ -86989,145 +88001,6 @@ var CURRENT_FEE_RECIPIENTS_FOR_BUYBACK = [
   "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW"
 ];
 
-// node_modules/bs58/src/esm/index.js
-init_polyfill();
-
-// node_modules/base-x/src/esm/index.js
-init_polyfill();
-function base(ALPHABET2) {
-  if (ALPHABET2.length >= 255) {
-    throw new TypeError("Alphabet too long");
-  }
-  const BASE_MAP = new Uint8Array(256);
-  for (let j = 0; j < BASE_MAP.length; j++) {
-    BASE_MAP[j] = 255;
-  }
-  for (let i2 = 0; i2 < ALPHABET2.length; i2++) {
-    const x = ALPHABET2.charAt(i2);
-    const xc = x.charCodeAt(0);
-    if (BASE_MAP[xc] !== 255) {
-      throw new TypeError(x + " is ambiguous");
-    }
-    BASE_MAP[xc] = i2;
-  }
-  const BASE2 = ALPHABET2.length;
-  const LEADER = ALPHABET2.charAt(0);
-  const FACTOR = Math.log(BASE2) / Math.log(256);
-  const iFACTOR = Math.log(256) / Math.log(BASE2);
-  function encode(source) {
-    if (source instanceof Uint8Array) {
-    } else if (ArrayBuffer.isView(source)) {
-      source = new Uint8Array(source.buffer, source.byteOffset, source.byteLength);
-    } else if (Array.isArray(source)) {
-      source = Uint8Array.from(source);
-    }
-    if (!(source instanceof Uint8Array)) {
-      throw new TypeError("Expected Uint8Array");
-    }
-    if (source.length === 0) {
-      return "";
-    }
-    let zeroes = 0;
-    let length = 0;
-    let pbegin = 0;
-    const pend = source.length;
-    while (pbegin !== pend && source[pbegin] === 0) {
-      pbegin++;
-      zeroes++;
-    }
-    const size = (pend - pbegin) * iFACTOR + 1 >>> 0;
-    const b58 = new Uint8Array(size);
-    while (pbegin !== pend) {
-      let carry = source[pbegin];
-      let i2 = 0;
-      for (let it1 = size - 1; (carry !== 0 || i2 < length) && it1 !== -1; it1--, i2++) {
-        carry += 256 * b58[it1] >>> 0;
-        b58[it1] = carry % BASE2 >>> 0;
-        carry = carry / BASE2 >>> 0;
-      }
-      if (carry !== 0) {
-        throw new Error("Non-zero carry");
-      }
-      length = i2;
-      pbegin++;
-    }
-    let it2 = size - length;
-    while (it2 !== size && b58[it2] === 0) {
-      it2++;
-    }
-    let str2 = LEADER.repeat(zeroes);
-    for (; it2 < size; ++it2) {
-      str2 += ALPHABET2.charAt(b58[it2]);
-    }
-    return str2;
-  }
-  function decodeUnsafe(source) {
-    if (typeof source !== "string") {
-      throw new TypeError("Expected String");
-    }
-    if (source.length === 0) {
-      return new Uint8Array();
-    }
-    let psz = 0;
-    let zeroes = 0;
-    let length = 0;
-    while (source[psz] === LEADER) {
-      zeroes++;
-      psz++;
-    }
-    const size = (source.length - psz) * FACTOR + 1 >>> 0;
-    const b256 = new Uint8Array(size);
-    while (psz < source.length) {
-      const charCode = source.charCodeAt(psz);
-      if (charCode > 255) {
-        return;
-      }
-      let carry = BASE_MAP[charCode];
-      if (carry === 255) {
-        return;
-      }
-      let i2 = 0;
-      for (let it3 = size - 1; (carry !== 0 || i2 < length) && it3 !== -1; it3--, i2++) {
-        carry += BASE2 * b256[it3] >>> 0;
-        b256[it3] = carry % 256 >>> 0;
-        carry = carry / 256 >>> 0;
-      }
-      if (carry !== 0) {
-        throw new Error("Non-zero carry");
-      }
-      length = i2;
-      psz++;
-    }
-    let it4 = size - length;
-    while (it4 !== size && b256[it4] === 0) {
-      it4++;
-    }
-    const vch = new Uint8Array(zeroes + (size - it4));
-    let j = zeroes;
-    while (it4 !== size) {
-      vch[j++] = b256[it4++];
-    }
-    return vch;
-  }
-  function decode2(string2) {
-    const buffer = decodeUnsafe(string2);
-    if (buffer) {
-      return buffer;
-    }
-    throw new Error("Non-base" + BASE2 + " character");
-  }
-  return {
-    encode,
-    decodeUnsafe,
-    decode: decode2
-  };
-}
-var esm_default = base;
-
-// node_modules/bs58/src/esm/index.js
-var ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-var esm_default2 = esm_default(ALPHABET);
-
 // src/ui.mjs
 if (!globalThis.Buffer) globalThis.Buffer = import_buffer6.Buffer;
 var form = document.querySelector("#token-form");
@@ -87136,6 +88009,7 @@ var status = document.querySelector("#form-status");
 var walletStatus = document.querySelector("#wallet-status");
 var serviceStatus = document.querySelector("#service-status");
 var connect = document.querySelector("#connect-wallet");
+var walletOptions = document.querySelector("#wallet-options");
 var wallet;
 var walletConnecting = false;
 var observedWallet;
@@ -87148,31 +88022,82 @@ if (metadataService) {
 } else {
   submit.disabled = true;
 }
-connect.addEventListener("click", async () => {
+var registry = getWallets();
+function addOption(label, action) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "wallet-option";
+  button.textContent = label;
+  button.addEventListener("click", action);
+  walletOptions.append(button);
+}
+async function chooseWallet(candidate) {
   if (walletConnecting) return;
   walletConnecting = true;
   connect.disabled = true;
   try {
-    const provider = window.phantom?.solana;
-    if (!provider?.isPhantom) {
-      const mobile = /Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent);
-      window.location.href = mobile ? `https://phantom.app/ul/browse/${encodeURIComponent(window.location.href)}?ref=${encodeURIComponent(window.location.origin)}` : "https://phantom.app/download";
-      return;
-    }
-    await provider.connect();
-    wallet = provider;
+    const next = await connectStandardWallet(candidate, StandardWalletAdapter);
+    if (wallet?.destroy) wallet.destroy();
+    wallet = next;
+    wallet.on("connect", updateWallet);
+    wallet.on("disconnect", updateWallet);
     updateWallet();
-    if (observedWallet !== provider) {
-      provider.on?.("disconnect", updateWallet);
-      provider.on?.("accountChanged", updateWallet);
-      observedWallet = provider;
-    }
+    walletOptions.hidden = true;
   } catch (e) {
     walletStatus.textContent = e.message || "Wallet connection was cancelled.";
   } finally {
     walletConnecting = false;
     connect.disabled = false;
   }
+}
+function showWallets() {
+  walletOptions.replaceChildren();
+  const available = eligibleWallets(registry.get());
+  for (const candidate of available) addOption(candidate.name, () => chooseWallet(candidate));
+  if (!available.some((w2) => w2.name.toLowerCase() === "phantom")) addOption("Phantom", async () => {
+    const provider = window.phantom?.solana;
+    if (provider?.isPhantom) {
+      if (walletConnecting) return;
+      walletConnecting = true;
+      connect.disabled = true;
+      try {
+        await provider.connect();
+        if (!provider.publicKey || typeof provider.signMessage !== "function" || typeof provider.signTransaction !== "function") throw Error("This wallet must support signing messages and transactions.");
+        if (wallet?.destroy) wallet.destroy();
+        wallet = provider;
+        updateWallet();
+        if (observedWallet !== provider) {
+          provider.on?.("disconnect", updateWallet);
+          provider.on?.("accountChanged", updateWallet);
+          observedWallet = provider;
+        }
+        walletOptions.hidden = true;
+      } catch (e) {
+        walletStatus.textContent = e.message || "Wallet connection was cancelled.";
+      } finally {
+        walletConnecting = false;
+        connect.disabled = false;
+      }
+      return;
+    }
+    const mobile = /Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent);
+    window.location.href = mobile ? `https://phantom.app/ul/browse/${encodeURIComponent(window.location.href)}?ref=${encodeURIComponent(window.location.origin)}` : "https://phantom.app/download";
+  });
+  if (!available.length) {
+    const hint = document.createElement("p");
+    hint.textContent = "Install a compatible Solana wallet or open this page in your wallet\u2019s browser. Your wallet must support message signing and versioned transactions.";
+    walletOptions.append(hint);
+  }
+  walletOptions.hidden = false;
+}
+connect.addEventListener("click", () => {
+  if (!walletConnecting) walletOptions.hidden ? showWallets() : walletOptions.hidden = true;
+});
+registry.on("register", () => {
+  if (!walletOptions.hidden) showWallets();
+});
+registry.on("unregister", () => {
+  if (!walletOptions.hidden) showWallets();
 });
 document.querySelector("#quote-select").addEventListener("change", (event) => {
   document.querySelector("#quote-address-label").hidden = event.target.value !== "custom";
@@ -87189,16 +88114,16 @@ form.addEventListener("submit", async (event) => {
     return;
   }
   if (!wallet?.publicKey) {
-    status.textContent = "Connect your Phantom wallet first.";
+    status.textContent = "Connect a Solana wallet first.";
     return;
   }
   submit.disabled = true;
   connect.disabled = true;
   status.textContent = "Preparing your token. Please approve the metadata signature in your wallet.";
   try {
-    const connection = new import_web326.Connection(solanaRpc, "confirmed"), online = new OnlinePumpSdk(connection);
+    const connection = new import_web327.Connection(solanaRpc, "confirmed"), online = new OnlinePumpSdk(connection);
     const publicKey4 = wallet.publicKey;
-    const result = await launchToken(input, { wallet, getWalletKey: () => wallet.publicKey, resolveQuote: (address) => resolveQuote(address, online, (x) => new import_web326.PublicKey(x)), uploadMetadata: (values) => uploadMetadata(values, wallet, metadataService), prepare: async (values, quote, uri) => {
+    const result = await launchToken(input, { wallet, getWalletKey: () => wallet.publicKey, resolveQuote: (address) => resolveQuote(address, online, (x) => new import_web327.PublicKey(x)), uploadMetadata: (values) => uploadMetadata(values, wallet, metadataService), prepare: async (values, quote, uri) => {
       const p2 = await prepareSolanaLaunch(values, quote, uri, publicKey4, { connection, buildInstruction: (args) => buildPumpInstruction(args, PUMP_SDK) });
       p2.expectedMessage = p2.transaction.message.serialize();
       return p2;
