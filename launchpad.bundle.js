@@ -87137,6 +87137,8 @@ var walletStatus = document.querySelector("#wallet-status");
 var serviceStatus = document.querySelector("#service-status");
 var connect = document.querySelector("#connect-wallet");
 var wallet;
+var walletConnecting = false;
+var observedWallet;
 function updateWallet() {
   walletStatus.textContent = wallet?.publicKey ? `Connected: ${wallet.publicKey.toString().slice(0, 6)}\u2026${wallet.publicKey.toString().slice(-6)}` : "No wallet connected";
 }
@@ -87147,15 +87149,25 @@ if (metadataService) {
   submit.disabled = true;
 }
 connect.addEventListener("click", async () => {
+  if (walletConnecting) return;
+  walletConnecting = true;
+  connect.disabled = true;
   try {
-    wallet = window.phantom?.solana;
-    if (!wallet?.isPhantom) throw Error("Install Phantom or open this page in the Phantom browser.");
-    await wallet.connect();
+    const provider = window.phantom?.solana;
+    if (!provider?.isPhantom) throw Error("Install Phantom or open this page in the Phantom browser.");
+    await provider.connect();
+    wallet = provider;
     updateWallet();
-    wallet.on?.("disconnect", updateWallet);
-    wallet.on?.("accountChanged", updateWallet);
+    if (observedWallet !== provider) {
+      provider.on?.("disconnect", updateWallet);
+      provider.on?.("accountChanged", updateWallet);
+      observedWallet = provider;
+    }
   } catch (e) {
     walletStatus.textContent = e.message || "Wallet connection was cancelled.";
+  } finally {
+    walletConnecting = false;
+    connect.disabled = false;
   }
 });
 document.querySelector("#quote-select").addEventListener("change", (event) => {
