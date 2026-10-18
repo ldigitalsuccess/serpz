@@ -87154,7 +87154,11 @@ connect.addEventListener("click", async () => {
   connect.disabled = true;
   try {
     const provider = window.phantom?.solana;
-    if (!provider?.isPhantom) throw Error("Install Phantom or open this page in the Phantom browser.");
+    if (!provider?.isPhantom) {
+      const mobile = /Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent);
+      window.location.href = mobile ? `https://phantom.app/ul/browse/${encodeURIComponent(window.location.href)}?ref=${encodeURIComponent(window.location.origin)}` : "https://phantom.app/download";
+      return;
+    }
     await provider.connect();
     wallet = provider;
     updateWallet();
