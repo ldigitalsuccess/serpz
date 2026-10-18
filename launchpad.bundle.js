@@ -45,6 +45,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var require_base64_js = __commonJS({
   "node_modules/base64-js/index.js"(exports) {
     "use strict";
+    init_polyfill();
     exports.byteLength = byteLength;
     exports.toByteArray = toByteArray;
     exports.fromByteArray = fromByteArray;
@@ -145,6 +146,7 @@ var require_base64_js = __commonJS({
 // node_modules/ieee754/index.js
 var require_ieee754 = __commonJS({
   "node_modules/ieee754/index.js"(exports) {
+    init_polyfill();
     exports.read = function(buffer, offset2, isLE, mLen, nBytes) {
       var e, m;
       var eLen = nBytes * 8 - mLen - 1;
@@ -229,16 +231,17 @@ var require_ieee754 = __commonJS({
 var require_buffer = __commonJS({
   "node_modules/buffer/index.js"(exports) {
     "use strict";
+    init_polyfill();
     var base64 = require_base64_js();
     var ieee754 = require_ieee754();
     var customInspectSymbol = typeof Symbol === "function" && typeof Symbol["for"] === "function" ? Symbol["for"]("nodejs.util.inspect.custom") : null;
-    exports.Buffer = Buffer4;
+    exports.Buffer = Buffer5;
     exports.SlowBuffer = SlowBuffer;
     exports.INSPECT_MAX_BYTES = 50;
     var K_MAX_LENGTH = 2147483647;
     exports.kMaxLength = K_MAX_LENGTH;
-    Buffer4.TYPED_ARRAY_SUPPORT = typedArraySupport();
-    if (!Buffer4.TYPED_ARRAY_SUPPORT && typeof console !== "undefined" && typeof console.error === "function") {
+    Buffer5.TYPED_ARRAY_SUPPORT = typedArraySupport();
+    if (!Buffer5.TYPED_ARRAY_SUPPORT && typeof console !== "undefined" && typeof console.error === "function") {
       console.error(
         "This browser lacks typed array (Uint8Array) support which is required by `buffer` v5.x. Use `buffer` v4.x if you require old browser support."
       );
@@ -256,17 +259,17 @@ var require_buffer = __commonJS({
         return false;
       }
     }
-    Object.defineProperty(Buffer4.prototype, "parent", {
+    Object.defineProperty(Buffer5.prototype, "parent", {
       enumerable: true,
       get: function() {
-        if (!Buffer4.isBuffer(this)) return void 0;
+        if (!Buffer5.isBuffer(this)) return void 0;
         return this.buffer;
       }
     });
-    Object.defineProperty(Buffer4.prototype, "offset", {
+    Object.defineProperty(Buffer5.prototype, "offset", {
       enumerable: true,
       get: function() {
-        if (!Buffer4.isBuffer(this)) return void 0;
+        if (!Buffer5.isBuffer(this)) return void 0;
         return this.byteOffset;
       }
     });
@@ -275,10 +278,10 @@ var require_buffer = __commonJS({
         throw new RangeError('The value "' + length + '" is invalid for option "size"');
       }
       const buf = new Uint8Array(length);
-      Object.setPrototypeOf(buf, Buffer4.prototype);
+      Object.setPrototypeOf(buf, Buffer5.prototype);
       return buf;
     }
-    function Buffer4(arg, encodingOrOffset, length) {
+    function Buffer5(arg, encodingOrOffset, length) {
       if (typeof arg === "number") {
         if (typeof encodingOrOffset === "string") {
           throw new TypeError(
@@ -289,7 +292,7 @@ var require_buffer = __commonJS({
       }
       return from(arg, encodingOrOffset, length);
     }
-    Buffer4.poolSize = 8192;
+    Buffer5.poolSize = 8192;
     function from(value, encodingOrOffset, length) {
       if (typeof value === "string") {
         return fromString(value, encodingOrOffset);
@@ -315,22 +318,22 @@ var require_buffer = __commonJS({
       }
       const valueOf = value.valueOf && value.valueOf();
       if (valueOf != null && valueOf !== value) {
-        return Buffer4.from(valueOf, encodingOrOffset, length);
+        return Buffer5.from(valueOf, encodingOrOffset, length);
       }
       const b2 = fromObject(value);
       if (b2) return b2;
       if (typeof Symbol !== "undefined" && Symbol.toPrimitive != null && typeof value[Symbol.toPrimitive] === "function") {
-        return Buffer4.from(value[Symbol.toPrimitive]("string"), encodingOrOffset, length);
+        return Buffer5.from(value[Symbol.toPrimitive]("string"), encodingOrOffset, length);
       }
       throw new TypeError(
         "The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value
       );
     }
-    Buffer4.from = function(value, encodingOrOffset, length) {
+    Buffer5.from = function(value, encodingOrOffset, length) {
       return from(value, encodingOrOffset, length);
     };
-    Object.setPrototypeOf(Buffer4.prototype, Uint8Array.prototype);
-    Object.setPrototypeOf(Buffer4, Uint8Array);
+    Object.setPrototypeOf(Buffer5.prototype, Uint8Array.prototype);
+    Object.setPrototypeOf(Buffer5, Uint8Array);
     function assertSize(size) {
       if (typeof size !== "number") {
         throw new TypeError('"size" argument must be of type number');
@@ -348,24 +351,24 @@ var require_buffer = __commonJS({
       }
       return createBuffer(size);
     }
-    Buffer4.alloc = function(size, fill, encoding) {
+    Buffer5.alloc = function(size, fill, encoding) {
       return alloc(size, fill, encoding);
     };
     function allocUnsafe(size) {
       assertSize(size);
       return createBuffer(size < 0 ? 0 : checked(size) | 0);
     }
-    Buffer4.allocUnsafe = function(size) {
+    Buffer5.allocUnsafe = function(size) {
       return allocUnsafe(size);
     };
-    Buffer4.allocUnsafeSlow = function(size) {
+    Buffer5.allocUnsafeSlow = function(size) {
       return allocUnsafe(size);
     };
     function fromString(string2, encoding) {
       if (typeof encoding !== "string" || encoding === "") {
         encoding = "utf8";
       }
-      if (!Buffer4.isEncoding(encoding)) {
+      if (!Buffer5.isEncoding(encoding)) {
         throw new TypeError("Unknown encoding: " + encoding);
       }
       const length = byteLength(string2, encoding) | 0;
@@ -406,11 +409,11 @@ var require_buffer = __commonJS({
       } else {
         buf = new Uint8Array(array3, byteOffset, length);
       }
-      Object.setPrototypeOf(buf, Buffer4.prototype);
+      Object.setPrototypeOf(buf, Buffer5.prototype);
       return buf;
     }
     function fromObject(obj) {
-      if (Buffer4.isBuffer(obj)) {
+      if (Buffer5.isBuffer(obj)) {
         const len = checked(obj.length) | 0;
         const buf = createBuffer(len);
         if (buf.length === 0) {
@@ -439,15 +442,15 @@ var require_buffer = __commonJS({
       if (+length != length) {
         length = 0;
       }
-      return Buffer4.alloc(+length);
+      return Buffer5.alloc(+length);
     }
-    Buffer4.isBuffer = function isBuffer(b2) {
-      return b2 != null && b2._isBuffer === true && b2 !== Buffer4.prototype;
+    Buffer5.isBuffer = function isBuffer(b2) {
+      return b2 != null && b2._isBuffer === true && b2 !== Buffer5.prototype;
     };
-    Buffer4.compare = function compare2(a2, b2) {
-      if (isInstance(a2, Uint8Array)) a2 = Buffer4.from(a2, a2.offset, a2.byteLength);
-      if (isInstance(b2, Uint8Array)) b2 = Buffer4.from(b2, b2.offset, b2.byteLength);
-      if (!Buffer4.isBuffer(a2) || !Buffer4.isBuffer(b2)) {
+    Buffer5.compare = function compare2(a2, b2) {
+      if (isInstance(a2, Uint8Array)) a2 = Buffer5.from(a2, a2.offset, a2.byteLength);
+      if (isInstance(b2, Uint8Array)) b2 = Buffer5.from(b2, b2.offset, b2.byteLength);
+      if (!Buffer5.isBuffer(a2) || !Buffer5.isBuffer(b2)) {
         throw new TypeError(
           'The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array'
         );
@@ -466,7 +469,7 @@ var require_buffer = __commonJS({
       if (y < x) return 1;
       return 0;
     };
-    Buffer4.isEncoding = function isEncoding(encoding) {
+    Buffer5.isEncoding = function isEncoding(encoding) {
       switch (String(encoding).toLowerCase()) {
         case "hex":
         case "utf8":
@@ -484,12 +487,12 @@ var require_buffer = __commonJS({
           return false;
       }
     };
-    Buffer4.concat = function concat(list, length) {
+    Buffer5.concat = function concat(list, length) {
       if (!Array.isArray(list)) {
         throw new TypeError('"list" argument must be an Array of Buffers');
       }
       if (list.length === 0) {
-        return Buffer4.alloc(0);
+        return Buffer5.alloc(0);
       }
       let i2;
       if (length === void 0) {
@@ -498,13 +501,13 @@ var require_buffer = __commonJS({
           length += list[i2].length;
         }
       }
-      const buffer = Buffer4.allocUnsafe(length);
+      const buffer = Buffer5.allocUnsafe(length);
       let pos = 0;
       for (i2 = 0; i2 < list.length; ++i2) {
         let buf = list[i2];
         if (isInstance(buf, Uint8Array)) {
           if (pos + buf.length > buffer.length) {
-            if (!Buffer4.isBuffer(buf)) buf = Buffer4.from(buf);
+            if (!Buffer5.isBuffer(buf)) buf = Buffer5.from(buf);
             buf.copy(buffer, pos);
           } else {
             Uint8Array.prototype.set.call(
@@ -513,7 +516,7 @@ var require_buffer = __commonJS({
               pos
             );
           }
-        } else if (!Buffer4.isBuffer(buf)) {
+        } else if (!Buffer5.isBuffer(buf)) {
           throw new TypeError('"list" argument must be an Array of Buffers');
         } else {
           buf.copy(buffer, pos);
@@ -523,7 +526,7 @@ var require_buffer = __commonJS({
       return buffer;
     };
     function byteLength(string2, encoding) {
-      if (Buffer4.isBuffer(string2)) {
+      if (Buffer5.isBuffer(string2)) {
         return string2.length;
       }
       if (ArrayBuffer.isView(string2) || isInstance(string2, ArrayBuffer)) {
@@ -565,7 +568,7 @@ var require_buffer = __commonJS({
         }
       }
     }
-    Buffer4.byteLength = byteLength;
+    Buffer5.byteLength = byteLength;
     function slowToString(encoding, start, end) {
       let loweredCase = false;
       if (start === void 0 || start < 0) {
@@ -612,13 +615,13 @@ var require_buffer = __commonJS({
         }
       }
     }
-    Buffer4.prototype._isBuffer = true;
+    Buffer5.prototype._isBuffer = true;
     function swap(b2, n, m) {
       const i2 = b2[n];
       b2[n] = b2[m];
       b2[m] = i2;
     }
-    Buffer4.prototype.swap16 = function swap16() {
+    Buffer5.prototype.swap16 = function swap16() {
       const len = this.length;
       if (len % 2 !== 0) {
         throw new RangeError("Buffer size must be a multiple of 16-bits");
@@ -628,7 +631,7 @@ var require_buffer = __commonJS({
       }
       return this;
     };
-    Buffer4.prototype.swap32 = function swap32() {
+    Buffer5.prototype.swap32 = function swap32() {
       const len = this.length;
       if (len % 4 !== 0) {
         throw new RangeError("Buffer size must be a multiple of 32-bits");
@@ -639,7 +642,7 @@ var require_buffer = __commonJS({
       }
       return this;
     };
-    Buffer4.prototype.swap64 = function swap64() {
+    Buffer5.prototype.swap64 = function swap64() {
       const len = this.length;
       if (len % 8 !== 0) {
         throw new RangeError("Buffer size must be a multiple of 64-bits");
@@ -652,19 +655,19 @@ var require_buffer = __commonJS({
       }
       return this;
     };
-    Buffer4.prototype.toString = function toString2() {
+    Buffer5.prototype.toString = function toString2() {
       const length = this.length;
       if (length === 0) return "";
       if (arguments.length === 0) return utf8Slice(this, 0, length);
       return slowToString.apply(this, arguments);
     };
-    Buffer4.prototype.toLocaleString = Buffer4.prototype.toString;
-    Buffer4.prototype.equals = function equals(b2) {
-      if (!Buffer4.isBuffer(b2)) throw new TypeError("Argument must be a Buffer");
+    Buffer5.prototype.toLocaleString = Buffer5.prototype.toString;
+    Buffer5.prototype.equals = function equals(b2) {
+      if (!Buffer5.isBuffer(b2)) throw new TypeError("Argument must be a Buffer");
       if (this === b2) return true;
-      return Buffer4.compare(this, b2) === 0;
+      return Buffer5.compare(this, b2) === 0;
     };
-    Buffer4.prototype.inspect = function inspect() {
+    Buffer5.prototype.inspect = function inspect() {
       let str2 = "";
       const max = exports.INSPECT_MAX_BYTES;
       str2 = this.toString("hex", 0, max).replace(/(.{2})/g, "$1 ").trim();
@@ -672,13 +675,13 @@ var require_buffer = __commonJS({
       return "<Buffer " + str2 + ">";
     };
     if (customInspectSymbol) {
-      Buffer4.prototype[customInspectSymbol] = Buffer4.prototype.inspect;
+      Buffer5.prototype[customInspectSymbol] = Buffer5.prototype.inspect;
     }
-    Buffer4.prototype.compare = function compare2(target, start, end, thisStart, thisEnd) {
+    Buffer5.prototype.compare = function compare2(target, start, end, thisStart, thisEnd) {
       if (isInstance(target, Uint8Array)) {
-        target = Buffer4.from(target, target.offset, target.byteLength);
+        target = Buffer5.from(target, target.offset, target.byteLength);
       }
-      if (!Buffer4.isBuffer(target)) {
+      if (!Buffer5.isBuffer(target)) {
         throw new TypeError(
           'The "target" argument must be one of type Buffer or Uint8Array. Received type ' + typeof target
         );
@@ -751,9 +754,9 @@ var require_buffer = __commonJS({
         else return -1;
       }
       if (typeof val === "string") {
-        val = Buffer4.from(val, encoding);
+        val = Buffer5.from(val, encoding);
       }
-      if (Buffer4.isBuffer(val)) {
+      if (Buffer5.isBuffer(val)) {
         if (val.length === 0) {
           return -1;
         }
@@ -821,13 +824,13 @@ var require_buffer = __commonJS({
       }
       return -1;
     }
-    Buffer4.prototype.includes = function includes(val, byteOffset, encoding) {
+    Buffer5.prototype.includes = function includes(val, byteOffset, encoding) {
       return this.indexOf(val, byteOffset, encoding) !== -1;
     };
-    Buffer4.prototype.indexOf = function indexOf(val, byteOffset, encoding) {
+    Buffer5.prototype.indexOf = function indexOf(val, byteOffset, encoding) {
       return bidirectionalIndexOf(this, val, byteOffset, encoding, true);
     };
-    Buffer4.prototype.lastIndexOf = function lastIndexOf(val, byteOffset, encoding) {
+    Buffer5.prototype.lastIndexOf = function lastIndexOf(val, byteOffset, encoding) {
       return bidirectionalIndexOf(this, val, byteOffset, encoding, false);
     };
     function hexWrite(buf, string2, offset2, length) {
@@ -865,7 +868,7 @@ var require_buffer = __commonJS({
     function ucs2Write(buf, string2, offset2, length) {
       return blitBuffer(utf16leToBytes(string2, buf.length - offset2), buf, offset2, length);
     }
-    Buffer4.prototype.write = function write(string2, offset2, length, encoding) {
+    Buffer5.prototype.write = function write(string2, offset2, length, encoding) {
       if (offset2 === void 0) {
         encoding = "utf8";
         length = this.length;
@@ -920,7 +923,7 @@ var require_buffer = __commonJS({
         }
       }
     };
-    Buffer4.prototype.toJSON = function toJSON() {
+    Buffer5.prototype.toJSON = function toJSON() {
       return {
         type: "Buffer",
         data: Array.prototype.slice.call(this._arr || this, 0)
@@ -1043,7 +1046,7 @@ var require_buffer = __commonJS({
       }
       return res;
     }
-    Buffer4.prototype.slice = function slice(start, end) {
+    Buffer5.prototype.slice = function slice(start, end) {
       const len = this.length;
       start = ~~start;
       end = end === void 0 ? len : ~~end;
@@ -1061,14 +1064,14 @@ var require_buffer = __commonJS({
       }
       if (end < start) end = start;
       const newBuf = this.subarray(start, end);
-      Object.setPrototypeOf(newBuf, Buffer4.prototype);
+      Object.setPrototypeOf(newBuf, Buffer5.prototype);
       return newBuf;
     };
     function checkOffset(offset2, ext, length) {
       if (offset2 % 1 !== 0 || offset2 < 0) throw new RangeError("offset is not uint");
       if (offset2 + ext > length) throw new RangeError("Trying to access beyond buffer length");
     }
-    Buffer4.prototype.readUintLE = Buffer4.prototype.readUIntLE = function readUIntLE(offset2, byteLength2, noAssert) {
+    Buffer5.prototype.readUintLE = Buffer5.prototype.readUIntLE = function readUIntLE(offset2, byteLength2, noAssert) {
       offset2 = offset2 >>> 0;
       byteLength2 = byteLength2 >>> 0;
       if (!noAssert) checkOffset(offset2, byteLength2, this.length);
@@ -1080,7 +1083,7 @@ var require_buffer = __commonJS({
       }
       return val;
     };
-    Buffer4.prototype.readUintBE = Buffer4.prototype.readUIntBE = function readUIntBE(offset2, byteLength2, noAssert) {
+    Buffer5.prototype.readUintBE = Buffer5.prototype.readUIntBE = function readUIntBE(offset2, byteLength2, noAssert) {
       offset2 = offset2 >>> 0;
       byteLength2 = byteLength2 >>> 0;
       if (!noAssert) {
@@ -1093,32 +1096,32 @@ var require_buffer = __commonJS({
       }
       return val;
     };
-    Buffer4.prototype.readUint8 = Buffer4.prototype.readUInt8 = function readUInt8(offset2, noAssert) {
+    Buffer5.prototype.readUint8 = Buffer5.prototype.readUInt8 = function readUInt8(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 1, this.length);
       return this[offset2];
     };
-    Buffer4.prototype.readUint16LE = Buffer4.prototype.readUInt16LE = function readUInt16LE(offset2, noAssert) {
+    Buffer5.prototype.readUint16LE = Buffer5.prototype.readUInt16LE = function readUInt16LE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 2, this.length);
       return this[offset2] | this[offset2 + 1] << 8;
     };
-    Buffer4.prototype.readUint16BE = Buffer4.prototype.readUInt16BE = function readUInt16BE(offset2, noAssert) {
+    Buffer5.prototype.readUint16BE = Buffer5.prototype.readUInt16BE = function readUInt16BE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 2, this.length);
       return this[offset2] << 8 | this[offset2 + 1];
     };
-    Buffer4.prototype.readUint32LE = Buffer4.prototype.readUInt32LE = function readUInt32LE(offset2, noAssert) {
+    Buffer5.prototype.readUint32LE = Buffer5.prototype.readUInt32LE = function readUInt32LE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 4, this.length);
       return (this[offset2] | this[offset2 + 1] << 8 | this[offset2 + 2] << 16) + this[offset2 + 3] * 16777216;
     };
-    Buffer4.prototype.readUint32BE = Buffer4.prototype.readUInt32BE = function readUInt32BE(offset2, noAssert) {
+    Buffer5.prototype.readUint32BE = Buffer5.prototype.readUInt32BE = function readUInt32BE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 4, this.length);
       return this[offset2] * 16777216 + (this[offset2 + 1] << 16 | this[offset2 + 2] << 8 | this[offset2 + 3]);
     };
-    Buffer4.prototype.readBigUInt64LE = defineBigIntMethod(function readBigUInt64LE(offset2) {
+    Buffer5.prototype.readBigUInt64LE = defineBigIntMethod(function readBigUInt64LE(offset2) {
       offset2 = offset2 >>> 0;
       validateNumber(offset2, "offset");
       const first = this[offset2];
@@ -1130,7 +1133,7 @@ var require_buffer = __commonJS({
       const hi = this[++offset2] + this[++offset2] * 2 ** 8 + this[++offset2] * 2 ** 16 + last * 2 ** 24;
       return BigInt(lo) + (BigInt(hi) << BigInt(32));
     });
-    Buffer4.prototype.readBigUInt64BE = defineBigIntMethod(function readBigUInt64BE(offset2) {
+    Buffer5.prototype.readBigUInt64BE = defineBigIntMethod(function readBigUInt64BE(offset2) {
       offset2 = offset2 >>> 0;
       validateNumber(offset2, "offset");
       const first = this[offset2];
@@ -1142,7 +1145,7 @@ var require_buffer = __commonJS({
       const lo = this[++offset2] * 2 ** 24 + this[++offset2] * 2 ** 16 + this[++offset2] * 2 ** 8 + last;
       return (BigInt(hi) << BigInt(32)) + BigInt(lo);
     });
-    Buffer4.prototype.readIntLE = function readIntLE(offset2, byteLength2, noAssert) {
+    Buffer5.prototype.readIntLE = function readIntLE(offset2, byteLength2, noAssert) {
       offset2 = offset2 >>> 0;
       byteLength2 = byteLength2 >>> 0;
       if (!noAssert) checkOffset(offset2, byteLength2, this.length);
@@ -1156,7 +1159,7 @@ var require_buffer = __commonJS({
       if (val >= mul) val -= Math.pow(2, 8 * byteLength2);
       return val;
     };
-    Buffer4.prototype.readIntBE = function readIntBE(offset2, byteLength2, noAssert) {
+    Buffer5.prototype.readIntBE = function readIntBE(offset2, byteLength2, noAssert) {
       offset2 = offset2 >>> 0;
       byteLength2 = byteLength2 >>> 0;
       if (!noAssert) checkOffset(offset2, byteLength2, this.length);
@@ -1170,35 +1173,35 @@ var require_buffer = __commonJS({
       if (val >= mul) val -= Math.pow(2, 8 * byteLength2);
       return val;
     };
-    Buffer4.prototype.readInt8 = function readInt8(offset2, noAssert) {
+    Buffer5.prototype.readInt8 = function readInt8(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 1, this.length);
       if (!(this[offset2] & 128)) return this[offset2];
       return (255 - this[offset2] + 1) * -1;
     };
-    Buffer4.prototype.readInt16LE = function readInt16LE(offset2, noAssert) {
+    Buffer5.prototype.readInt16LE = function readInt16LE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 2, this.length);
       const val = this[offset2] | this[offset2 + 1] << 8;
       return val & 32768 ? val | 4294901760 : val;
     };
-    Buffer4.prototype.readInt16BE = function readInt16BE(offset2, noAssert) {
+    Buffer5.prototype.readInt16BE = function readInt16BE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 2, this.length);
       const val = this[offset2 + 1] | this[offset2] << 8;
       return val & 32768 ? val | 4294901760 : val;
     };
-    Buffer4.prototype.readInt32LE = function readInt32LE(offset2, noAssert) {
+    Buffer5.prototype.readInt32LE = function readInt32LE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 4, this.length);
       return this[offset2] | this[offset2 + 1] << 8 | this[offset2 + 2] << 16 | this[offset2 + 3] << 24;
     };
-    Buffer4.prototype.readInt32BE = function readInt32BE(offset2, noAssert) {
+    Buffer5.prototype.readInt32BE = function readInt32BE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 4, this.length);
       return this[offset2] << 24 | this[offset2 + 1] << 16 | this[offset2 + 2] << 8 | this[offset2 + 3];
     };
-    Buffer4.prototype.readBigInt64LE = defineBigIntMethod(function readBigInt64LE(offset2) {
+    Buffer5.prototype.readBigInt64LE = defineBigIntMethod(function readBigInt64LE(offset2) {
       offset2 = offset2 >>> 0;
       validateNumber(offset2, "offset");
       const first = this[offset2];
@@ -1209,7 +1212,7 @@ var require_buffer = __commonJS({
       const val = this[offset2 + 4] + this[offset2 + 5] * 2 ** 8 + this[offset2 + 6] * 2 ** 16 + (last << 24);
       return (BigInt(val) << BigInt(32)) + BigInt(first + this[++offset2] * 2 ** 8 + this[++offset2] * 2 ** 16 + this[++offset2] * 2 ** 24);
     });
-    Buffer4.prototype.readBigInt64BE = defineBigIntMethod(function readBigInt64BE(offset2) {
+    Buffer5.prototype.readBigInt64BE = defineBigIntMethod(function readBigInt64BE(offset2) {
       offset2 = offset2 >>> 0;
       validateNumber(offset2, "offset");
       const first = this[offset2];
@@ -1221,32 +1224,32 @@ var require_buffer = __commonJS({
       this[++offset2] * 2 ** 16 + this[++offset2] * 2 ** 8 + this[++offset2];
       return (BigInt(val) << BigInt(32)) + BigInt(this[++offset2] * 2 ** 24 + this[++offset2] * 2 ** 16 + this[++offset2] * 2 ** 8 + last);
     });
-    Buffer4.prototype.readFloatLE = function readFloatLE(offset2, noAssert) {
+    Buffer5.prototype.readFloatLE = function readFloatLE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 4, this.length);
       return ieee754.read(this, offset2, true, 23, 4);
     };
-    Buffer4.prototype.readFloatBE = function readFloatBE(offset2, noAssert) {
+    Buffer5.prototype.readFloatBE = function readFloatBE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 4, this.length);
       return ieee754.read(this, offset2, false, 23, 4);
     };
-    Buffer4.prototype.readDoubleLE = function readDoubleLE(offset2, noAssert) {
+    Buffer5.prototype.readDoubleLE = function readDoubleLE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 8, this.length);
       return ieee754.read(this, offset2, true, 52, 8);
     };
-    Buffer4.prototype.readDoubleBE = function readDoubleBE(offset2, noAssert) {
+    Buffer5.prototype.readDoubleBE = function readDoubleBE(offset2, noAssert) {
       offset2 = offset2 >>> 0;
       if (!noAssert) checkOffset(offset2, 8, this.length);
       return ieee754.read(this, offset2, false, 52, 8);
     };
     function checkInt(buf, value, offset2, ext, max, min) {
-      if (!Buffer4.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance');
+      if (!Buffer5.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance');
       if (value > max || value < min) throw new RangeError('"value" argument is out of bounds');
       if (offset2 + ext > buf.length) throw new RangeError("Index out of range");
     }
-    Buffer4.prototype.writeUintLE = Buffer4.prototype.writeUIntLE = function writeUIntLE(value, offset2, byteLength2, noAssert) {
+    Buffer5.prototype.writeUintLE = Buffer5.prototype.writeUIntLE = function writeUIntLE(value, offset2, byteLength2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       byteLength2 = byteLength2 >>> 0;
@@ -1262,7 +1265,7 @@ var require_buffer = __commonJS({
       }
       return offset2 + byteLength2;
     };
-    Buffer4.prototype.writeUintBE = Buffer4.prototype.writeUIntBE = function writeUIntBE(value, offset2, byteLength2, noAssert) {
+    Buffer5.prototype.writeUintBE = Buffer5.prototype.writeUIntBE = function writeUIntBE(value, offset2, byteLength2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       byteLength2 = byteLength2 >>> 0;
@@ -1278,14 +1281,14 @@ var require_buffer = __commonJS({
       }
       return offset2 + byteLength2;
     };
-    Buffer4.prototype.writeUint8 = Buffer4.prototype.writeUInt8 = function writeUInt8(value, offset2, noAssert) {
+    Buffer5.prototype.writeUint8 = Buffer5.prototype.writeUInt8 = function writeUInt8(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 1, 255, 0);
       this[offset2] = value & 255;
       return offset2 + 1;
     };
-    Buffer4.prototype.writeUint16LE = Buffer4.prototype.writeUInt16LE = function writeUInt16LE(value, offset2, noAssert) {
+    Buffer5.prototype.writeUint16LE = Buffer5.prototype.writeUInt16LE = function writeUInt16LE(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 2, 65535, 0);
@@ -1293,7 +1296,7 @@ var require_buffer = __commonJS({
       this[offset2 + 1] = value >>> 8;
       return offset2 + 2;
     };
-    Buffer4.prototype.writeUint16BE = Buffer4.prototype.writeUInt16BE = function writeUInt16BE(value, offset2, noAssert) {
+    Buffer5.prototype.writeUint16BE = Buffer5.prototype.writeUInt16BE = function writeUInt16BE(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 2, 65535, 0);
@@ -1301,7 +1304,7 @@ var require_buffer = __commonJS({
       this[offset2 + 1] = value & 255;
       return offset2 + 2;
     };
-    Buffer4.prototype.writeUint32LE = Buffer4.prototype.writeUInt32LE = function writeUInt32LE(value, offset2, noAssert) {
+    Buffer5.prototype.writeUint32LE = Buffer5.prototype.writeUInt32LE = function writeUInt32LE(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 4, 4294967295, 0);
@@ -1311,7 +1314,7 @@ var require_buffer = __commonJS({
       this[offset2] = value & 255;
       return offset2 + 4;
     };
-    Buffer4.prototype.writeUint32BE = Buffer4.prototype.writeUInt32BE = function writeUInt32BE(value, offset2, noAssert) {
+    Buffer5.prototype.writeUint32BE = Buffer5.prototype.writeUInt32BE = function writeUInt32BE(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 4, 4294967295, 0);
@@ -1361,13 +1364,13 @@ var require_buffer = __commonJS({
       buf[offset2] = hi;
       return offset2 + 8;
     }
-    Buffer4.prototype.writeBigUInt64LE = defineBigIntMethod(function writeBigUInt64LE(value, offset2 = 0) {
+    Buffer5.prototype.writeBigUInt64LE = defineBigIntMethod(function writeBigUInt64LE(value, offset2 = 0) {
       return wrtBigUInt64LE(this, value, offset2, BigInt(0), BigInt("0xffffffffffffffff"));
     });
-    Buffer4.prototype.writeBigUInt64BE = defineBigIntMethod(function writeBigUInt64BE(value, offset2 = 0) {
+    Buffer5.prototype.writeBigUInt64BE = defineBigIntMethod(function writeBigUInt64BE(value, offset2 = 0) {
       return wrtBigUInt64BE(this, value, offset2, BigInt(0), BigInt("0xffffffffffffffff"));
     });
-    Buffer4.prototype.writeIntLE = function writeIntLE(value, offset2, byteLength2, noAssert) {
+    Buffer5.prototype.writeIntLE = function writeIntLE(value, offset2, byteLength2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) {
@@ -1386,7 +1389,7 @@ var require_buffer = __commonJS({
       }
       return offset2 + byteLength2;
     };
-    Buffer4.prototype.writeIntBE = function writeIntBE(value, offset2, byteLength2, noAssert) {
+    Buffer5.prototype.writeIntBE = function writeIntBE(value, offset2, byteLength2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) {
@@ -1405,7 +1408,7 @@ var require_buffer = __commonJS({
       }
       return offset2 + byteLength2;
     };
-    Buffer4.prototype.writeInt8 = function writeInt8(value, offset2, noAssert) {
+    Buffer5.prototype.writeInt8 = function writeInt8(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 1, 127, -128);
@@ -1413,7 +1416,7 @@ var require_buffer = __commonJS({
       this[offset2] = value & 255;
       return offset2 + 1;
     };
-    Buffer4.prototype.writeInt16LE = function writeInt16LE(value, offset2, noAssert) {
+    Buffer5.prototype.writeInt16LE = function writeInt16LE(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 2, 32767, -32768);
@@ -1421,7 +1424,7 @@ var require_buffer = __commonJS({
       this[offset2 + 1] = value >>> 8;
       return offset2 + 2;
     };
-    Buffer4.prototype.writeInt16BE = function writeInt16BE(value, offset2, noAssert) {
+    Buffer5.prototype.writeInt16BE = function writeInt16BE(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 2, 32767, -32768);
@@ -1429,7 +1432,7 @@ var require_buffer = __commonJS({
       this[offset2 + 1] = value & 255;
       return offset2 + 2;
     };
-    Buffer4.prototype.writeInt32LE = function writeInt32LE(value, offset2, noAssert) {
+    Buffer5.prototype.writeInt32LE = function writeInt32LE(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 4, 2147483647, -2147483648);
@@ -1439,7 +1442,7 @@ var require_buffer = __commonJS({
       this[offset2 + 3] = value >>> 24;
       return offset2 + 4;
     };
-    Buffer4.prototype.writeInt32BE = function writeInt32BE(value, offset2, noAssert) {
+    Buffer5.prototype.writeInt32BE = function writeInt32BE(value, offset2, noAssert) {
       value = +value;
       offset2 = offset2 >>> 0;
       if (!noAssert) checkInt(this, value, offset2, 4, 2147483647, -2147483648);
@@ -1450,10 +1453,10 @@ var require_buffer = __commonJS({
       this[offset2 + 3] = value & 255;
       return offset2 + 4;
     };
-    Buffer4.prototype.writeBigInt64LE = defineBigIntMethod(function writeBigInt64LE(value, offset2 = 0) {
+    Buffer5.prototype.writeBigInt64LE = defineBigIntMethod(function writeBigInt64LE(value, offset2 = 0) {
       return wrtBigUInt64LE(this, value, offset2, -BigInt("0x8000000000000000"), BigInt("0x7fffffffffffffff"));
     });
-    Buffer4.prototype.writeBigInt64BE = defineBigIntMethod(function writeBigInt64BE(value, offset2 = 0) {
+    Buffer5.prototype.writeBigInt64BE = defineBigIntMethod(function writeBigInt64BE(value, offset2 = 0) {
       return wrtBigUInt64BE(this, value, offset2, -BigInt("0x8000000000000000"), BigInt("0x7fffffffffffffff"));
     });
     function checkIEEE754(buf, value, offset2, ext, max, min) {
@@ -1469,10 +1472,10 @@ var require_buffer = __commonJS({
       ieee754.write(buf, value, offset2, littleEndian, 23, 4);
       return offset2 + 4;
     }
-    Buffer4.prototype.writeFloatLE = function writeFloatLE(value, offset2, noAssert) {
+    Buffer5.prototype.writeFloatLE = function writeFloatLE(value, offset2, noAssert) {
       return writeFloat(this, value, offset2, true, noAssert);
     };
-    Buffer4.prototype.writeFloatBE = function writeFloatBE(value, offset2, noAssert) {
+    Buffer5.prototype.writeFloatBE = function writeFloatBE(value, offset2, noAssert) {
       return writeFloat(this, value, offset2, false, noAssert);
     };
     function writeDouble(buf, value, offset2, littleEndian, noAssert) {
@@ -1484,14 +1487,14 @@ var require_buffer = __commonJS({
       ieee754.write(buf, value, offset2, littleEndian, 52, 8);
       return offset2 + 8;
     }
-    Buffer4.prototype.writeDoubleLE = function writeDoubleLE(value, offset2, noAssert) {
+    Buffer5.prototype.writeDoubleLE = function writeDoubleLE(value, offset2, noAssert) {
       return writeDouble(this, value, offset2, true, noAssert);
     };
-    Buffer4.prototype.writeDoubleBE = function writeDoubleBE(value, offset2, noAssert) {
+    Buffer5.prototype.writeDoubleBE = function writeDoubleBE(value, offset2, noAssert) {
       return writeDouble(this, value, offset2, false, noAssert);
     };
-    Buffer4.prototype.copy = function copy(target, targetStart, start, end) {
-      if (!Buffer4.isBuffer(target)) throw new TypeError("argument should be a Buffer");
+    Buffer5.prototype.copy = function copy(target, targetStart, start, end) {
+      if (!Buffer5.isBuffer(target)) throw new TypeError("argument should be a Buffer");
       if (!start) start = 0;
       if (!end && end !== 0) end = this.length;
       if (targetStart >= target.length) targetStart = target.length;
@@ -1520,7 +1523,7 @@ var require_buffer = __commonJS({
       }
       return len;
     };
-    Buffer4.prototype.fill = function fill(val, start, end, encoding) {
+    Buffer5.prototype.fill = function fill(val, start, end, encoding) {
       if (typeof val === "string") {
         if (typeof start === "string") {
           encoding = start;
@@ -1533,7 +1536,7 @@ var require_buffer = __commonJS({
         if (encoding !== void 0 && typeof encoding !== "string") {
           throw new TypeError("encoding must be a string");
         }
-        if (typeof encoding === "string" && !Buffer4.isEncoding(encoding)) {
+        if (typeof encoding === "string" && !Buffer5.isEncoding(encoding)) {
           throw new TypeError("Unknown encoding: " + encoding);
         }
         if (val.length === 1) {
@@ -1562,7 +1565,7 @@ var require_buffer = __commonJS({
           this[i2] = val;
         }
       } else {
-        const bytes = Buffer4.isBuffer(val) ? val : Buffer4.from(val, encoding);
+        const bytes = Buffer5.isBuffer(val) ? val : Buffer5.from(val, encoding);
         const len = bytes.length;
         if (len === 0) {
           throw new TypeError('The value "' + val + '" is invalid for argument "value"');
@@ -1817,10 +1820,19 @@ var require_buffer = __commonJS({
   }
 });
 
+// src/polyfill.mjs
+var import_buffer;
+var init_polyfill = __esm({
+  "src/polyfill.mjs"() {
+    import_buffer = __toESM(require_buffer(), 1);
+  }
+});
+
 // node_modules/@noble/hashes/crypto.js
 var require_crypto = __commonJS({
   "node_modules/@noble/hashes/crypto.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.crypto = void 0;
     exports.crypto = typeof globalThis === "object" && "crypto" in globalThis ? globalThis.crypto : void 0;
@@ -1831,6 +1843,7 @@ var require_crypto = __commonJS({
 var require_utils = __commonJS({
   "node_modules/@noble/hashes/utils.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.wrapXOFConstructorWithOpts = exports.wrapConstructorWithOpts = exports.wrapConstructor = exports.Hash = exports.nextTick = exports.swap32IfBE = exports.byteSwapIfBE = exports.swap8IfBE = exports.isLE = void 0;
     exports.isBytes = isBytes;
@@ -2073,6 +2086,7 @@ var require_utils = __commonJS({
 var require_md = __commonJS({
   "node_modules/@noble/hashes/_md.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.SHA512_IV = exports.SHA384_IV = exports.SHA224_IV = exports.SHA256_IV = exports.HashMD = void 0;
     exports.setBigUint64 = setBigUint64;
@@ -2251,6 +2265,7 @@ var require_md = __commonJS({
 var require_u64 = __commonJS({
   "node_modules/@noble/hashes/_u64.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.toBig = exports.shrSL = exports.shrSH = exports.rotrSL = exports.rotrSH = exports.rotrBL = exports.rotrBH = exports.rotr32L = exports.rotr32H = exports.rotlSL = exports.rotlSH = exports.rotlBL = exports.rotlBH = exports.add5L = exports.add5H = exports.add4L = exports.add4H = exports.add3L = exports.add3H = void 0;
     exports.add = add;
@@ -2347,6 +2362,7 @@ var require_u64 = __commonJS({
 var require_sha2 = __commonJS({
   "node_modules/@noble/hashes/sha2.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.sha512_224 = exports.sha512_256 = exports.sha384 = exports.sha512 = exports.sha224 = exports.sha256 = exports.SHA512_256 = exports.SHA512_224 = exports.SHA384 = exports.SHA512 = exports.SHA224 = exports.SHA256 = void 0;
     var _md_ts_1 = require_md();
@@ -2817,6 +2833,7 @@ var require_sha2 = __commonJS({
 var require_utils2 = __commonJS({
   "node_modules/@noble/curves/utils.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.notImplemented = exports.bitMask = exports.utf8ToBytes = exports.randomBytes = exports.isBytes = exports.hexToBytes = exports.concatBytes = exports.bytesToUtf8 = exports.bytesToHex = exports.anumber = exports.abytes = void 0;
     exports.abool = abool;
@@ -3100,6 +3117,7 @@ var require_utils2 = __commonJS({
 var require_modular = __commonJS({
   "node_modules/@noble/curves/abstract/modular.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.isNegativeLE = void 0;
     exports.mod = mod;
@@ -3506,6 +3524,7 @@ var require_modular = __commonJS({
 var require_curve = __commonJS({
   "node_modules/@noble/curves/abstract/curve.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.wNAF = void 0;
     exports.negateCt = negateCt;
@@ -3854,6 +3873,7 @@ var require_curve = __commonJS({
 var require_edwards = __commonJS({
   "node_modules/@noble/curves/abstract/edwards.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.PrimeEdwardsPoint = void 0;
     exports.edwards = edwards;
@@ -4419,6 +4439,7 @@ var require_edwards = __commonJS({
 var require_hash_to_curve = __commonJS({
   "node_modules/@noble/curves/abstract/hash-to-curve.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports._DST_scalar = void 0;
     exports.expand_message_xmd = expand_message_xmd;
@@ -4594,6 +4615,7 @@ var require_hash_to_curve = __commonJS({
 var require_montgomery = __commonJS({
   "node_modules/@noble/curves/abstract/montgomery.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.montgomery = montgomery;
     var utils_ts_1 = require_utils2();
@@ -4723,6 +4745,7 @@ var require_montgomery = __commonJS({
 var require_ed25519 = __commonJS({
   "node_modules/@noble/curves/ed25519.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.hash_to_ristretto255 = exports.hashToRistretto255 = exports.encodeToCurve = exports.hashToCurve = exports.RistrettoPoint = exports.edwardsToMontgomery = exports.ED25519_TORSION_SUBGROUP = exports.ristretto255_hasher = exports.ristretto255 = exports.ed25519_hasher = exports.x25519 = exports.ed25519ph = exports.ed25519ctx = exports.ed25519 = void 0;
     exports.edwardsToMontgomeryPub = edwardsToMontgomeryPub;
@@ -5093,12 +5116,14 @@ var require_ed25519 = __commonJS({
 // (disabled):node_modules/buffer/index.js
 var require_buffer2 = __commonJS({
   "(disabled):node_modules/buffer/index.js"() {
+    init_polyfill();
   }
 });
 
 // node_modules/bn.js/lib/bn.js
 var require_bn = __commonJS({
   "node_modules/bn.js/lib/bn.js"(exports, module) {
+    init_polyfill();
     (function(module2, exports2) {
       "use strict";
       function assert2(val, msg) {
@@ -5135,12 +5160,12 @@ var require_bn = __commonJS({
       }
       BN12.BN = BN12;
       BN12.wordSize = 26;
-      var Buffer4;
+      var Buffer5;
       try {
         if (typeof window !== "undefined" && typeof window.Buffer !== "undefined") {
-          Buffer4 = window.Buffer;
+          Buffer5 = window.Buffer;
         } else {
-          Buffer4 = require_buffer2().Buffer;
+          Buffer5 = require_buffer2().Buffer;
         }
       } catch (e) {
       }
@@ -5597,9 +5622,9 @@ var require_bn = __commonJS({
       BN12.prototype.toJSON = function toJSON() {
         return this.toString(16, 2);
       };
-      if (Buffer4) {
+      if (Buffer5) {
         BN12.prototype.toBuffer = function toBuffer(endian, length) {
-          return this.toArrayLike(Buffer4, endian, length);
+          return this.toArrayLike(Buffer5, endian, length);
         };
       }
       BN12.prototype.toArray = function toArray(endian, length) {
@@ -7999,35 +8024,36 @@ var require_bn = __commonJS({
 // node_modules/safe-buffer/index.js
 var require_safe_buffer = __commonJS({
   "node_modules/safe-buffer/index.js"(exports, module) {
+    init_polyfill();
     var buffer = require_buffer();
-    var Buffer4 = buffer.Buffer;
+    var Buffer5 = buffer.Buffer;
     function copyProps(src, dst) {
       for (var key in src) {
         dst[key] = src[key];
       }
     }
-    if (Buffer4.from && Buffer4.alloc && Buffer4.allocUnsafe && Buffer4.allocUnsafeSlow) {
+    if (Buffer5.from && Buffer5.alloc && Buffer5.allocUnsafe && Buffer5.allocUnsafeSlow) {
       module.exports = buffer;
     } else {
       copyProps(buffer, exports);
       exports.Buffer = SafeBuffer;
     }
     function SafeBuffer(arg, encodingOrOffset, length) {
-      return Buffer4(arg, encodingOrOffset, length);
+      return Buffer5(arg, encodingOrOffset, length);
     }
-    SafeBuffer.prototype = Object.create(Buffer4.prototype);
-    copyProps(Buffer4, SafeBuffer);
+    SafeBuffer.prototype = Object.create(Buffer5.prototype);
+    copyProps(Buffer5, SafeBuffer);
     SafeBuffer.from = function(arg, encodingOrOffset, length) {
       if (typeof arg === "number") {
         throw new TypeError("Argument must not be a number");
       }
-      return Buffer4(arg, encodingOrOffset, length);
+      return Buffer5(arg, encodingOrOffset, length);
     };
     SafeBuffer.alloc = function(size, fill, encoding) {
       if (typeof size !== "number") {
         throw new TypeError("Argument must be a number");
       }
-      var buf = Buffer4(size);
+      var buf = Buffer5(size);
       if (fill !== void 0) {
         if (typeof encoding === "string") {
           buf.fill(fill, encoding);
@@ -8043,7 +8069,7 @@ var require_safe_buffer = __commonJS({
       if (typeof size !== "number") {
         throw new TypeError("Argument must be a number");
       }
-      return Buffer4(size);
+      return Buffer5(size);
     };
     SafeBuffer.allocUnsafeSlow = function(size) {
       if (typeof size !== "number") {
@@ -8058,6 +8084,7 @@ var require_safe_buffer = __commonJS({
 var require_src = __commonJS({
   "node_modules/@solana/web3.js/node_modules/base-x/src/index.js"(exports, module) {
     "use strict";
+    init_polyfill();
     var _Buffer = require_safe_buffer().Buffer;
     function base2(ALPHABET2) {
       if (ALPHABET2.length >= 255) {
@@ -8192,6 +8219,7 @@ var require_src = __commonJS({
 // node_modules/@solana/web3.js/node_modules/bs58/index.js
 var require_bs58 = __commonJS({
   "node_modules/@solana/web3.js/node_modules/bs58/index.js"(exports, module) {
+    init_polyfill();
     var basex = require_src();
     var ALPHABET2 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     module.exports = basex(ALPHABET2);
@@ -8202,6 +8230,7 @@ var require_bs58 = __commonJS({
 var require_sha256 = __commonJS({
   "node_modules/@noble/hashes/sha256.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.sha224 = exports.SHA224 = exports.sha256 = exports.SHA256 = void 0;
     var sha2_ts_1 = require_sha2();
@@ -8216,6 +8245,7 @@ var require_sha256 = __commonJS({
 var require_src2 = __commonJS({
   "node_modules/borsh/node_modules/base-x/src/index.js"(exports, module) {
     "use strict";
+    init_polyfill();
     var _Buffer = require_safe_buffer().Buffer;
     function base2(ALPHABET2) {
       if (ALPHABET2.length >= 255) {
@@ -8350,6 +8380,7 @@ var require_src2 = __commonJS({
 // node_modules/borsh/node_modules/bs58/index.js
 var require_bs582 = __commonJS({
   "node_modules/borsh/node_modules/bs58/index.js"(exports, module) {
+    init_polyfill();
     var basex = require_src2();
     var ALPHABET2 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     module.exports = basex(ALPHABET2);
@@ -8360,6 +8391,7 @@ var require_bs582 = __commonJS({
 var require_encoding_lib = __commonJS({
   "node_modules/text-encoding-utf-8/lib/encoding.lib.js"(exports) {
     "use strict";
+    init_polyfill();
     function inRange(a2, min, max) {
       return min <= a2 && a2 <= max;
     }
@@ -8727,6 +8759,7 @@ var require_encoding_lib = __commonJS({
 var require_lib = __commonJS({
   "node_modules/borsh/lib/index.js"(exports) {
     "use strict";
+    init_polyfill();
     var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k2, k22) {
       if (k22 === void 0) k22 = k2;
       Object.defineProperty(o, k22, { enumerable: true, get: function() {
@@ -8768,13 +8801,13 @@ var require_lib = __commonJS({
     var textDecoder = new ResolvedTextDecoder("utf-8", { fatal: true });
     function baseEncode(value) {
       if (typeof value === "string") {
-        value = Buffer.from(value, "utf8");
+        value = import_buffer.Buffer.from(value, "utf8");
       }
-      return bs58_1.default.encode(Buffer.from(value));
+      return bs58_1.default.encode(import_buffer.Buffer.from(value));
     }
     exports.baseEncode = baseEncode;
     function baseDecode(value) {
-      return Buffer.from(bs58_1.default.decode(value));
+      return import_buffer.Buffer.from(bs58_1.default.decode(value));
     }
     exports.baseDecode = baseDecode;
     var INITIAL_LENGTH = 1024;
@@ -8792,12 +8825,12 @@ var require_lib = __commonJS({
     exports.BorshError = BorshError;
     var BinaryWriter = class {
       constructor() {
-        this.buf = Buffer.alloc(INITIAL_LENGTH);
+        this.buf = import_buffer.Buffer.alloc(INITIAL_LENGTH);
         this.length = 0;
       }
       maybeResize() {
         if (this.buf.length < 16 + this.length) {
-          this.buf = Buffer.concat([this.buf, Buffer.alloc(INITIAL_LENGTH)]);
+          this.buf = import_buffer.Buffer.concat([this.buf, import_buffer.Buffer.alloc(INITIAL_LENGTH)]);
         }
       }
       writeU8(value) {
@@ -8817,36 +8850,36 @@ var require_lib = __commonJS({
       }
       writeU64(value) {
         this.maybeResize();
-        this.writeBuffer(Buffer.from(new bn_js_1.default(value).toArray("le", 8)));
+        this.writeBuffer(import_buffer.Buffer.from(new bn_js_1.default(value).toArray("le", 8)));
       }
       writeU128(value) {
         this.maybeResize();
-        this.writeBuffer(Buffer.from(new bn_js_1.default(value).toArray("le", 16)));
+        this.writeBuffer(import_buffer.Buffer.from(new bn_js_1.default(value).toArray("le", 16)));
       }
       writeU256(value) {
         this.maybeResize();
-        this.writeBuffer(Buffer.from(new bn_js_1.default(value).toArray("le", 32)));
+        this.writeBuffer(import_buffer.Buffer.from(new bn_js_1.default(value).toArray("le", 32)));
       }
       writeU512(value) {
         this.maybeResize();
-        this.writeBuffer(Buffer.from(new bn_js_1.default(value).toArray("le", 64)));
+        this.writeBuffer(import_buffer.Buffer.from(new bn_js_1.default(value).toArray("le", 64)));
       }
       writeBuffer(buffer) {
-        this.buf = Buffer.concat([
-          Buffer.from(this.buf.subarray(0, this.length)),
+        this.buf = import_buffer.Buffer.concat([
+          import_buffer.Buffer.from(this.buf.subarray(0, this.length)),
           buffer,
-          Buffer.alloc(INITIAL_LENGTH)
+          import_buffer.Buffer.alloc(INITIAL_LENGTH)
         ]);
         this.length += buffer.length;
       }
       writeString(str2) {
         this.maybeResize();
-        const b2 = Buffer.from(str2, "utf8");
+        const b2 = import_buffer.Buffer.from(str2, "utf8");
         this.writeU32(b2.length);
         this.writeBuffer(b2);
       }
       writeFixedArray(array3) {
-        this.writeBuffer(Buffer.from(array3));
+        this.writeBuffer(import_buffer.Buffer.from(array3));
       }
       writeArray(array3, fn) {
         this.maybeResize();
@@ -9153,6 +9186,7 @@ var require_lib = __commonJS({
 var require_Layout = __commonJS({
   "node_modules/@solana/buffer-layout/lib/Layout.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.s16 = exports.s8 = exports.nu64be = exports.u48be = exports.u40be = exports.u32be = exports.u24be = exports.u16be = exports.nu64 = exports.u48 = exports.u40 = exports.u32 = exports.u24 = exports.u16 = exports.u8 = exports.offset = exports.greedy = exports.Constant = exports.UTF8 = exports.CString = exports.Blob = exports.Boolean = exports.BitField = exports.BitStructure = exports.VariantLayout = exports.Union = exports.UnionLayoutDiscriminator = exports.UnionDiscriminator = exports.Structure = exports.Sequence = exports.DoubleBE = exports.Double = exports.FloatBE = exports.Float = exports.NearInt64BE = exports.NearInt64 = exports.NearUInt64BE = exports.NearUInt64 = exports.IntBE = exports.Int = exports.UIntBE = exports.UInt = exports.OffsetLayout = exports.GreedyCount = exports.ExternalLayout = exports.bindConstructorLayout = exports.nameWithProperty = exports.Layout = exports.uint8ArrayToBuffer = exports.checkUint8Array = void 0;
     exports.constant = exports.utf8 = exports.cstr = exports.blob = exports.unionLayoutDiscriminator = exports.union = exports.seq = exports.bits = exports.struct = exports.f64be = exports.f64 = exports.f32be = exports.f32 = exports.ns64be = exports.s48be = exports.s40be = exports.s32be = exports.s24be = exports.s16be = exports.ns64 = exports.s48 = exports.s40 = exports.s32 = exports.s24 = void 0;
@@ -10510,6 +10544,7 @@ var require_Layout = __commonJS({
 var require_index_browser = __commonJS({
   "node_modules/@solana/web3.js/node_modules/@solana/errors/dist/index.browser.cjs"(exports) {
     "use strict";
+    init_polyfill();
     var SOLANA_ERROR__BLOCK_HEIGHT_EXCEEDED = 1;
     var SOLANA_ERROR__INVALID_NONCE = 2;
     var SOLANA_ERROR__NONCE_ACCOUNT_NOT_FOUND = 3;
@@ -11699,6 +11734,7 @@ var require_index_browser = __commonJS({
 var require_index_browser2 = __commonJS({
   "node_modules/@solana/web3.js/node_modules/@solana/codecs-core/dist/index.browser.cjs"(exports) {
     "use strict";
+    init_polyfill();
     var errors = require_index_browser();
     var mergeBytes = (byteArrays) => {
       const nonEmptyByteArrays = byteArrays.filter((arr) => arr.length);
@@ -12221,6 +12257,7 @@ var require_index_browser2 = __commonJS({
 var require_index_browser3 = __commonJS({
   "node_modules/@solana/web3.js/node_modules/@solana/codecs-numbers/dist/index.browser.cjs"(exports) {
     "use strict";
+    init_polyfill();
     var errors = require_index_browser();
     var codecsCore = require_index_browser2();
     function assertNumberIsBetweenForCodec(codecDescription, min, max, value) {
@@ -12542,6 +12579,7 @@ var require_index_browser3 = __commonJS({
 // node_modules/@solana/web3.js/node_modules/superstruct/dist/index.cjs
 var require_dist = __commonJS({
   "node_modules/@solana/web3.js/node_modules/superstruct/dist/index.cjs"(exports, module) {
+    init_polyfill();
     (function(global2, factory) {
       typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global2 = typeof globalThis !== "undefined" ? globalThis : global2 || self, factory(global2.Superstruct = {}));
     })(exports, (function(exports2) {
@@ -13362,6 +13400,7 @@ function rng() {
 var getRandomValues, rnds8;
 var init_rng = __esm({
   "node_modules/uuid/dist/esm-browser/rng.js"() {
+    init_polyfill();
     rnds8 = new Uint8Array(16);
   }
 });
@@ -13370,6 +13409,7 @@ var init_rng = __esm({
 var regex_default;
 var init_regex = __esm({
   "node_modules/uuid/dist/esm-browser/regex.js"() {
+    init_polyfill();
     regex_default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
   }
 });
@@ -13381,6 +13421,7 @@ function validate(uuid) {
 var validate_default;
 var init_validate = __esm({
   "node_modules/uuid/dist/esm-browser/validate.js"() {
+    init_polyfill();
     init_regex();
     validate_default = validate;
   }
@@ -13398,6 +13439,7 @@ function stringify(arr) {
 var byteToHex, i, stringify_default;
 var init_stringify = __esm({
   "node_modules/uuid/dist/esm-browser/stringify.js"() {
+    init_polyfill();
     init_validate();
     byteToHex = [];
     for (i = 0; i < 256; ++i) {
@@ -13459,6 +13501,7 @@ function v1(options, buf, offset2) {
 var _nodeId, _clockseq, _lastMSecs, _lastNSecs, v1_default;
 var init_v1 = __esm({
   "node_modules/uuid/dist/esm-browser/v1.js"() {
+    init_polyfill();
     init_rng();
     init_stringify();
     _lastMSecs = 0;
@@ -13495,6 +13538,7 @@ function parse(uuid) {
 var parse_default;
 var init_parse = __esm({
   "node_modules/uuid/dist/esm-browser/parse.js"() {
+    init_polyfill();
     init_validate();
     parse_default = parse;
   }
@@ -13546,6 +13590,7 @@ function v35_default(name, version2, hashfunc) {
 var DNS, URL2;
 var init_v35 = __esm({
   "node_modules/uuid/dist/esm-browser/v35.js"() {
+    init_polyfill();
     init_stringify();
     init_parse();
     DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
@@ -13698,6 +13743,7 @@ function md5ii(a2, b2, c, d, x, s, t) {
 var md5_default;
 var init_md5 = __esm({
   "node_modules/uuid/dist/esm-browser/md5.js"() {
+    init_polyfill();
     md5_default = md5;
   }
 });
@@ -13706,6 +13752,7 @@ var init_md5 = __esm({
 var v3, v3_default;
 var init_v3 = __esm({
   "node_modules/uuid/dist/esm-browser/v3.js"() {
+    init_polyfill();
     init_v35();
     init_md5();
     v3 = v35_default("v3", 48, md5_default);
@@ -13731,6 +13778,7 @@ function v4(options, buf, offset2) {
 var v4_default;
 var init_v4 = __esm({
   "node_modules/uuid/dist/esm-browser/v4.js"() {
+    init_polyfill();
     init_rng();
     init_stringify();
     v4_default = v4;
@@ -13812,6 +13860,7 @@ function sha1(bytes) {
 var sha1_default;
 var init_sha1 = __esm({
   "node_modules/uuid/dist/esm-browser/sha1.js"() {
+    init_polyfill();
     sha1_default = sha1;
   }
 });
@@ -13820,6 +13869,7 @@ var init_sha1 = __esm({
 var v5, v5_default;
 var init_v5 = __esm({
   "node_modules/uuid/dist/esm-browser/v5.js"() {
+    init_polyfill();
     init_v35();
     init_sha1();
     v5 = v35_default("v5", 80, sha1_default);
@@ -13831,6 +13881,7 @@ var init_v5 = __esm({
 var nil_default;
 var init_nil = __esm({
   "node_modules/uuid/dist/esm-browser/nil.js"() {
+    init_polyfill();
     nil_default = "00000000-0000-0000-0000-000000000000";
   }
 });
@@ -13845,6 +13896,7 @@ function version(uuid) {
 var version_default;
 var init_version = __esm({
   "node_modules/uuid/dist/esm-browser/version.js"() {
+    init_polyfill();
     init_validate();
     version_default = version;
   }
@@ -13865,6 +13917,7 @@ __export(esm_browser_exports, {
 });
 var init_esm_browser = __esm({
   "node_modules/uuid/dist/esm-browser/index.js"() {
+    init_polyfill();
     init_v1();
     init_v3();
     init_v4();
@@ -13881,6 +13934,7 @@ var init_esm_browser = __esm({
 var require_generateRequest = __commonJS({
   "node_modules/jayson/lib/generateRequest.js"(exports, module) {
     "use strict";
+    init_polyfill();
     var uuid = (init_esm_browser(), __toCommonJS(esm_browser_exports)).v4;
     var generateRequest = function(method, params, id, options) {
       if (typeof method !== "string") {
@@ -13925,6 +13979,7 @@ var require_generateRequest = __commonJS({
 var require_browser = __commonJS({
   "node_modules/jayson/lib/client/browser/index.js"(exports, module) {
     "use strict";
+    init_polyfill();
     var uuid = (init_esm_browser(), __toCommonJS(esm_browser_exports)).v4;
     var generateRequest = require_generateRequest();
     var ClientBrowser = function(callServer, options) {
@@ -14032,6 +14087,7 @@ var require_browser = __commonJS({
 var require_eventemitter3 = __commonJS({
   "node_modules/rpc-websockets/node_modules/eventemitter3/index.js"(exports, module) {
     "use strict";
+    init_polyfill();
     var has = Object.prototype.hasOwnProperty;
     var prefix = "~";
     function Events() {
@@ -14194,6 +14250,7 @@ var require_eventemitter3 = __commonJS({
 var require_index_browser4 = __commonJS({
   "node_modules/rpc-websockets/dist/index.browser.cjs"(exports) {
     "use strict";
+    init_polyfill();
     var buffer = require_buffer();
     var eventemitter3 = require_eventemitter3();
     var WebSocketBrowserImpl = class extends eventemitter3.EventEmitter {
@@ -14613,6 +14670,7 @@ var require_index_browser4 = __commonJS({
 var require_sha3 = __commonJS({
   "node_modules/@noble/hashes/sha3.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.shake256 = exports.shake128 = exports.keccak_512 = exports.keccak_384 = exports.keccak_256 = exports.keccak_224 = exports.sha3_512 = exports.sha3_384 = exports.sha3_256 = exports.sha3_224 = exports.Keccak = void 0;
     exports.keccakP = keccakP;
@@ -14815,6 +14873,7 @@ var require_sha3 = __commonJS({
 var require_hmac = __commonJS({
   "node_modules/@noble/hashes/hmac.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.hmac = exports.HMAC = void 0;
     var utils_ts_1 = require_utils();
@@ -14893,6 +14952,7 @@ var require_hmac = __commonJS({
 var require_weierstrass = __commonJS({
   "node_modules/@noble/curves/abstract/weierstrass.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.DER = exports.DERErr = void 0;
     exports._splitEndoScalar = _splitEndoScalar;
@@ -16059,6 +16119,7 @@ var require_weierstrass = __commonJS({
 var require_shortw_utils = __commonJS({
   "node_modules/@noble/curves/_shortw_utils.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.getHash = getHash;
     exports.createCurve = createCurve;
@@ -16077,6 +16138,7 @@ var require_shortw_utils = __commonJS({
 var require_secp256k1 = __commonJS({
   "node_modules/@noble/curves/secp256k1.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.encodeToCurve = exports.hashToCurve = exports.secp256k1_hasher = exports.schnorr = exports.secp256k1 = void 0;
     var sha2_js_1 = require_sha2();
@@ -16302,6 +16364,7 @@ var require_secp256k1 = __commonJS({
 var require_index_browser_cjs = __commonJS({
   "node_modules/@solana/web3.js/lib/index.browser.cjs.js"(exports) {
     "use strict";
+    init_polyfill();
     var buffer = require_buffer();
     var ed25519 = require_ed25519();
     var BN12 = require_bn();
@@ -25076,11 +25139,12 @@ Message: ${transactionMessage}.
 var require_browser2 = __commonJS({
   "node_modules/bigint-buffer/dist/browser.js"(exports) {
     "use strict";
+    init_polyfill();
     Object.defineProperty(exports, "__esModule", { value: true });
     var converter;
     function toBigIntLE2(buf) {
       {
-        const reversed = Buffer.from(buf);
+        const reversed = import_buffer.Buffer.from(buf);
         reversed.reverse();
         const hex = reversed.toString("hex");
         if (hex.length === 0) {
@@ -25105,19 +25169,19 @@ var require_browser2 = __commonJS({
     function toBufferLE2(num, width) {
       {
         const hex = num.toString(16);
-        const buffer = Buffer.from(hex.padStart(width * 2, "0").slice(0, width * 2), "hex");
+        const buffer = import_buffer.Buffer.from(hex.padStart(width * 2, "0").slice(0, width * 2), "hex");
         buffer.reverse();
         return buffer;
       }
-      return converter.fromBigInt(num, Buffer.allocUnsafe(width), false);
+      return converter.fromBigInt(num, import_buffer.Buffer.allocUnsafe(width), false);
     }
     exports.toBufferLE = toBufferLE2;
     function toBufferBE2(num, width) {
       {
         const hex = num.toString(16);
-        return Buffer.from(hex.padStart(width * 2, "0").slice(0, width * 2), "hex");
+        return import_buffer.Buffer.from(hex.padStart(width * 2, "0").slice(0, width * 2), "hex");
       }
-      return converter.fromBigInt(num, Buffer.allocUnsafe(width), true);
+      return converter.fromBigInt(num, import_buffer.Buffer.allocUnsafe(width), true);
     }
     exports.toBufferBE = toBufferBE2;
   }
@@ -25127,6 +25191,7 @@ var require_browser2 = __commonJS({
 var require_src3 = __commonJS({
   "node_modules/@coral-xyz/anchor/node_modules/base-x/src/index.js"(exports, module) {
     "use strict";
+    init_polyfill();
     var _Buffer = require_safe_buffer().Buffer;
     function base2(ALPHABET2) {
       if (ALPHABET2.length >= 255) {
@@ -25261,6 +25326,7 @@ var require_src3 = __commonJS({
 // node_modules/@coral-xyz/anchor/node_modules/bs58/index.js
 var require_bs583 = __commonJS({
   "node_modules/@coral-xyz/anchor/node_modules/bs58/index.js"(exports, module) {
+    init_polyfill();
     var basex = require_src3();
     var ALPHABET2 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
     module.exports = basex(ALPHABET2);
@@ -25271,6 +25337,7 @@ var require_bs583 = __commonJS({
 var require_camelcase = __commonJS({
   "node_modules/camelcase/index.js"(exports, module) {
     "use strict";
+    init_polyfill();
     var UPPERCASE = /[\p{Lu}]/u;
     var LOWERCASE = /[\p{Ll}]/u;
     var LEADING_CAPITAL = /^[\p{Lu}](?![\p{Lu}])/gu;
@@ -25359,6 +25426,7 @@ var require_camelcase = __commonJS({
 var require_Layout2 = __commonJS({
   "node_modules/buffer-layout/lib/Layout.js"(exports) {
     "use strict";
+    init_polyfill();
     var Layout2 = class {
       constructor(span, property) {
         if (!Number.isInteger(span)) {
@@ -26343,7 +26411,7 @@ var require_Layout2 = __commonJS({
        */
       getVariant(vb, offset2) {
         let variant = vb;
-        if (Buffer.isBuffer(vb)) {
+        if (import_buffer.Buffer.isBuffer(vb)) {
           if (void 0 === offset2) {
             offset2 = 0;
           }
@@ -26673,7 +26741,7 @@ var require_Layout2 = __commonJS({
         if (this.length instanceof ExternalLayout2) {
           span = src.length;
         }
-        if (!(Buffer.isBuffer(src) && span === src.length)) {
+        if (!(import_buffer.Buffer.isBuffer(src) && span === src.length)) {
           throw new TypeError(nameWithProperty2("Blob.encode", this) + " requires (length " + span + ") Buffer as src");
         }
         if (offset2 + span > b2.length) {
@@ -26692,7 +26760,7 @@ var require_Layout2 = __commonJS({
       }
       /** @override */
       getSpan(b2, offset2) {
-        if (!Buffer.isBuffer(b2)) {
+        if (!import_buffer.Buffer.isBuffer(b2)) {
           throw new TypeError("b must be a Buffer");
         }
         if (void 0 === offset2) {
@@ -26720,7 +26788,7 @@ var require_Layout2 = __commonJS({
         if ("string" !== typeof src) {
           src = src.toString();
         }
-        const srcb = new Buffer(src, "utf8");
+        const srcb = new import_buffer.Buffer(src, "utf8");
         const span = srcb.length;
         if (offset2 + span > b2.length) {
           throw new RangeError("encoding overruns Buffer");
@@ -26746,7 +26814,7 @@ var require_Layout2 = __commonJS({
       }
       /** @override */
       getSpan(b2, offset2) {
-        if (!Buffer.isBuffer(b2)) {
+        if (!import_buffer.Buffer.isBuffer(b2)) {
           throw new TypeError("b must be a Buffer");
         }
         if (void 0 === offset2) {
@@ -26773,7 +26841,7 @@ var require_Layout2 = __commonJS({
         if ("string" !== typeof src) {
           src = src.toString();
         }
-        const srcb = new Buffer(src, "utf8");
+        const srcb = new import_buffer.Buffer(src, "utf8");
         const span = srcb.length;
         if (0 <= this.maxSpan && this.maxSpan < span) {
           throw new RangeError("text length exceeds maxSpan");
@@ -26871,6 +26939,7 @@ var require_Layout2 = __commonJS({
 var require_dist2 = __commonJS({
   "node_modules/@coral-xyz/borsh/dist/index.js"(exports) {
     "use strict";
+    init_polyfill();
     var __importDefault = exports && exports.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -26940,7 +27009,7 @@ var require_dist2 = __commonJS({
         if (this.signed) {
           src = src.toTwos(this.span * 8);
         }
-        return this.blob.encode(src.toArrayLike(Buffer, "le", this.span), b2, offset2);
+        return this.blob.encode(src.toArrayLike(import_buffer.Buffer, "le", this.span), b2, offset2);
       }
     };
     function u644(property) {
@@ -27060,7 +27129,7 @@ var require_dist2 = __commonJS({
       return new WrappedLayout2(layout, ({ data }) => data, (data) => ({ data }), property);
     }
     function str2(property) {
-      return new WrappedLayout2(vecU82(), (data) => data.toString("utf-8"), (s) => Buffer.from(s, "utf-8"), property);
+      return new WrappedLayout2(vecU82(), (data) => data.toString("utf-8"), (s) => import_buffer.Buffer.from(s, "utf-8"), property);
     }
     function rustEnum2(variants, property, discriminant) {
       const unionLayout = (0, buffer_layout_1.union)(discriminant !== null && discriminant !== void 0 ? discriminant : (0, buffer_layout_1.u8)(), property);
@@ -27110,6 +27179,7 @@ var require_dist2 = __commonJS({
 var require_eventemitter32 = __commonJS({
   "node_modules/eventemitter3/index.js"(exports, module) {
     "use strict";
+    init_polyfill();
     var has = Object.prototype.hasOwnProperty;
     var prefix = "~";
     function Events() {
@@ -27269,13 +27339,16 @@ var require_eventemitter32 = __commonJS({
 });
 
 // src/ui.mjs
-var import_buffer5 = __toESM(require_buffer(), 1);
+init_polyfill();
+var import_buffer6 = __toESM(require_buffer(), 1);
 
 // src/config.mjs
+init_polyfill();
 var metadataService = "https://serpz-launchpad-metadata.ldigitalsuccess.workers.dev";
 var solanaRpc = "https://solana-rpc.publicnode.com";
 
 // src/validation.mjs
+init_polyfill();
 function validateToken(input) {
   const errors = {};
   const name = String(input.name || "").trim();
@@ -27299,12 +27372,24 @@ function validateToken(input) {
 }
 
 // src/metadata.mjs
+init_polyfill();
+async function serviceError(response, fallback) {
+  let error;
+  try {
+    error = (await response.json()).error;
+  } catch {
+  }
+  if (response.status === 429 && error === "Storage limit reached") return "Launchpad storage limit or this wallet\u2019s daily upload limit reached. Please contact the site owner or try again tomorrow.";
+  if (response.status === 429) return "Daily launch request limit reached. Please try again tomorrow.";
+  if (response.status === 403) return "Wallet verification failed or expired. Please reconnect your wallet and try again.";
+  return fallback;
+}
 var toBase64 = (bytes) => btoa(Array.from(bytes, (b2) => String.fromCharCode(b2)).join(""));
 async function uploadMetadata(input, wallet2, service, fetcher = fetch) {
   if (!service || new URL(service).protocol !== "https:") throw Error("Metadata service unavailable.");
   const original = String(wallet2.publicKey), publicKey4 = toBase64(wallet2.publicKey.toBytes());
   const response = await fetcher(`${service}/challenge`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ publicKey: publicKey4 }) });
-  if (!response.ok) throw Error("Metadata service unavailable.");
+  if (!response.ok) throw Error(await serviceError(response, "Metadata service unavailable."));
   const { nonce, message, expires } = await response.json();
   const expected = `SERPZ launchpad metadata upload
 Nonce: ${nonce}
@@ -27320,7 +27405,7 @@ This signature does not authorize a transaction.`;
   form2.set("signature", toBase64(signature));
   form2.set("nonce", nonce);
   const uploaded = await fetcher(`${service}/upload`, { method: "POST", body: form2 });
-  if (!uploaded.ok) throw Error("Metadata upload unavailable.");
+  if (!uploaded.ok) throw Error(await serviceError(uploaded, "Metadata upload unavailable."));
   const result = await uploaded.json();
   const parsed = new URL(result.uri);
   if (parsed.origin !== new URL(service).origin || !parsed.pathname.startsWith("/metadata/")) throw Error("Invalid metadata response.");
@@ -27328,6 +27413,7 @@ This signature does not authorize a transaction.`;
 }
 
 // src/transaction.mjs
+init_polyfill();
 async function launchToken(input, deps) {
   let signature;
   let mint;
@@ -27376,6 +27462,7 @@ async function launchToken(input, deps) {
 }
 
 // src/quote.mjs
+init_polyfill();
 async function resolveQuote(address, sdk, publicKey4) {
   try {
     const mint = address?.trim() ? publicKey4(address.trim()) : void 0;
@@ -27388,6 +27475,7 @@ async function resolveQuote(address, sdk, publicKey4) {
 }
 
 // src/pump.mjs
+init_polyfill();
 async function buildPumpInstruction({ name, symbol, uri, wallet: wallet2, mint, quote }, sdk) {
   const args = { name, symbol, uri, creator: wallet2, user: wallet2, mint, mayhemMode: false, holderReward: false };
   if (quote.source !== "sol") {
@@ -27402,6 +27490,7 @@ async function buildPumpInstruction({ name, symbol, uri, wallet: wallet2, mint, 
 }
 
 // src/solana.mjs
+init_polyfill();
 var import_web3 = __toESM(require_index_browser_cjs(), 1);
 var MAINNET_GENESIS = "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d";
 async function prepareSolanaLaunch(input, quote, uri, wallet2, { connection, buildInstruction }) {
@@ -27441,7 +27530,11 @@ async function verifySignedTransaction(transaction, expectedMessage, cryptoApi =
 // src/ui.mjs
 var import_web326 = __toESM(require_index_browser_cjs(), 1);
 
+// node_modules/@pump-fun/pump-sdk/dist/esm/index.js
+init_polyfill();
+
 // node_modules/@solana/spl-token/lib/esm/constants.js
+init_polyfill();
 var import_web32 = __toESM(require_index_browser_cjs(), 1);
 var TOKEN_PROGRAM_ID = new import_web32.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 var TOKEN_2022_PROGRAM_ID = new import_web32.PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
@@ -27449,7 +27542,11 @@ var ASSOCIATED_TOKEN_PROGRAM_ID = new import_web32.PublicKey("ATokenGPvbdGVxr1b2
 var NATIVE_MINT = new import_web32.PublicKey("So11111111111111111111111111111111111111112");
 var NATIVE_MINT_2022 = new import_web32.PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXejP");
 
+// node_modules/@solana/buffer-layout-utils/lib/esm/index.mjs
+init_polyfill();
+
 // node_modules/@solana/buffer-layout-utils/lib/esm/base.mjs
+init_polyfill();
 var encodeDecode = (layout) => {
   const decode2 = layout.decode.bind(layout);
   const encode = layout.encode.bind(layout);
@@ -27457,7 +27554,8 @@ var encodeDecode = (layout) => {
 };
 
 // node_modules/@solana/buffer-layout-utils/lib/esm/bigint.mjs
-var import_buffer = __toESM(require_buffer(), 1);
+init_polyfill();
+var import_buffer2 = __toESM(require_buffer(), 1);
 var import_buffer_layout = __toESM(require_Layout(), 1);
 var import_bigint_buffer = __toESM(require_browser2(), 1);
 function assertValidBigInteger(untrustedInput) {
@@ -27472,13 +27570,13 @@ function bigInt_IMPL(littleEndian, length) {
     const bigIntLayout = layout;
     bigIntLayout.decode = (buffer, offset2) => {
       const src = decode2(buffer, offset2);
-      return littleEndian ? (0, import_bigint_buffer.toBigIntLE)(import_buffer.Buffer.from(src)) : (0, import_bigint_buffer.toBigIntBE)(import_buffer.Buffer.from(src));
+      return littleEndian ? (0, import_bigint_buffer.toBigIntLE)(import_buffer2.Buffer.from(src)) : (0, import_bigint_buffer.toBigIntBE)(import_buffer2.Buffer.from(src));
     };
     bigIntLayout.encode = (bigInt2, buffer, offset2) => {
       assertValidBigInteger(bigInt2);
       let src;
       if (length === 0) {
-        src = import_buffer.Buffer.alloc(0);
+        src = import_buffer2.Buffer.alloc(0);
       } else {
         src = littleEndian ? (0, import_bigint_buffer.toBufferLE)(bigInt2, length) : (0, import_bigint_buffer.toBufferBE)(bigInt2, length);
       }
@@ -27494,7 +27592,11 @@ var bigInt = /* @__PURE__ */ bigInt_IMPL.bind(
 );
 var u64 = /* @__PURE__ */ bigInt(8);
 
+// node_modules/@solana/buffer-layout-utils/lib/esm/decimal.mjs
+init_polyfill();
+
 // node_modules/bignumber.js/bignumber.mjs
+init_polyfill();
 var isNumeric = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
 var mathceil = Math.ceil;
 var mathfloor = Math.floor;
@@ -28842,6 +28944,7 @@ var bignumber_default = BigNumber;
 var WAD = new bignumber_default("1e+18");
 
 // node_modules/@solana/buffer-layout-utils/lib/esm/native.mjs
+init_polyfill();
 var import_buffer_layout2 = __toESM(require_Layout(), 1);
 var bool = (property) => {
   const layout = (0, import_buffer_layout2.u8)(property);
@@ -28859,6 +28962,7 @@ var bool = (property) => {
 };
 
 // node_modules/@solana/buffer-layout-utils/lib/esm/web3.mjs
+init_polyfill();
 var import_buffer_layout3 = __toESM(require_Layout(), 1);
 var import_web33 = __toESM(require_index_browser_cjs(), 1);
 var publicKey = (property) => {
@@ -28877,6 +28981,7 @@ var publicKey = (property) => {
 };
 
 // node_modules/@solana/spl-token/lib/esm/errors.js
+init_polyfill();
 var TokenError = class extends Error {
   constructor(message) {
     super(message);
@@ -28920,6 +29025,7 @@ var TokenOwnerOffCurveError = class extends TokenError {
 };
 
 // node_modules/@solana/spl-token/lib/esm/instructions/types.js
+init_polyfill();
 var TokenInstruction;
 (function(TokenInstruction2) {
   TokenInstruction2[TokenInstruction2["InitializeMint"] = 0] = "InitializeMint";
@@ -28969,10 +29075,12 @@ var TokenInstruction;
 })(TokenInstruction || (TokenInstruction = {}));
 
 // node_modules/@solana/spl-token/lib/esm/state/mint.js
+init_polyfill();
 var import_buffer_layout6 = __toESM(require_Layout(), 1);
 var import_web35 = __toESM(require_index_browser_cjs(), 1);
 
 // node_modules/@solana/spl-token/lib/esm/extensions/accountType.js
+init_polyfill();
 var AccountType;
 (function(AccountType2) {
   AccountType2[AccountType2["Uninitialized"] = 0] = "Uninitialized";
@@ -28982,9 +29090,11 @@ var AccountType;
 var ACCOUNT_TYPE_SIZE = 1;
 
 // node_modules/@solana/spl-token/lib/esm/state/account.js
+init_polyfill();
 var import_buffer_layout5 = __toESM(require_Layout(), 1);
 
 // node_modules/@solana/spl-token/lib/esm/state/multisig.js
+init_polyfill();
 var import_buffer_layout4 = __toESM(require_Layout(), 1);
 var MultisigLayout = (0, import_buffer_layout4.struct)([
   (0, import_buffer_layout4.u8)("m"),
@@ -29033,7 +29143,7 @@ function unpackAccount(address, info, programId = TOKEN_PROGRAM_ID) {
   if (info.data.length < ACCOUNT_SIZE)
     throw new TokenInvalidAccountSizeError();
   const rawAccount = AccountLayout.decode(info.data.slice(0, ACCOUNT_SIZE));
-  let tlvData = Buffer.alloc(0);
+  let tlvData = import_buffer.Buffer.alloc(0);
   if (info.data.length > ACCOUNT_SIZE) {
     if (info.data.length === MULTISIG_SIZE)
       throw new TokenInvalidAccountSizeError();
@@ -29058,6 +29168,7 @@ function unpackAccount(address, info, programId = TOKEN_PROGRAM_ID) {
 }
 
 // node_modules/@solana/spl-token/lib/esm/instructions/internal.js
+init_polyfill();
 var import_web34 = __toESM(require_index_browser_cjs(), 1);
 function addSigners(keys, ownerOrAuthority, multiSigners) {
   if (multiSigners.length) {
@@ -29094,7 +29205,7 @@ function unpackMint(address, info, programId = TOKEN_PROGRAM_ID) {
   if (info.data.length < MINT_SIZE)
     throw new TokenInvalidAccountSizeError();
   const rawMint = MintLayout.decode(info.data.slice(0, MINT_SIZE));
-  let tlvData = Buffer.alloc(0);
+  let tlvData = import_buffer.Buffer.alloc(0);
   if (info.data.length > MINT_SIZE) {
     if (info.data.length <= ACCOUNT_SIZE)
       throw new TokenInvalidAccountSizeError();
@@ -29122,6 +29233,7 @@ function getAssociatedTokenAddressSync(mint, owner, allowOwnerOffCurve = false, 
 }
 
 // node_modules/@solana/spl-token/lib/esm/instructions/closeAccount.js
+init_polyfill();
 var import_buffer_layout7 = __toESM(require_Layout(), 1);
 var import_web36 = __toESM(require_index_browser_cjs(), 1);
 var closeAccountInstructionData = (0, import_buffer_layout7.struct)([(0, import_buffer_layout7.u8)("instruction")]);
@@ -29130,15 +29242,16 @@ function createCloseAccountInstruction(account, destination, authority, multiSig
     { pubkey: account, isSigner: false, isWritable: true },
     { pubkey: destination, isSigner: false, isWritable: true }
   ], authority, multiSigners);
-  const data = Buffer.alloc(closeAccountInstructionData.span);
+  const data = import_buffer.Buffer.alloc(closeAccountInstructionData.span);
   closeAccountInstructionData.encode({ instruction: TokenInstruction.CloseAccount }, data);
   return new import_web36.TransactionInstruction({ keys, programId, data });
 }
 
 // node_modules/@solana/spl-token/lib/esm/instructions/associatedTokenAccount.js
+init_polyfill();
 var import_web37 = __toESM(require_index_browser_cjs(), 1);
 function createAssociatedTokenAccountIdempotentInstruction(payer, associatedToken, owner, mint, programId = TOKEN_PROGRAM_ID, associatedTokenProgramId = ASSOCIATED_TOKEN_PROGRAM_ID) {
-  return buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, mint, Buffer.from([1]), programId, associatedTokenProgramId);
+  return buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, mint, import_buffer.Buffer.from([1]), programId, associatedTokenProgramId);
 }
 function buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, mint, instructionData, programId = TOKEN_PROGRAM_ID, associatedTokenProgramId = ASSOCIATED_TOKEN_PROGRAM_ID) {
   const keys = [
@@ -29157,12 +29270,13 @@ function buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, m
 }
 
 // node_modules/@solana/spl-token/lib/esm/instructions/syncNative.js
+init_polyfill();
 var import_buffer_layout8 = __toESM(require_Layout(), 1);
 var import_web38 = __toESM(require_index_browser_cjs(), 1);
 var syncNativeInstructionData = (0, import_buffer_layout8.struct)([(0, import_buffer_layout8.u8)("instruction")]);
 function createSyncNativeInstruction(account, programId = TOKEN_PROGRAM_ID) {
   const keys = [{ pubkey: account, isSigner: false, isWritable: true }];
-  const data = Buffer.alloc(syncNativeInstructionData.span);
+  const data = import_buffer.Buffer.alloc(syncNativeInstructionData.span);
   syncNativeInstructionData.encode({ instruction: TokenInstruction.SyncNative }, data);
   return new import_web38.TransactionInstruction({ keys, programId, data });
 }
@@ -29174,22 +29288,25 @@ var import_web322 = __toESM(require_index_browser_cjs());
 var import_bn14 = __toESM(require_bn());
 
 // node_modules/@pump-fun/pump-swap-sdk/dist/esm/index.js
+init_polyfill();
 var import_web310 = __toESM(require_index_browser_cjs());
 var import_bn3 = __toESM(require_bn());
 var import_bn4 = __toESM(require_bn());
 var import_bn5 = __toESM(require_bn());
 
 // node_modules/@coral-xyz/anchor/dist/browser/index.js
+init_polyfill();
 var import_bn = __toESM(require_bn());
 var import_bn2 = __toESM(require_bn());
 var import_web39 = __toESM(require_index_browser_cjs());
 var web3_js = __toESM(require_index_browser_cjs());
-var import_buffer2 = __toESM(require_buffer());
+var import_buffer3 = __toESM(require_buffer());
 var import_bs58 = __toESM(require_bs583());
 var import_camelcase = __toESM(require_camelcase());
 var borsh = __toESM(require_dist2());
 
 // node_modules/pako/dist/pako.esm.mjs
+init_polyfill();
 var Z_FIXED$1 = 4;
 var Z_BINARY = 0;
 var Z_TEXT = 1;
@@ -33415,7 +33532,7 @@ function encode$1(data) {
   return import_bs58.default.encode(data);
 }
 function decode(data) {
-  return import_buffer2.Buffer.from(data, "base64");
+  return import_buffer3.Buffer.from(data, "base64");
 }
 function isCompositeAccounts(accountItem) {
   return "accounts" in accountItem;
@@ -35253,25 +35370,25 @@ var BorshInstructionCoder = class {
    * Encodes a program instruction.
    */
   encode(ixName, ix) {
-    const buffer = import_buffer2.Buffer.alloc(1e3);
+    const buffer = import_buffer3.Buffer.alloc(1e3);
     const encoder = this.ixLayouts.get(ixName);
     if (!encoder) {
       throw new Error(`Unknown method: ${ixName}`);
     }
     const len = encoder.layout.encode(ix, buffer);
     const data = buffer.slice(0, len);
-    return import_buffer2.Buffer.concat([import_buffer2.Buffer.from(encoder.discriminator), data]);
+    return import_buffer3.Buffer.concat([import_buffer3.Buffer.from(encoder.discriminator), data]);
   }
   /**
    * Decodes a program instruction.
    */
   decode(ix, encoding = "hex") {
     if (typeof ix === "string") {
-      ix = encoding === "hex" ? import_buffer2.Buffer.from(ix, "hex") : import_bs58.default.decode(ix);
+      ix = encoding === "hex" ? import_buffer3.Buffer.from(ix, "hex") : import_bs58.default.decode(ix);
     }
     for (const [name, layout] of this.ixLayouts) {
       const givenDisc = ix.subarray(0, layout.discriminator.length);
-      const matches = givenDisc.equals(import_buffer2.Buffer.from(layout.discriminator));
+      const matches = givenDisc.equals(import_buffer3.Buffer.from(layout.discriminator));
       if (matches) {
         return {
           name,
@@ -35469,7 +35586,7 @@ var BorshAccountsCoder = class {
     this.accountLayouts = new Map(layouts);
   }
   async encode(accountName, account) {
-    const buffer = import_buffer2.Buffer.alloc(1e3);
+    const buffer = import_buffer3.Buffer.alloc(1e3);
     const layout = this.accountLayouts.get(accountName);
     if (!layout) {
       throw new Error(`Unknown account: ${accountName}`);
@@ -35477,7 +35594,7 @@ var BorshAccountsCoder = class {
     const len = layout.layout.encode(account, buffer);
     const accountData = buffer.slice(0, len);
     const discriminator = this.accountDiscriminator(accountName);
-    return import_buffer2.Buffer.concat([discriminator, accountData]);
+    return import_buffer3.Buffer.concat([discriminator, accountData]);
   }
   decode(accountName, data) {
     const discriminator = this.accountDiscriminator(accountName);
@@ -35489,7 +35606,7 @@ var BorshAccountsCoder = class {
   decodeAny(data) {
     for (const [name, layout] of this.accountLayouts) {
       const givenDisc = data.subarray(0, layout.discriminator.length);
-      const matches = givenDisc.equals(import_buffer2.Buffer.from(layout.discriminator));
+      const matches = givenDisc.equals(import_buffer3.Buffer.from(layout.discriminator));
       if (matches)
         return this.decodeUnchecked(name, data);
     }
@@ -35508,7 +35625,7 @@ var BorshAccountsCoder = class {
     const discriminator = this.accountDiscriminator(accountName);
     return {
       offset: 0,
-      bytes: import_bs58.default.encode(appendData ? import_buffer2.Buffer.concat([discriminator, appendData]) : discriminator)
+      bytes: import_bs58.default.encode(appendData ? import_buffer3.Buffer.concat([discriminator, appendData]) : discriminator)
     };
   }
   size(accountName) {
@@ -35525,7 +35642,7 @@ var BorshAccountsCoder = class {
     if (!account) {
       throw new Error(`Account not found: ${name}`);
     }
-    return import_buffer2.Buffer.from(account.discriminator);
+    return import_buffer3.Buffer.from(account.discriminator);
   }
 };
 var BorshEventCoder = class {
@@ -35562,7 +35679,7 @@ var BorshEventCoder = class {
     }
     for (const [name, layout] of this.layouts) {
       const givenDisc = logArr.subarray(0, layout.discriminator.length);
-      const matches = givenDisc.equals(import_buffer2.Buffer.from(layout.discriminator));
+      const matches = givenDisc.equals(import_buffer3.Buffer.from(layout.discriminator));
       if (matches) {
         return {
           name,
@@ -35587,7 +35704,7 @@ var BorshTypesCoder = class {
     this.typeLayouts = new Map(layouts);
   }
   encode(name, type2) {
-    const buffer = import_buffer2.Buffer.alloc(1e3);
+    const buffer = import_buffer3.Buffer.alloc(1e3);
     const layout = this.typeLayouts.get(name);
     if (!layout) {
       throw new Error(`Unknown type: ${name}`);
@@ -36280,7 +36397,7 @@ var Union = class extends Layout {
    */
   getVariant(vb, offset2) {
     let variant = vb;
-    if (Buffer.isBuffer(vb)) {
+    if (import_buffer.Buffer.isBuffer(vb)) {
       if (void 0 === offset2) {
         offset2 = 0;
       }
@@ -36432,7 +36549,7 @@ var Blob$1 = class extends Layout {
     if (this.length instanceof ExternalLayout) {
       span = src.length;
     }
-    if (!(Buffer.isBuffer(src) && span === src.length)) {
+    if (!(import_buffer.Buffer.isBuffer(src) && span === src.length)) {
       throw new TypeError(nameWithProperty("Blob.encode", this) + " requires (length " + span + ") Buffer as src");
     }
     if (offset2 + span > b2.length) {
@@ -36468,7 +36585,7 @@ var RustStringLayout = class extends Layout_2 {
       return this.layout.span;
     }
     const data = {
-      chars: Buffer.from(src, "utf8")
+      chars: import_buffer.Buffer.from(src, "utf8")
     };
     return this.layout.encode(data, b2, offset2);
   }
@@ -37432,7 +37549,7 @@ var AccountClient = class {
    *                filters are appended after the discriminator filter.
    */
   async all(filters) {
-    const filter = this.coder.accounts.memcmp(this._idlAccount.name, filters instanceof Buffer ? filters : void 0);
+    const filter = this.coder.accounts.memcmp(this._idlAccount.name, filters instanceof import_buffer.Buffer ? filters : void 0);
     const coderFilters = [];
     if ((filter === null || filter === void 0 ? void 0 : filter.offset) != void 0 && (filter === null || filter === void 0 ? void 0 : filter.bytes) != void 0) {
       coderFilters.push({
@@ -37605,14 +37722,14 @@ var u643 = class _u64 extends import_bn.default {
    */
   toBuffer() {
     const a2 = super.toArray().reverse();
-    const b2 = Buffer.from(a2);
+    const b2 = import_buffer.Buffer.from(a2);
     if (b2.length === 8) {
       return b2;
     }
     if (b2.length >= 8) {
       throw new Error("u64 too large");
     }
-    const zeroPad = Buffer.alloc(8);
+    const zeroPad = import_buffer.Buffer.alloc(8);
     b2.copy(zeroPad);
     return zeroPad;
   }
@@ -37776,7 +37893,7 @@ var AccountsResolver = class {
         const currentPath = [...path, currentName];
         const nextPath = [...path, nextName];
         if (!this.get(currentPath)) {
-          this.set(currentPath, import_web39.PublicKey.findProgramAddressSync([Buffer.from("__event_authority")], this._programId)[0]);
+          this.set(currentPath, import_web39.PublicKey.findProgramAddressSync([import_buffer.Buffer.from("__event_authority")], this._programId)[0]);
         }
         if (!this.get(nextPath)) {
           this.set(nextPath, this._programId);
@@ -37918,31 +38035,31 @@ var AccountsResolver = class {
     switch (type2) {
       case "u8":
       case "i8":
-        return Buffer.from([value]);
+        return import_buffer.Buffer.from([value]);
       case "u16":
       case "i16":
-        return new import_bn.default(value).toArrayLike(Buffer, "le", 2);
+        return new import_bn.default(value).toArrayLike(import_buffer.Buffer, "le", 2);
       case "u32":
       case "i32":
-        return new import_bn.default(value).toArrayLike(Buffer, "le", 4);
+        return new import_bn.default(value).toArrayLike(import_buffer.Buffer, "le", 4);
       case "u64":
       case "i64":
-        return new import_bn.default(value).toArrayLike(Buffer, "le", 8);
+        return new import_bn.default(value).toArrayLike(import_buffer.Buffer, "le", 8);
       case "u128":
       case "i128":
-        return new import_bn.default(value).toArrayLike(Buffer, "le", 16);
+        return new import_bn.default(value).toArrayLike(import_buffer.Buffer, "le", 16);
       case "u256":
       case "i256":
-        return new import_bn.default(value).toArrayLike(Buffer, "le", 32);
+        return new import_bn.default(value).toArrayLike(import_buffer.Buffer, "le", 32);
       case "string":
-        return Buffer.from(value);
+        return import_buffer.Buffer.from(value);
       case "pubkey":
         return value.toBuffer();
       case "bytes":
-        return Buffer.from(value);
+        return import_buffer.Buffer.from(value);
       default:
         if (type2 === null || type2 === void 0 ? void 0 : type2.array) {
-          return Buffer.from(value);
+          return import_buffer.Buffer.from(value);
         }
         throw new Error(`Unexpected seed type: ${type2}`);
     }
@@ -40300,7 +40417,7 @@ var require_buffer3 = __commonJS2({
     }
   }
 });
-var import_buffer3 = __toESM2(require_buffer3());
+var import_buffer4 = __toESM2(require_buffer3());
 var PUMP_PROGRAM_ID = new import_web310.PublicKey(
   "6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P"
 );
@@ -40323,39 +40440,39 @@ function pumpAmmPda(seeds) {
 function pumpFeePda(seeds) {
   return import_web310.PublicKey.findProgramAddressSync(seeds, PUMP_FEE_PROGRAM_ID)[0];
 }
-var GLOBAL_CONFIG_PDA = pumpAmmPda([import_buffer3.Buffer.from("global_config")]);
+var GLOBAL_CONFIG_PDA = pumpAmmPda([import_buffer4.Buffer.from("global_config")]);
 var PUMP_AMM_EVENT_AUTHORITY_PDA = pumpAmmPda([
-  import_buffer3.Buffer.from("__event_authority")
+  import_buffer4.Buffer.from("__event_authority")
 ]);
 var GLOBAL_VOLUME_ACCUMULATOR_PDA = pumpAmmPda([
-  import_buffer3.Buffer.from("global_volume_accumulator")
+  import_buffer4.Buffer.from("global_volume_accumulator")
 ]);
 var PUMP_AMM_FEE_CONFIG_PDA = pumpFeePda([
-  import_buffer3.Buffer.from("fee_config"),
+  import_buffer4.Buffer.from("fee_config"),
   PUMP_AMM_PROGRAM_ID.toBuffer()
 ]);
 function poolPda(index, owner, baseMint, quoteMint) {
   return pumpAmmPda([
-    import_buffer3.Buffer.from("pool"),
-    new import_bn3.default(index).toArrayLike(import_buffer3.Buffer, "le", 2),
+    import_buffer4.Buffer.from("pool"),
+    new import_bn3.default(index).toArrayLike(import_buffer4.Buffer, "le", 2),
     owner.toBuffer(),
     baseMint.toBuffer(),
     quoteMint.toBuffer()
   ]);
 }
 function pumpPoolAuthorityPda(mint) {
-  return pumpPda([import_buffer3.Buffer.from("pool-authority"), mint.toBuffer()]);
+  return pumpPda([import_buffer4.Buffer.from("pool-authority"), mint.toBuffer()]);
 }
 var MPL_TOKEN_METADATA_PROGRAM_ID = new import_web310.PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
 function bondingCurvePda(mint) {
-  return pumpPda([import_buffer3.Buffer.from("bonding-curve"), mint.toBuffer()]);
+  return pumpPda([import_buffer4.Buffer.from("bonding-curve"), mint.toBuffer()]);
 }
 function metadataPda(mint) {
   return import_web310.PublicKey.findProgramAddressSync(
     [
-      import_buffer3.Buffer.from("metadata"),
+      import_buffer4.Buffer.from("metadata"),
       MPL_TOKEN_METADATA_PROGRAM_ID.toBuffer(),
       mint.toBuffer()
     ],
@@ -40374,10 +40491,10 @@ function canonicalPumpPoolPda(mint, quoteMint = NATIVE_MINT) {
   );
 }
 function userVolumeAccumulatorPda(user) {
-  return pumpAmmPda([import_buffer3.Buffer.from("user_volume_accumulator"), user.toBuffer()]);
+  return pumpAmmPda([import_buffer4.Buffer.from("user_volume_accumulator"), user.toBuffer()]);
 }
 function coinCreatorVaultAuthorityPda(coinCreator) {
-  return pumpAmmPda([import_buffer3.Buffer.from("creator_vault"), coinCreator.toBuffer()]);
+  return pumpAmmPda([import_buffer4.Buffer.from("creator_vault"), coinCreator.toBuffer()]);
 }
 function coinCreatorVaultAtaPda(coinCreatorVaultAuthority, quoteMint, quoteTokenProgram) {
   return getAssociatedTokenAddressSync(
@@ -40388,13 +40505,13 @@ function coinCreatorVaultAtaPda(coinCreatorVaultAuthority, quoteMint, quoteToken
   );
 }
 function feeSharingConfigPda(mint) {
-  return pumpFeePda([import_buffer3.Buffer.from("sharing-config"), mint.toBuffer()]);
+  return pumpFeePda([import_buffer4.Buffer.from("sharing-config"), mint.toBuffer()]);
 }
 function poolV2Pda(baseMint) {
-  return pumpAmmPda([import_buffer3.Buffer.from("pool-v2"), baseMint.toBuffer()]);
+  return pumpAmmPda([import_buffer4.Buffer.from("pool-v2"), baseMint.toBuffer()]);
 }
 function boostVaultAuthorityPda(pool) {
-  return pumpAmmPda([import_buffer3.Buffer.from("boost_vault"), pool.toBuffer()]);
+  return pumpAmmPda([import_buffer4.Buffer.from("boost_vault"), pool.toBuffer()]);
 }
 function boostVaultAta(boostVaultAuthority, quoteMint, quoteTokenProgram) {
   return getAssociatedTokenAddressSync(
@@ -48621,7 +48738,7 @@ var FEE_CONFIG_FEE_TIERS_OFFSET = 8 + 1 + 32 + 24;
 var FEES_SIZE = 24;
 var FEE_TIER_SIZE = 16 + FEES_SIZE;
 function padTrailing(data, size) {
-  return data.length >= size ? data : Buffer.concat([data, Buffer.alloc(size - data.length)]);
+  return data.length >= size ? data : import_buffer.Buffer.concat([data, import_buffer.Buffer.alloc(size - data.length)]);
 }
 function feeTierVecEnd(data, offset2) {
   if (offset2 + 4 > data.length) {
@@ -50653,9 +50770,10 @@ var OnlinePumpAmmSdk = class {
 
 // node_modules/@pump-fun/pump-sdk/dist/esm/index.js
 var import_web323 = __toESM(require_index_browser_cjs());
-var import_buffer4 = __toESM(require_buffer());
+var import_buffer5 = __toESM(require_buffer());
 
 // node_modules/@pump-fun/agent-payments-sdk/dist/index.js
+init_polyfill();
 var import_web316 = __toESM(require_index_browser_cjs(), 1);
 var import_web317 = __toESM(require_index_browser_cjs(), 1);
 var import_web318 = __toESM(require_index_browser_cjs(), 1);
@@ -50672,13 +50790,13 @@ function P(a2) {
 }
 var l = new import_web319.PublicKey("pUmPFn9WvfaN2WTVGnCEtJTd2ATTpvpsKRz6jVzu6u4");
 var G = new import_web319.PublicKey("6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P");
-var O = Buffer.from("global-config");
-var R = Buffer.from("token-agent-payments");
-var U = Buffer.from("payment-in-currency");
-var M = Buffer.from("invoice-id");
-var S = Buffer.from("buyback-authority");
-var K = Buffer.from("withdraw-authority");
-var W = Buffer.from("bonding-curve");
+var O = import_buffer.Buffer.from("global-config");
+var R = import_buffer.Buffer.from("token-agent-payments");
+var U = import_buffer.Buffer.from("payment-in-currency");
+var M = import_buffer.Buffer.from("invoice-id");
+var S = import_buffer.Buffer.from("buyback-authority");
+var K = import_buffer.Buffer.from("withdraw-authority");
+var W = import_buffer.Buffer.from("bonding-curve");
 function k() {
   return import_web318.PublicKey.findProgramAddressSync([O], l);
 }
@@ -50689,7 +50807,7 @@ function T(a2, e) {
   return import_web318.PublicKey.findProgramAddressSync([U, a2.toBuffer(), e.toBuffer()], l);
 }
 function V(a2, e, n, t, r, o) {
-  return import_web318.PublicKey.findProgramAddressSync([M, a2.toBuffer(), e.toBuffer(), n.toArrayLike(Buffer, "le", 8), t.toArrayLike(Buffer, "le", 8), r.toArrayLike(Buffer, "le", 8), o.toArrayLike(Buffer, "le", 8)], l);
+  return import_web318.PublicKey.findProgramAddressSync([M, a2.toBuffer(), e.toBuffer(), n.toArrayLike(import_buffer.Buffer, "le", 8), t.toArrayLike(import_buffer.Buffer, "le", 8), r.toArrayLike(import_buffer.Buffer, "le", 8), o.toArrayLike(import_buffer.Buffer, "le", 8)], l);
 }
 function A(a2) {
   return import_web318.PublicKey.findProgramAddressSync([S, a2.toBuffer()], l);
@@ -81748,7 +81866,7 @@ function tokenAccountAmount(address, accountInfo, tokenProgram) {
   const { amount } = unpackAccount(address, accountInfo, tokenProgram);
   return new import_bn16.default(amount.toString());
 }
-var TRADE_EVENT_DISCRIMINATOR = Buffer.from(
+var TRADE_EVENT_DISCRIMINATOR = import_buffer.Buffer.from(
   pump_default.events.find(({ name }) => name === "TradeEvent").discriminator
 );
 function curveSellProceeds(logs, mint) {
@@ -81757,7 +81875,7 @@ function curveSellProceeds(logs, mint) {
     if (!line.startsWith("Program data: ")) {
       continue;
     }
-    const data = Buffer.from(line.slice("Program data: ".length), "base64");
+    const data = import_buffer.Buffer.from(line.slice("Program data: ".length), "base64");
     if (!data.subarray(0, 8).equals(TRADE_EVENT_DISCRIMINATOR)) {
       continue;
     }
@@ -82978,7 +83096,7 @@ ${(value.logs ?? []).join("\n")}`
     const afterInfo = {
       ...after,
       owner: new import_web325.PublicKey(after.owner),
-      data: Buffer.from(after.data[0], "base64")
+      data: import_buffer.Buffer.from(after.data[0], "base64")
     };
     return tokenAccountAmount(outAta, afterInfo, output.tokenProgram).sub(
       before
@@ -83185,7 +83303,7 @@ ${(value.logs ?? []).join("\n")}`
     if (!result.value.err) {
       const [data, encoding] = result.value.returnData?.data ?? [];
       if (data) {
-        const buffer = Buffer.from(data, encoding);
+        const buffer = import_buffer.Buffer.from(data, encoding);
         minimumDistributableFee = PUMP_SDK.decodeMinimumDistributableFee(buffer);
       }
     }
@@ -83389,7 +83507,7 @@ var BONDING_CURVE_INITIALIZE_SIZE = 49;
 var GLOBAL_SIZE = 1088;
 var ADMIN_CTO_COMPUTE_UNIT_LIMIT = 6e5;
 function zeroPadded(data, size) {
-  return data.length >= size ? data : Buffer.concat([data, Buffer.alloc(size - data.length)]);
+  return data.length >= size ? data : import_buffer.Buffer.concat([data, import_buffer.Buffer.alloc(size - data.length)]);
 }
 var CREATE_EVENT_LAYOUT_PADDINGS = [0, 1, 2, 10];
 var CREATE_POOL_EVENT_LAYOUT_PADDINGS = [0, 1, 10];
@@ -83422,7 +83540,7 @@ function decodeWithTrailingDefaults(data, paddings, decode2) {
   let rangeError;
   for (const padding of paddings) {
     try {
-      return decode2(Buffer.concat([data, Buffer.alloc(padding)]));
+      return decode2(import_buffer.Buffer.concat([data, import_buffer.Buffer.alloc(padding)]));
     } catch (error) {
       if (!isRangeError(error)) {
         throw error;
@@ -83720,9 +83838,9 @@ var PumpSdk = class {
     }
     return this.offlinePumpProgram.coder.accounts.decode(
       "feeConfig",
-      Buffer.concat([
+      import_buffer.Buffer.concat([
         data.subarray(0, readEnd),
-        Buffer.alloc(VEC_LEN_PREFIX + FEES_LEN)
+        import_buffer.Buffer.alloc(VEC_LEN_PREFIX + FEES_LEN)
       ])
     );
   }
@@ -86510,51 +86628,51 @@ var PumpSdk = class {
   }
 };
 var PUMP_SDK = new PumpSdk();
-var GLOBAL_PDA = pumpPda([import_buffer4.Buffer.from("global")]);
-var QUOTE_CONTROL_PDA = pumpPda([import_buffer4.Buffer.from("quote-control")]);
-var AMM_GLOBAL_PDA = pumpAmmPda([import_buffer4.Buffer.from("global_config")]);
+var GLOBAL_PDA = pumpPda([import_buffer5.Buffer.from("global")]);
+var QUOTE_CONTROL_PDA = pumpPda([import_buffer5.Buffer.from("quote-control")]);
+var AMM_GLOBAL_PDA = pumpAmmPda([import_buffer5.Buffer.from("global_config")]);
 var FEE_PROGRAM_GLOBAL_PDA = pumpFeePda([
-  import_buffer4.Buffer.from("fee-program-global")
+  import_buffer5.Buffer.from("fee-program-global")
 ]);
 var PUMP_FEE_CONFIG_PDA = pumpFeePda([
-  import_buffer4.Buffer.from("fee_config"),
+  import_buffer5.Buffer.from("fee_config"),
   PUMP_PROGRAM_ID2.toBuffer()
 ]);
 var GLOBAL_VOLUME_ACCUMULATOR_PDA2 = pumpPda([
-  import_buffer4.Buffer.from("global_volume_accumulator")
+  import_buffer5.Buffer.from("global_volume_accumulator")
 ]);
 var AMM_GLOBAL_VOLUME_ACCUMULATOR_PDA = pumpAmmPda([
-  import_buffer4.Buffer.from("global_volume_accumulator")
+  import_buffer5.Buffer.from("global_volume_accumulator")
 ]);
 var PUMP_EVENT_AUTHORITY_PDA = getEventAuthorityPda(PUMP_PROGRAM_ID2);
 var PUMP_AMM_EVENT_AUTHORITY_PDA2 = getEventAuthorityPda(PUMP_AMM_PROGRAM_ID2);
 var PUMP_FEE_EVENT_AUTHORITY_PDA = getEventAuthorityPda(PUMP_FEE_PROGRAM_ID2);
 function getEventAuthorityPda(programId) {
   return import_web323.PublicKey.findProgramAddressSync(
-    [import_buffer4.Buffer.from("__event_authority")],
+    [import_buffer5.Buffer.from("__event_authority")],
     programId
   )[0];
 }
 function bondingCurvePda2(mint) {
   return pumpPda([
-    import_buffer4.Buffer.from("bonding-curve"),
+    import_buffer5.Buffer.from("bonding-curve"),
     new import_web323.PublicKey(mint).toBuffer()
   ]);
 }
 function bondingCurveV2Pda(mint) {
   return pumpPda([
-    import_buffer4.Buffer.from("bonding-curve-v2"),
+    import_buffer5.Buffer.from("bonding-curve-v2"),
     new import_web323.PublicKey(mint).toBuffer()
   ]);
 }
 function creatorVaultPda(creator) {
-  return pumpPda([import_buffer4.Buffer.from("creator-vault"), creator.toBuffer()]);
+  return pumpPda([import_buffer5.Buffer.from("creator-vault"), creator.toBuffer()]);
 }
 function holderRewardsPda(mint) {
-  return pumpPda([import_buffer4.Buffer.from("holder-rewards"), mint.toBuffer()]);
+  return pumpPda([import_buffer5.Buffer.from("holder-rewards"), mint.toBuffer()]);
 }
 function pumpPoolAuthorityPda2(mint) {
-  return pumpPda([import_buffer4.Buffer.from("pool-authority"), mint.toBuffer()]);
+  return pumpPda([import_buffer5.Buffer.from("pool-authority"), mint.toBuffer()]);
 }
 var CANONICAL_POOL_INDEX2 = 0;
 function canonicalPumpPoolPda2(mint) {
@@ -86574,29 +86692,29 @@ function canonicalPumpPoolPdaWithQuote(mint, quoteMint) {
   );
 }
 function boostVaultAuthorityPda2(pool) {
-  return pumpAmmPda([import_buffer4.Buffer.from("boost_vault"), pool.toBuffer()]);
+  return pumpAmmPda([import_buffer5.Buffer.from("boost_vault"), pool.toBuffer()]);
 }
 function userVolumeAccumulatorPda2(user, program = PUMP_PROGRAM_ID2) {
   if (program.equals(PUMP_PROGRAM_ID2)) {
-    return pumpPda([import_buffer4.Buffer.from("user_volume_accumulator"), user.toBuffer()]);
+    return pumpPda([import_buffer5.Buffer.from("user_volume_accumulator"), user.toBuffer()]);
   }
-  return pumpAmmPda([import_buffer4.Buffer.from("user_volume_accumulator"), user.toBuffer()]);
+  return pumpAmmPda([import_buffer5.Buffer.from("user_volume_accumulator"), user.toBuffer()]);
 }
 var getGlobalParamsPda = () => {
   return import_web323.PublicKey.findProgramAddressSync(
-    [import_buffer4.Buffer.from("global-params")],
+    [import_buffer5.Buffer.from("global-params")],
     MAYHEM_PROGRAM_ID
   )[0];
 };
 var getMayhemStatePda = (mint) => {
   return import_web323.PublicKey.findProgramAddressSync(
-    [import_buffer4.Buffer.from("mayhem-state"), mint.toBuffer()],
+    [import_buffer5.Buffer.from("mayhem-state"), mint.toBuffer()],
     MAYHEM_PROGRAM_ID
   )[0];
 };
 var getSolVaultPda = () => {
   return import_web323.PublicKey.findProgramAddressSync(
-    [import_buffer4.Buffer.from("sol-vault")],
+    [import_buffer5.Buffer.from("sol-vault")],
     MAYHEM_PROGRAM_ID
   )[0];
 };
@@ -86609,27 +86727,27 @@ var getTokenVaultPda = (mintPubkey) => {
   );
 };
 var feeSharingConfigPda2 = (mint) => {
-  return pumpFeePda([import_buffer4.Buffer.from("sharing-config"), mint.toBuffer()]);
+  return pumpFeePda([import_buffer5.Buffer.from("sharing-config"), mint.toBuffer()]);
 };
 var isLegacyQuoteMint = (quoteMint) => quoteMint.equals(NATIVE_MINT) || quoteMint.equals(import_web323.PublicKey.default);
 var normalizeQuoteMint = (quoteMint) => !quoteMint || isLegacyQuoteMint(quoteMint) ? NATIVE_MINT : quoteMint;
 var quoteAta = (owner, quoteMint, quoteTokenProgram) => getAssociatedTokenAddressSync(quoteMint, owner, true, quoteTokenProgram);
 var ammCreatorVaultPda = (creator) => {
   return import_web323.PublicKey.findProgramAddressSync(
-    [import_buffer4.Buffer.from("creator_vault"), creator.toBuffer()],
+    [import_buffer5.Buffer.from("creator_vault"), creator.toBuffer()],
     PUMP_AMM_PROGRAM_ID2
   )[0];
 };
 var socialFeePda = (userId, platform) => {
   return pumpFeePda([
-    import_buffer4.Buffer.from("social-fee-pda"),
-    import_buffer4.Buffer.from(userId),
-    import_buffer4.Buffer.from([platform])
+    import_buffer5.Buffer.from("social-fee-pda"),
+    import_buffer5.Buffer.from(userId),
+    import_buffer5.Buffer.from([platform])
   ]);
 };
 var donationFeePda = (mint, configId) => {
   return pumpFeePda([
-    import_buffer4.Buffer.from("donation-fee-pda"),
+    import_buffer5.Buffer.from("donation-fee-pda"),
     mint.toBuffer(),
     configId.toBuffer()
   ]);
@@ -86646,7 +86764,7 @@ var donationRelayPda = (seeds, donationRelayProgramId) => {
 var donationRelayEpochTrackerPda = (configId, quoteMint, donationRelayProgramId) => {
   return donationRelayPda(
     [
-      import_buffer4.Buffer.from("epoch_tracker_v1"),
+      import_buffer5.Buffer.from("epoch_tracker_v1"),
       configId.toBuffer(),
       quoteMint.toBuffer()
     ],
@@ -86655,13 +86773,13 @@ var donationRelayEpochTrackerPda = (configId, quoteMint, donationRelayProgramId)
 };
 var donationRelayDebouncerPda = (configId, quoteMint, donationRelayProgramId) => {
   return donationRelayPda(
-    [import_buffer4.Buffer.from("debouncer_v1"), configId.toBuffer(), quoteMint.toBuffer()],
+    [import_buffer5.Buffer.from("debouncer_v1"), configId.toBuffer(), quoteMint.toBuffer()],
     donationRelayProgramId
   );
 };
 var donationRelayMintWhitelistPda = (donationRelayProgramId) => {
   return donationRelayPda(
-    [import_buffer4.Buffer.from("mint_whitelist_v1")],
+    [import_buffer5.Buffer.from("mint_whitelist_v1")],
     donationRelayProgramId
   );
 };
@@ -86871,7 +86989,11 @@ var CURRENT_FEE_RECIPIENTS_FOR_BUYBACK = [
   "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW"
 ];
 
+// node_modules/bs58/src/esm/index.js
+init_polyfill();
+
 // node_modules/base-x/src/esm/index.js
+init_polyfill();
 function base(ALPHABET2) {
   if (ALPHABET2.length >= 255) {
     throw new TypeError("Alphabet too long");
@@ -87007,7 +87129,7 @@ var ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 var esm_default2 = esm_default(ALPHABET);
 
 // src/ui.mjs
-if (!globalThis.Buffer) globalThis.Buffer = import_buffer5.Buffer;
+if (!globalThis.Buffer) globalThis.Buffer = import_buffer6.Buffer;
 var form = document.querySelector("#token-form");
 var submit = form.querySelector("button[type=submit]");
 var status = document.querySelector("#form-status");
