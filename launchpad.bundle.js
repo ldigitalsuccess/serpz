@@ -5300,8 +5300,8 @@ var require_bn = __commonJS({
         ctor.prototype = new TempCtor();
         ctor.prototype.constructor = ctor;
       }
-      function BN12(number2, base2, endian) {
-        if (BN12.isBN(number2)) {
+      function BN13(number2, base2, endian) {
+        if (BN13.isBN(number2)) {
           return number2;
         }
         this.negative = 0;
@@ -5317,12 +5317,12 @@ var require_bn = __commonJS({
         }
       }
       if (typeof module2 === "object") {
-        module2.exports = BN12;
+        module2.exports = BN13;
       } else {
-        exports2.BN = BN12;
+        exports2.BN = BN13;
       }
-      BN12.BN = BN12;
-      BN12.wordSize = 26;
+      BN13.BN = BN13;
+      BN13.wordSize = 26;
       var Buffer5;
       try {
         if (typeof window !== "undefined" && typeof window.Buffer !== "undefined") {
@@ -5332,21 +5332,21 @@ var require_bn = __commonJS({
         }
       } catch (e) {
       }
-      BN12.isBN = function isBN(num) {
-        if (num instanceof BN12) {
+      BN13.isBN = function isBN(num) {
+        if (num instanceof BN13) {
           return true;
         }
-        return num !== null && typeof num === "object" && num.constructor.wordSize === BN12.wordSize && Array.isArray(num.words);
+        return num !== null && typeof num === "object" && num.constructor.wordSize === BN13.wordSize && Array.isArray(num.words);
       };
-      BN12.max = function max(left, right) {
+      BN13.max = function max(left, right) {
         if (left.cmp(right) > 0) return left;
         return right;
       };
-      BN12.min = function min(left, right) {
+      BN13.min = function min(left, right) {
         if (left.cmp(right) < 0) return left;
         return right;
       };
-      BN12.prototype._init = function init(number2, base2, endian) {
+      BN13.prototype._init = function init(number2, base2, endian) {
         if (typeof number2 === "number") {
           return this._initNumber(number2, base2, endian);
         }
@@ -5374,7 +5374,7 @@ var require_bn = __commonJS({
           }
         }
       };
-      BN12.prototype._initNumber = function _initNumber(number2, base2, endian) {
+      BN13.prototype._initNumber = function _initNumber(number2, base2, endian) {
         if (number2 < 0) {
           this.negative = 1;
           number2 = -number2;
@@ -5400,7 +5400,7 @@ var require_bn = __commonJS({
         if (endian !== "le") return;
         this._initArray(this.toArray(), base2, endian);
       };
-      BN12.prototype._initArray = function _initArray(number2, base2, endian) {
+      BN13.prototype._initArray = function _initArray(number2, base2, endian) {
         assert2(typeof number2.length === "number");
         if (number2.length <= 0) {
           this.words = [0];
@@ -5458,7 +5458,7 @@ var require_bn = __commonJS({
         }
         return r;
       }
-      BN12.prototype._parseHex = function _parseHex(number2, start, endian) {
+      BN13.prototype._parseHex = function _parseHex(number2, start, endian) {
         this.length = Math.ceil((number2.length - start) / 6);
         this.words = new Array(this.length);
         for (var i2 = 0; i2 < this.length; i2++) {
@@ -5514,7 +5514,7 @@ var require_bn = __commonJS({
         }
         return r;
       }
-      BN12.prototype._parseBase = function _parseBase(number2, base2, start) {
+      BN13.prototype._parseBase = function _parseBase(number2, base2, start) {
         this.words = [0];
         this.length = 1;
         for (var limbLen = 0, limbPow = 1; limbPow <= 67108863; limbPow *= base2) {
@@ -5550,7 +5550,7 @@ var require_bn = __commonJS({
         }
         this._strip();
       };
-      BN12.prototype.copy = function copy(dest) {
+      BN13.prototype.copy = function copy(dest) {
         dest.words = new Array(this.length);
         for (var i2 = 0; i2 < this.length; i2++) {
           dest.words[i2] = this.words[i2];
@@ -5565,27 +5565,27 @@ var require_bn = __commonJS({
         dest.negative = src.negative;
         dest.red = src.red;
       }
-      BN12.prototype._move = function _move(dest) {
+      BN13.prototype._move = function _move(dest) {
         move(dest, this);
       };
-      BN12.prototype.clone = function clone2() {
-        var r = new BN12(null);
+      BN13.prototype.clone = function clone2() {
+        var r = new BN13(null);
         this.copy(r);
         return r;
       };
-      BN12.prototype._expand = function _expand(size) {
+      BN13.prototype._expand = function _expand(size) {
         while (this.length < size) {
           this.words[this.length++] = 0;
         }
         return this;
       };
-      BN12.prototype._strip = function strip() {
+      BN13.prototype._strip = function strip() {
         while (this.length > 1 && this.words[this.length - 1] === 0) {
           this.length--;
         }
         return this._normSign();
       };
-      BN12.prototype._normSign = function _normSign() {
+      BN13.prototype._normSign = function _normSign() {
         if (this.length === 1 && this.words[0] === 0) {
           this.negative = 0;
         }
@@ -5593,12 +5593,12 @@ var require_bn = __commonJS({
       };
       if (typeof Symbol !== "undefined" && typeof Symbol.for === "function") {
         try {
-          BN12.prototype[/* @__PURE__ */ Symbol.for("nodejs.util.inspect.custom")] = inspect;
+          BN13.prototype[/* @__PURE__ */ Symbol.for("nodejs.util.inspect.custom")] = inspect;
         } catch (e) {
-          BN12.prototype.inspect = inspect;
+          BN13.prototype.inspect = inspect;
         }
       } else {
-        BN12.prototype.inspect = inspect;
+        BN13.prototype.inspect = inspect;
       }
       function inspect() {
         return (this.red ? "<BN-R: " : "<BN: ") + this.toString(16) + ">";
@@ -5709,7 +5709,7 @@ var require_bn = __commonJS({
         52521875,
         60466176
       ];
-      BN12.prototype.toString = function toString2(base2, padding) {
+      BN13.prototype.toString = function toString2(base2, padding) {
         base2 = base2 || 10;
         padding = padding | 0 || 1;
         var out;
@@ -5771,7 +5771,7 @@ var require_bn = __commonJS({
         }
         assert2(false, "Base should be between 2 and 36");
       };
-      BN12.prototype.toNumber = function toNumber() {
+      BN13.prototype.toNumber = function toNumber() {
         var ret = this.words[0];
         if (this.length === 2) {
           ret += this.words[1] * 67108864;
@@ -5782,15 +5782,15 @@ var require_bn = __commonJS({
         }
         return this.negative !== 0 ? -ret : ret;
       };
-      BN12.prototype.toJSON = function toJSON() {
+      BN13.prototype.toJSON = function toJSON() {
         return this.toString(16, 2);
       };
       if (Buffer5) {
-        BN12.prototype.toBuffer = function toBuffer(endian, length) {
+        BN13.prototype.toBuffer = function toBuffer(endian, length) {
           return this.toArrayLike(Buffer5, endian, length);
         };
       }
-      BN12.prototype.toArray = function toArray(endian, length) {
+      BN13.prototype.toArray = function toArray(endian, length) {
         return this.toArrayLike(Array, endian, length);
       };
       var allocate = function allocate2(ArrayType, size) {
@@ -5799,7 +5799,7 @@ var require_bn = __commonJS({
         }
         return new ArrayType(size);
       };
-      BN12.prototype.toArrayLike = function toArrayLike(ArrayType, endian, length) {
+      BN13.prototype.toArrayLike = function toArrayLike(ArrayType, endian, length) {
         this._strip();
         var byteLength = this.byteLength();
         var reqLength = length || Math.max(1, byteLength);
@@ -5810,7 +5810,7 @@ var require_bn = __commonJS({
         this["_toArrayLike" + postfix](res, byteLength);
         return res;
       };
-      BN12.prototype._toArrayLikeLE = function _toArrayLikeLE(res, byteLength) {
+      BN13.prototype._toArrayLikeLE = function _toArrayLikeLE(res, byteLength) {
         var position = 0;
         var carry = 0;
         for (var i2 = 0, shift = 0; i2 < this.length; i2++) {
@@ -5840,7 +5840,7 @@ var require_bn = __commonJS({
           }
         }
       };
-      BN12.prototype._toArrayLikeBE = function _toArrayLikeBE(res, byteLength) {
+      BN13.prototype._toArrayLikeBE = function _toArrayLikeBE(res, byteLength) {
         var position = res.length - 1;
         var carry = 0;
         for (var i2 = 0, shift = 0; i2 < this.length; i2++) {
@@ -5871,11 +5871,11 @@ var require_bn = __commonJS({
         }
       };
       if (Math.clz32) {
-        BN12.prototype._countBits = function _countBits(w2) {
+        BN13.prototype._countBits = function _countBits(w2) {
           return 32 - Math.clz32(w2);
         };
       } else {
-        BN12.prototype._countBits = function _countBits(w2) {
+        BN13.prototype._countBits = function _countBits(w2) {
           var t = w2;
           var r = 0;
           if (t >= 4096) {
@@ -5897,7 +5897,7 @@ var require_bn = __commonJS({
           return r + t;
         };
       }
-      BN12.prototype._zeroBits = function _zeroBits(w2) {
+      BN13.prototype._zeroBits = function _zeroBits(w2) {
         if (w2 === 0) return 26;
         var t = w2;
         var r = 0;
@@ -5922,7 +5922,7 @@ var require_bn = __commonJS({
         }
         return r;
       };
-      BN12.prototype.bitLength = function bitLength() {
+      BN13.prototype.bitLength = function bitLength() {
         var w2 = this.words[this.length - 1];
         var hi = this._countBits(w2);
         return (this.length - 1) * 26 + hi;
@@ -5936,7 +5936,7 @@ var require_bn = __commonJS({
         }
         return w2;
       }
-      BN12.prototype.zeroBits = function zeroBits() {
+      BN13.prototype.zeroBits = function zeroBits() {
         if (this.isZero()) return 0;
         var r = 0;
         for (var i2 = 0; i2 < this.length; i2++) {
@@ -5946,34 +5946,34 @@ var require_bn = __commonJS({
         }
         return r;
       };
-      BN12.prototype.byteLength = function byteLength() {
+      BN13.prototype.byteLength = function byteLength() {
         return Math.ceil(this.bitLength() / 8);
       };
-      BN12.prototype.toTwos = function toTwos(width) {
+      BN13.prototype.toTwos = function toTwos(width) {
         if (this.negative !== 0) {
           return this.abs().inotn(width).iaddn(1);
         }
         return this.clone();
       };
-      BN12.prototype.fromTwos = function fromTwos(width) {
+      BN13.prototype.fromTwos = function fromTwos(width) {
         if (this.testn(width - 1)) {
           return this.notn(width).iaddn(1).ineg();
         }
         return this.clone();
       };
-      BN12.prototype.isNeg = function isNeg() {
+      BN13.prototype.isNeg = function isNeg() {
         return this.negative !== 0;
       };
-      BN12.prototype.neg = function neg() {
+      BN13.prototype.neg = function neg() {
         return this.clone().ineg();
       };
-      BN12.prototype.ineg = function ineg() {
+      BN13.prototype.ineg = function ineg() {
         if (!this.isZero()) {
           this.negative ^= 1;
         }
         return this;
       };
-      BN12.prototype.iuor = function iuor(num) {
+      BN13.prototype.iuor = function iuor(num) {
         while (this.length < num.length) {
           this.words[this.length++] = 0;
         }
@@ -5982,19 +5982,19 @@ var require_bn = __commonJS({
         }
         return this._strip();
       };
-      BN12.prototype.ior = function ior(num) {
+      BN13.prototype.ior = function ior(num) {
         assert2((this.negative | num.negative) === 0);
         return this.iuor(num);
       };
-      BN12.prototype.or = function or(num) {
+      BN13.prototype.or = function or(num) {
         if (this.length > num.length) return this.clone().ior(num);
         return num.clone().ior(this);
       };
-      BN12.prototype.uor = function uor(num) {
+      BN13.prototype.uor = function uor(num) {
         if (this.length > num.length) return this.clone().iuor(num);
         return num.clone().iuor(this);
       };
-      BN12.prototype.iuand = function iuand(num) {
+      BN13.prototype.iuand = function iuand(num) {
         var b2;
         if (this.length > num.length) {
           b2 = num;
@@ -6007,19 +6007,19 @@ var require_bn = __commonJS({
         this.length = b2.length;
         return this._strip();
       };
-      BN12.prototype.iand = function iand(num) {
+      BN13.prototype.iand = function iand(num) {
         assert2((this.negative | num.negative) === 0);
         return this.iuand(num);
       };
-      BN12.prototype.and = function and(num) {
+      BN13.prototype.and = function and(num) {
         if (this.length > num.length) return this.clone().iand(num);
         return num.clone().iand(this);
       };
-      BN12.prototype.uand = function uand(num) {
+      BN13.prototype.uand = function uand(num) {
         if (this.length > num.length) return this.clone().iuand(num);
         return num.clone().iuand(this);
       };
-      BN12.prototype.iuxor = function iuxor(num) {
+      BN13.prototype.iuxor = function iuxor(num) {
         var a2;
         var b2;
         if (this.length > num.length) {
@@ -6040,19 +6040,19 @@ var require_bn = __commonJS({
         this.length = a2.length;
         return this._strip();
       };
-      BN12.prototype.ixor = function ixor(num) {
+      BN13.prototype.ixor = function ixor(num) {
         assert2((this.negative | num.negative) === 0);
         return this.iuxor(num);
       };
-      BN12.prototype.xor = function xor(num) {
+      BN13.prototype.xor = function xor(num) {
         if (this.length > num.length) return this.clone().ixor(num);
         return num.clone().ixor(this);
       };
-      BN12.prototype.uxor = function uxor(num) {
+      BN13.prototype.uxor = function uxor(num) {
         if (this.length > num.length) return this.clone().iuxor(num);
         return num.clone().iuxor(this);
       };
-      BN12.prototype.inotn = function inotn(width) {
+      BN13.prototype.inotn = function inotn(width) {
         assert2(typeof width === "number" && width >= 0);
         var bytesNeeded = Math.ceil(width / 26) | 0;
         var bitsLeft = width % 26;
@@ -6072,10 +6072,10 @@ var require_bn = __commonJS({
         }
         return this._strip();
       };
-      BN12.prototype.notn = function notn(width) {
+      BN13.prototype.notn = function notn(width) {
         return this.clone().inotn(width);
       };
-      BN12.prototype.setn = function setn(bit, val) {
+      BN13.prototype.setn = function setn(bit, val) {
         assert2(typeof bit === "number" && bit >= 0);
         var off = bit / 26 | 0;
         var wbit = bit % 26;
@@ -6087,7 +6087,7 @@ var require_bn = __commonJS({
         }
         return this._strip();
       };
-      BN12.prototype.iadd = function iadd(num) {
+      BN13.prototype.iadd = function iadd(num) {
         var r;
         if (this.negative !== 0 && num.negative === 0) {
           this.negative = 0;
@@ -6130,7 +6130,7 @@ var require_bn = __commonJS({
         }
         return this;
       };
-      BN12.prototype.add = function add(num) {
+      BN13.prototype.add = function add(num) {
         var res;
         if (num.negative !== 0 && this.negative === 0) {
           num.negative = 0;
@@ -6146,7 +6146,7 @@ var require_bn = __commonJS({
         if (this.length > num.length) return this.clone().iadd(num);
         return num.clone().iadd(this);
       };
-      BN12.prototype.isub = function isub(num) {
+      BN13.prototype.isub = function isub(num) {
         if (num.negative !== 0) {
           num.negative = 0;
           var r = this.iadd(num);
@@ -6195,7 +6195,7 @@ var require_bn = __commonJS({
         }
         return this._strip();
       };
-      BN12.prototype.sub = function sub(num) {
+      BN13.prototype.sub = function sub(num) {
         return this.clone().isub(num);
       };
       function smallMulTo(self2, num, out) {
@@ -6823,7 +6823,7 @@ var require_bn = __commonJS({
       function jumboMulTo(self2, num, out) {
         return bigMulTo(self2, num, out);
       }
-      BN12.prototype.mulTo = function mulTo(num, out) {
+      BN13.prototype.mulTo = function mulTo(num, out) {
         var res;
         var len = this.length + num.length;
         if (this.length === 10 && num.length === 10) {
@@ -6843,7 +6843,7 @@ var require_bn = __commonJS({
       }
       FFTM.prototype.makeRBT = function makeRBT(N2) {
         var t = new Array(N2);
-        var l2 = BN12.prototype._countBits(N2) - 1;
+        var l2 = BN13.prototype._countBits(N2) - 1;
         for (var i2 = 0; i2 < N2; i2++) {
           t[i2] = this.revBin(i2, l2, N2);
         }
@@ -6978,20 +6978,20 @@ var require_bn = __commonJS({
         out.length = x.length + y.length;
         return out._strip();
       };
-      BN12.prototype.mul = function mul(num) {
-        var out = new BN12(null);
+      BN13.prototype.mul = function mul(num) {
+        var out = new BN13(null);
         out.words = new Array(this.length + num.length);
         return this.mulTo(num, out);
       };
-      BN12.prototype.mulf = function mulf(num) {
-        var out = new BN12(null);
+      BN13.prototype.mulf = function mulf(num) {
+        var out = new BN13(null);
         out.words = new Array(this.length + num.length);
         return jumboMulTo(this, num, out);
       };
-      BN12.prototype.imul = function imul(num) {
+      BN13.prototype.imul = function imul(num) {
         return this.clone().mulTo(num, this);
       };
-      BN12.prototype.imuln = function imuln(num) {
+      BN13.prototype.imuln = function imuln(num) {
         var isNegNum = num < 0;
         if (isNegNum) num = -num;
         assert2(typeof num === "number");
@@ -7015,18 +7015,18 @@ var require_bn = __commonJS({
         }
         return isNegNum ? this.ineg() : this;
       };
-      BN12.prototype.muln = function muln(num) {
+      BN13.prototype.muln = function muln(num) {
         return this.clone().imuln(num);
       };
-      BN12.prototype.sqr = function sqr() {
+      BN13.prototype.sqr = function sqr() {
         return this.mul(this);
       };
-      BN12.prototype.isqr = function isqr() {
+      BN13.prototype.isqr = function isqr() {
         return this.imul(this.clone());
       };
-      BN12.prototype.pow = function pow(num) {
+      BN13.prototype.pow = function pow(num) {
         var w2 = toBitArray(num);
-        if (w2.length === 0) return new BN12(1);
+        if (w2.length === 0) return new BN13(1);
         var res = this;
         for (var i2 = 0; i2 < w2.length; i2++, res = res.sqr()) {
           if (w2[i2] !== 0) break;
@@ -7039,7 +7039,7 @@ var require_bn = __commonJS({
         }
         return res;
       };
-      BN12.prototype.iushln = function iushln(bits) {
+      BN13.prototype.iushln = function iushln(bits) {
         assert2(typeof bits === "number" && bits >= 0);
         var r = bits % 26;
         var s = (bits - r) / 26;
@@ -7069,11 +7069,11 @@ var require_bn = __commonJS({
         }
         return this._strip();
       };
-      BN12.prototype.ishln = function ishln(bits) {
+      BN13.prototype.ishln = function ishln(bits) {
         assert2(this.negative === 0);
         return this.iushln(bits);
       };
-      BN12.prototype.iushrn = function iushrn(bits, hint, extended) {
+      BN13.prototype.iushrn = function iushrn(bits, hint, extended) {
         assert2(typeof bits === "number" && bits >= 0);
         var h2;
         if (hint) {
@@ -7118,23 +7118,23 @@ var require_bn = __commonJS({
         }
         return this._strip();
       };
-      BN12.prototype.ishrn = function ishrn(bits, hint, extended) {
+      BN13.prototype.ishrn = function ishrn(bits, hint, extended) {
         assert2(this.negative === 0);
         return this.iushrn(bits, hint, extended);
       };
-      BN12.prototype.shln = function shln(bits) {
+      BN13.prototype.shln = function shln(bits) {
         return this.clone().ishln(bits);
       };
-      BN12.prototype.ushln = function ushln(bits) {
+      BN13.prototype.ushln = function ushln(bits) {
         return this.clone().iushln(bits);
       };
-      BN12.prototype.shrn = function shrn(bits) {
+      BN13.prototype.shrn = function shrn(bits) {
         return this.clone().ishrn(bits);
       };
-      BN12.prototype.ushrn = function ushrn(bits) {
+      BN13.prototype.ushrn = function ushrn(bits) {
         return this.clone().iushrn(bits);
       };
-      BN12.prototype.testn = function testn(bit) {
+      BN13.prototype.testn = function testn(bit) {
         assert2(typeof bit === "number" && bit >= 0);
         var r = bit % 26;
         var s = (bit - r) / 26;
@@ -7143,7 +7143,7 @@ var require_bn = __commonJS({
         var w2 = this.words[s];
         return !!(w2 & q2);
       };
-      BN12.prototype.imaskn = function imaskn(bits) {
+      BN13.prototype.imaskn = function imaskn(bits) {
         assert2(typeof bits === "number" && bits >= 0);
         var r = bits % 26;
         var s = (bits - r) / 26;
@@ -7165,10 +7165,10 @@ var require_bn = __commonJS({
         }
         return this._strip();
       };
-      BN12.prototype.maskn = function maskn(bits) {
+      BN13.prototype.maskn = function maskn(bits) {
         return this.clone().imaskn(bits);
       };
-      BN12.prototype.iaddn = function iaddn(num) {
+      BN13.prototype.iaddn = function iaddn(num) {
         assert2(typeof num === "number");
         assert2(num < 67108864);
         if (num < 0) return this.isubn(-num);
@@ -7185,7 +7185,7 @@ var require_bn = __commonJS({
         }
         return this._iaddn(num);
       };
-      BN12.prototype._iaddn = function _iaddn(num) {
+      BN13.prototype._iaddn = function _iaddn(num) {
         this.words[0] += num;
         for (var i2 = 0; i2 < this.length && this.words[i2] >= 67108864; i2++) {
           this.words[i2] -= 67108864;
@@ -7198,7 +7198,7 @@ var require_bn = __commonJS({
         this.length = Math.max(this.length, i2 + 1);
         return this;
       };
-      BN12.prototype.isubn = function isubn(num) {
+      BN13.prototype.isubn = function isubn(num) {
         assert2(typeof num === "number");
         assert2(num < 67108864);
         if (num < 0) return this.iaddn(-num);
@@ -7220,20 +7220,20 @@ var require_bn = __commonJS({
         }
         return this._strip();
       };
-      BN12.prototype.addn = function addn(num) {
+      BN13.prototype.addn = function addn(num) {
         return this.clone().iaddn(num);
       };
-      BN12.prototype.subn = function subn(num) {
+      BN13.prototype.subn = function subn(num) {
         return this.clone().isubn(num);
       };
-      BN12.prototype.iabs = function iabs() {
+      BN13.prototype.iabs = function iabs() {
         this.negative = 0;
         return this;
       };
-      BN12.prototype.abs = function abs() {
+      BN13.prototype.abs = function abs() {
         return this.clone().iabs();
       };
-      BN12.prototype._ishlnsubmul = function _ishlnsubmul(num, mul, shift) {
+      BN13.prototype._ishlnsubmul = function _ishlnsubmul(num, mul, shift) {
         var len = num.length + shift;
         var i2;
         this._expand(len);
@@ -7262,7 +7262,7 @@ var require_bn = __commonJS({
         this.negative = 1;
         return this._strip();
       };
-      BN12.prototype._wordDiv = function _wordDiv(num, mode) {
+      BN13.prototype._wordDiv = function _wordDiv(num, mode) {
         var shift = this.length - num.length;
         var a2 = this.clone();
         var b2 = num;
@@ -7277,7 +7277,7 @@ var require_bn = __commonJS({
         var m = a2.length - b2.length;
         var q2;
         if (mode !== "mod") {
-          q2 = new BN12(null);
+          q2 = new BN13(null);
           q2.length = m + 1;
           q2.words = new Array(q2.length);
           for (var i2 = 0; i2 < q2.length; i2++) {
@@ -7319,12 +7319,12 @@ var require_bn = __commonJS({
           mod: a2
         };
       };
-      BN12.prototype.divmod = function divmod(num, mode, positive) {
+      BN13.prototype.divmod = function divmod(num, mode, positive) {
         assert2(!num.isZero());
         if (this.isZero()) {
           return {
-            div: new BN12(0),
-            mod: new BN12(0)
+            div: new BN13(0),
+            mod: new BN13(0)
           };
         }
         var div, mod, res;
@@ -7369,7 +7369,7 @@ var require_bn = __commonJS({
         }
         if (num.length > this.length || this.cmp(num) < 0) {
           return {
-            div: new BN12(0),
+            div: new BN13(0),
             mod: this
           };
         }
@@ -7383,26 +7383,26 @@ var require_bn = __commonJS({
           if (mode === "mod") {
             return {
               div: null,
-              mod: new BN12(this.modrn(num.words[0]))
+              mod: new BN13(this.modrn(num.words[0]))
             };
           }
           return {
             div: this.divn(num.words[0]),
-            mod: new BN12(this.modrn(num.words[0]))
+            mod: new BN13(this.modrn(num.words[0]))
           };
         }
         return this._wordDiv(num, mode);
       };
-      BN12.prototype.div = function div(num) {
+      BN13.prototype.div = function div(num) {
         return this.divmod(num, "div", false).div;
       };
-      BN12.prototype.mod = function mod(num) {
+      BN13.prototype.mod = function mod(num) {
         return this.divmod(num, "mod", false).mod;
       };
-      BN12.prototype.umod = function umod(num) {
+      BN13.prototype.umod = function umod(num) {
         return this.divmod(num, "mod", true).mod;
       };
-      BN12.prototype.divRound = function divRound(num) {
+      BN13.prototype.divRound = function divRound(num) {
         var dm = this.divmod(num);
         if (dm.mod.isZero()) return dm.div;
         var mod = dm.mod.abs();
@@ -7410,11 +7410,11 @@ var require_bn = __commonJS({
         var r2 = num.words[0] & 1;
         var cmp = mod.cmp(half);
         if (cmp < 0 || r2 === 1 && cmp === 0) return dm.div;
-        var up = new BN12(1);
+        var up = new BN13(1);
         up.negative = this.negative ^ num.negative;
         return dm.div.iadd(up);
       };
-      BN12.prototype.modrn = function modrn(num) {
+      BN13.prototype.modrn = function modrn(num) {
         var isNegNum = num < 0;
         if (isNegNum) num = -num;
         assert2(num <= 67108863);
@@ -7425,10 +7425,10 @@ var require_bn = __commonJS({
         }
         return isNegNum ? -acc : acc;
       };
-      BN12.prototype.modn = function modn(num) {
+      BN13.prototype.modn = function modn(num) {
         return this.modrn(num);
       };
-      BN12.prototype.idivn = function idivn(num) {
+      BN13.prototype.idivn = function idivn(num) {
         var isNegNum = num < 0;
         if (isNegNum) num = -num;
         assert2(num <= 67108863);
@@ -7441,10 +7441,10 @@ var require_bn = __commonJS({
         this._strip();
         return isNegNum ? this.ineg() : this;
       };
-      BN12.prototype.divn = function divn(num) {
+      BN13.prototype.divn = function divn(num) {
         return this.clone().idivn(num);
       };
-      BN12.prototype.egcd = function egcd(p2) {
+      BN13.prototype.egcd = function egcd(p2) {
         assert2(p2.negative === 0);
         assert2(!p2.isZero());
         var x = this;
@@ -7454,10 +7454,10 @@ var require_bn = __commonJS({
         } else {
           x = x.clone();
         }
-        var A2 = new BN12(1);
-        var B = new BN12(0);
-        var C2 = new BN12(0);
-        var D = new BN12(1);
+        var A2 = new BN13(1);
+        var B = new BN13(0);
+        var C2 = new BN13(0);
+        var D = new BN13(1);
         var g2 = 0;
         while (x.isEven() && y.isEven()) {
           x.iushrn(1);
@@ -7507,7 +7507,7 @@ var require_bn = __commonJS({
           gcd: y.iushln(g2)
         };
       };
-      BN12.prototype._invmp = function _invmp(p2) {
+      BN13.prototype._invmp = function _invmp(p2) {
         assert2(p2.negative === 0);
         assert2(!p2.isZero());
         var a2 = this;
@@ -7517,8 +7517,8 @@ var require_bn = __commonJS({
         } else {
           a2 = a2.clone();
         }
-        var x1 = new BN12(1);
-        var x2 = new BN12(0);
+        var x1 = new BN13(1);
+        var x2 = new BN13(0);
         var delta = b2.clone();
         while (a2.cmpn(1) > 0 && b2.cmpn(1) > 0) {
           for (var i2 = 0, im = 1; (a2.words[0] & im) === 0 && i2 < 26; ++i2, im <<= 1) ;
@@ -7560,7 +7560,7 @@ var require_bn = __commonJS({
         }
         return res;
       };
-      BN12.prototype.gcd = function gcd(num) {
+      BN13.prototype.gcd = function gcd(num) {
         if (this.isZero()) return num.abs();
         if (num.isZero()) return this.abs();
         var a2 = this.clone();
@@ -7590,19 +7590,19 @@ var require_bn = __commonJS({
         } while (true);
         return b2.iushln(shift);
       };
-      BN12.prototype.invm = function invm(num) {
+      BN13.prototype.invm = function invm(num) {
         return this.egcd(num).a.umod(num);
       };
-      BN12.prototype.isEven = function isEven() {
+      BN13.prototype.isEven = function isEven() {
         return (this.words[0] & 1) === 0;
       };
-      BN12.prototype.isOdd = function isOdd2() {
+      BN13.prototype.isOdd = function isOdd2() {
         return (this.words[0] & 1) === 1;
       };
-      BN12.prototype.andln = function andln(num) {
+      BN13.prototype.andln = function andln(num) {
         return this.words[0] & num;
       };
-      BN12.prototype.bincn = function bincn(bit) {
+      BN13.prototype.bincn = function bincn(bit) {
         assert2(typeof bit === "number");
         var r = bit % 26;
         var s = (bit - r) / 26;
@@ -7626,10 +7626,10 @@ var require_bn = __commonJS({
         }
         return this;
       };
-      BN12.prototype.isZero = function isZero() {
+      BN13.prototype.isZero = function isZero() {
         return this.length === 1 && this.words[0] === 0;
       };
-      BN12.prototype.cmpn = function cmpn(num) {
+      BN13.prototype.cmpn = function cmpn(num) {
         var negative = num < 0;
         if (this.negative !== 0 && !negative) return -1;
         if (this.negative === 0 && negative) return 1;
@@ -7648,14 +7648,14 @@ var require_bn = __commonJS({
         if (this.negative !== 0) return -res | 0;
         return res;
       };
-      BN12.prototype.cmp = function cmp(num) {
+      BN13.prototype.cmp = function cmp(num) {
         if (this.negative !== 0 && num.negative === 0) return -1;
         if (this.negative === 0 && num.negative !== 0) return 1;
         var res = this.ucmp(num);
         if (this.negative !== 0) return -res | 0;
         return res;
       };
-      BN12.prototype.ucmp = function ucmp(num) {
+      BN13.prototype.ucmp = function ucmp(num) {
         if (this.length > num.length) return 1;
         if (this.length < num.length) return -1;
         var res = 0;
@@ -7672,112 +7672,112 @@ var require_bn = __commonJS({
         }
         return res;
       };
-      BN12.prototype.gtn = function gtn(num) {
+      BN13.prototype.gtn = function gtn(num) {
         return this.cmpn(num) === 1;
       };
-      BN12.prototype.gt = function gt(num) {
+      BN13.prototype.gt = function gt(num) {
         return this.cmp(num) === 1;
       };
-      BN12.prototype.gten = function gten(num) {
+      BN13.prototype.gten = function gten(num) {
         return this.cmpn(num) >= 0;
       };
-      BN12.prototype.gte = function gte(num) {
+      BN13.prototype.gte = function gte(num) {
         return this.cmp(num) >= 0;
       };
-      BN12.prototype.ltn = function ltn(num) {
+      BN13.prototype.ltn = function ltn(num) {
         return this.cmpn(num) === -1;
       };
-      BN12.prototype.lt = function lt(num) {
+      BN13.prototype.lt = function lt(num) {
         return this.cmp(num) === -1;
       };
-      BN12.prototype.lten = function lten(num) {
+      BN13.prototype.lten = function lten(num) {
         return this.cmpn(num) <= 0;
       };
-      BN12.prototype.lte = function lte(num) {
+      BN13.prototype.lte = function lte(num) {
         return this.cmp(num) <= 0;
       };
-      BN12.prototype.eqn = function eqn(num) {
+      BN13.prototype.eqn = function eqn(num) {
         return this.cmpn(num) === 0;
       };
-      BN12.prototype.eq = function eq(num) {
+      BN13.prototype.eq = function eq(num) {
         return this.cmp(num) === 0;
       };
-      BN12.red = function red(num) {
+      BN13.red = function red(num) {
         return new Red(num);
       };
-      BN12.prototype.toRed = function toRed(ctx) {
+      BN13.prototype.toRed = function toRed(ctx) {
         assert2(!this.red, "Already a number in reduction context");
         assert2(this.negative === 0, "red works only with positives");
         return ctx.convertTo(this)._forceRed(ctx);
       };
-      BN12.prototype.fromRed = function fromRed() {
+      BN13.prototype.fromRed = function fromRed() {
         assert2(this.red, "fromRed works only with numbers in reduction context");
         return this.red.convertFrom(this);
       };
-      BN12.prototype._forceRed = function _forceRed(ctx) {
+      BN13.prototype._forceRed = function _forceRed(ctx) {
         this.red = ctx;
         return this;
       };
-      BN12.prototype.forceRed = function forceRed(ctx) {
+      BN13.prototype.forceRed = function forceRed(ctx) {
         assert2(!this.red, "Already a number in reduction context");
         return this._forceRed(ctx);
       };
-      BN12.prototype.redAdd = function redAdd(num) {
+      BN13.prototype.redAdd = function redAdd(num) {
         assert2(this.red, "redAdd works only with red numbers");
         return this.red.add(this, num);
       };
-      BN12.prototype.redIAdd = function redIAdd(num) {
+      BN13.prototype.redIAdd = function redIAdd(num) {
         assert2(this.red, "redIAdd works only with red numbers");
         return this.red.iadd(this, num);
       };
-      BN12.prototype.redSub = function redSub(num) {
+      BN13.prototype.redSub = function redSub(num) {
         assert2(this.red, "redSub works only with red numbers");
         return this.red.sub(this, num);
       };
-      BN12.prototype.redISub = function redISub(num) {
+      BN13.prototype.redISub = function redISub(num) {
         assert2(this.red, "redISub works only with red numbers");
         return this.red.isub(this, num);
       };
-      BN12.prototype.redShl = function redShl(num) {
+      BN13.prototype.redShl = function redShl(num) {
         assert2(this.red, "redShl works only with red numbers");
         return this.red.shl(this, num);
       };
-      BN12.prototype.redMul = function redMul(num) {
+      BN13.prototype.redMul = function redMul(num) {
         assert2(this.red, "redMul works only with red numbers");
         this.red._verify2(this, num);
         return this.red.mul(this, num);
       };
-      BN12.prototype.redIMul = function redIMul(num) {
+      BN13.prototype.redIMul = function redIMul(num) {
         assert2(this.red, "redMul works only with red numbers");
         this.red._verify2(this, num);
         return this.red.imul(this, num);
       };
-      BN12.prototype.redSqr = function redSqr() {
+      BN13.prototype.redSqr = function redSqr() {
         assert2(this.red, "redSqr works only with red numbers");
         this.red._verify1(this);
         return this.red.sqr(this);
       };
-      BN12.prototype.redISqr = function redISqr() {
+      BN13.prototype.redISqr = function redISqr() {
         assert2(this.red, "redISqr works only with red numbers");
         this.red._verify1(this);
         return this.red.isqr(this);
       };
-      BN12.prototype.redSqrt = function redSqrt() {
+      BN13.prototype.redSqrt = function redSqrt() {
         assert2(this.red, "redSqrt works only with red numbers");
         this.red._verify1(this);
         return this.red.sqrt(this);
       };
-      BN12.prototype.redInvm = function redInvm() {
+      BN13.prototype.redInvm = function redInvm() {
         assert2(this.red, "redInvm works only with red numbers");
         this.red._verify1(this);
         return this.red.invm(this);
       };
-      BN12.prototype.redNeg = function redNeg() {
+      BN13.prototype.redNeg = function redNeg() {
         assert2(this.red, "redNeg works only with red numbers");
         this.red._verify1(this);
         return this.red.neg(this);
       };
-      BN12.prototype.redPow = function redPow(num) {
+      BN13.prototype.redPow = function redPow(num) {
         assert2(this.red && !num.red, "redPow(normalNum)");
         this.red._verify1(this);
         return this.red.pow(this, num);
@@ -7790,13 +7790,13 @@ var require_bn = __commonJS({
       };
       function MPrime(name, p2) {
         this.name = name;
-        this.p = new BN12(p2, 16);
+        this.p = new BN13(p2, 16);
         this.n = this.p.bitLength();
-        this.k = new BN12(1).iushln(this.n).isub(this.p);
+        this.k = new BN13(1).iushln(this.n).isub(this.p);
         this.tmp = this._tmp();
       }
       MPrime.prototype._tmp = function _tmp() {
-        var tmp = new BN12(null);
+        var tmp = new BN13(null);
         tmp.words = new Array(Math.ceil(this.n / 13));
         return tmp;
       };
@@ -7922,7 +7922,7 @@ var require_bn = __commonJS({
         }
         return num;
       };
-      BN12._prime = function prime(name) {
+      BN13._prime = function prime(name) {
         if (primes[name]) return primes[name];
         var prime2;
         if (name === "k256") {
@@ -7941,7 +7941,7 @@ var require_bn = __commonJS({
       };
       function Red(m) {
         if (typeof m === "string") {
-          var prime = BN12._prime(m);
+          var prime = BN13._prime(m);
           this.m = prime.p;
           this.prime = prime;
         } else {
@@ -8027,7 +8027,7 @@ var require_bn = __commonJS({
         var mod3 = this.m.andln(3);
         assert2(mod3 % 2 === 1);
         if (mod3 === 3) {
-          var pow = this.m.add(new BN12(1)).iushrn(2);
+          var pow = this.m.add(new BN13(1)).iushrn(2);
           return this.pow(a2, pow);
         }
         var q2 = this.m.subn(1);
@@ -8037,11 +8037,11 @@ var require_bn = __commonJS({
           q2.iushrn(1);
         }
         assert2(!q2.isZero());
-        var one = new BN12(1).toRed(this);
+        var one = new BN13(1).toRed(this);
         var nOne = one.redNeg();
         var lpow = this.m.subn(1).iushrn(1);
         var z = this.m.bitLength();
-        z = new BN12(2 * z * z).toRed(this);
+        z = new BN13(2 * z * z).toRed(this);
         while (this.pow(z, lpow).cmp(nOne) !== 0) {
           z.redIAdd(nOne);
         }
@@ -8055,7 +8055,7 @@ var require_bn = __commonJS({
             tmp = tmp.redSqr();
           }
           assert2(i2 < m);
-          var b2 = this.pow(c, new BN12(1).iushln(m - i2 - 1));
+          var b2 = this.pow(c, new BN13(1).iushln(m - i2 - 1));
           r = r.redMul(b2);
           c = b2.redSqr();
           t = t.redMul(c);
@@ -8073,11 +8073,11 @@ var require_bn = __commonJS({
         }
       };
       Red.prototype.pow = function pow(a2, num) {
-        if (num.isZero()) return new BN12(1).toRed(this);
+        if (num.isZero()) return new BN13(1).toRed(this);
         if (num.cmpn(1) === 0) return a2.clone();
         var windowSize = 4;
         var wnd = new Array(1 << windowSize);
-        wnd[0] = new BN12(1).toRed(this);
+        wnd[0] = new BN13(1).toRed(this);
         wnd[1] = a2;
         for (var i2 = 2; i2 < wnd.length; i2++) {
           wnd[i2] = this.mul(wnd[i2 - 1], a2);
@@ -8121,7 +8121,7 @@ var require_bn = __commonJS({
         res.red = null;
         return res;
       };
-      BN12.mont = function mont(num) {
+      BN13.mont = function mont(num) {
         return new Mont(num);
       };
       function Mont(m) {
@@ -8130,7 +8130,7 @@ var require_bn = __commonJS({
         if (this.shift % 26 !== 0) {
           this.shift += 26 - this.shift % 26;
         }
-        this.r = new BN12(1).iushln(this.shift);
+        this.r = new BN13(1).iushln(this.shift);
         this.r2 = this.imod(this.r.sqr());
         this.rinv = this.r._invmp(this.m);
         this.minv = this.rinv.mul(this.r).isubn(1).div(this.m);
@@ -8164,7 +8164,7 @@ var require_bn = __commonJS({
         return res._forceRed(this);
       };
       Mont.prototype.mul = function mul(a2, b2) {
-        if (a2.isZero() || b2.isZero()) return new BN12(0)._forceRed(this);
+        if (a2.isZero() || b2.isZero()) return new BN13(0)._forceRed(this);
         var t = a2.mul(b2);
         var c = t.maskn(this.shift).mul(this.minv).imaskn(this.shift).mul(this.m);
         var u = t.isub(c).iushrn(this.shift);
@@ -16530,7 +16530,7 @@ var require_index_browser_cjs = __commonJS({
     init_polyfill();
     var buffer = require_buffer();
     var ed25519 = require_ed25519();
-    var BN12 = require_bn();
+    var BN13 = require_bn();
     var bs58 = require_bs58();
     var sha256 = require_sha256();
     var borsh2 = require_lib();
@@ -16563,7 +16563,7 @@ var require_index_browser_cjs = __commonJS({
       n.default = e;
       return Object.freeze(n);
     }
-    var BN__default = /* @__PURE__ */ _interopDefaultCompat(BN12);
+    var BN__default = /* @__PURE__ */ _interopDefaultCompat(BN13);
     var bs58__default = /* @__PURE__ */ _interopDefaultCompat(bs58);
     var BufferLayout__namespace = /* @__PURE__ */ _interopNamespaceCompat(BufferLayout);
     var RpcClient__default = /* @__PURE__ */ _interopDefaultCompat(RpcClient);
@@ -27533,6 +27533,15 @@ function validateToken(input) {
   }
   return errors;
 }
+function parseInitialBuy(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return 0;
+  if (!/^\d+(?:\.\d{1,9})?$/.test(text)) throw Error("Enter a valid SOL amount with up to 9 decimal places.");
+  const [whole, fraction = ""] = text.split(".");
+  const lamports = BigInt(whole) * 1000000000n + BigInt(fraction.padEnd(9, "0"));
+  if (lamports > BigInt(Number.MAX_SAFE_INTEGER)) throw Error("SOL amount is too large.");
+  return Number(lamports);
+}
 
 // src/metadata.mjs
 init_polyfill();
@@ -28500,59 +28509,33 @@ async function buildPumpInstruction({ name, symbol, uri, wallet: wallet2, mint, 
   }
   return sdk.createV2Instruction(args);
 }
-
-// src/solana.mjs
-init_polyfill();
-var import_web32 = __toESM(require_index_browser_cjs(), 1);
-var MAINNET_GENESIS = "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d";
-async function prepareSolanaLaunch(input, quote, uri, wallet2, { connection, buildInstruction }) {
-  if (await connection.getGenesisHash() !== MAINNET_GENESIS) throw Error("Wallet launch requires the Solana mainnet network.");
-  const mint = import_web32.Keypair.generate();
-  const instruction = await buildInstruction({ name: input.name.trim(), symbol: input.symbol.trim(), uri, wallet: wallet2, mint: mint.publicKey, quote });
-  const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
-  const message = new import_web32.TransactionMessage({ payerKey: wallet2, recentBlockhash: blockhash, instructions: [instruction] }).compileToV0Message();
-  const transaction = new import_web32.VersionedTransaction(message);
-  transaction.sign([mint]);
-  const balance = await connection.getBalance(wallet2, "confirmed");
-  const sim = await connection.simulateTransaction(transaction, { commitment: "confirmed", sigVerify: false, accounts: { encoding: "base64", addresses: [wallet2.toBase58()] } });
-  if (sim.value.err) throw Error("Transaction simulation failed. Check your balance and token details.");
-  const post = sim.value.accounts?.[0]?.lamports;
-  const networkFee = (await connection.getFeeForMessage(message, "confirmed")).value;
-  if (!Number.isSafeInteger(post) || networkFee === null || !Number.isSafeInteger(balance) || post > balance) throw Error("Unable to estimate the full launch cost. Please try again.");
-  const fee2 = balance - post;
-  if (fee2 < networkFee) throw Error("Unable to estimate the full launch cost. Please try again.");
-  return { transaction, mint: mint.publicKey.toBase58(), fee: fee2, balance, blockhash, lastValidBlockHeight };
-}
-async function verifySignedTransaction(transaction, expectedMessage, cryptoApi = crypto) {
-  try {
-    const message = transaction.message.serialize();
-    if (message.length !== expectedMessage.length || !message.every((v2, i2) => v2 === expectedMessage[i2])) return false;
-    const n = transaction.message.header.numRequiredSignatures;
-    if (transaction.signatures.length !== n) return false;
-    for (let i2 = 0; i2 < n; i2++) {
-      const key = await cryptoApi.subtle.importKey("raw", transaction.message.staticAccountKeys[i2].toBytes(), { name: "Ed25519" }, false, ["verify"]);
-      if (!await cryptoApi.subtle.verify("Ed25519", key, transaction.signatures[i2], message)) return false;
-    }
-    return true;
-  } catch {
-    return false;
-  }
+async function buildPumpInstructions(args, sdk, { global: global2, feeConfig, makeAmount, getTokens, newCurve, nativeMint, tokenProgram, ataInstruction } = {}) {
+  if (!args.buyLamports) return [await buildPumpInstruction(args, sdk)];
+  if (args.quote.source !== "sol") throw Error("The initial SOL purchase is available for SOL-paired tokens only.");
+  const quoteAmount = makeAmount(args.buyLamports);
+  const curve = newCurve(global2, nativeMint);
+  curve.creator = args.wallet;
+  const amount = getTokens({ global: global2, feeConfig, mintSupply: global2.tokenTotalSupply, bondingCurve: curve, amount: quoteAmount, curveBaseTokenBalance: global2.tokenTotalSupply });
+  if (amount.isZero()) throw Error("The SOL amount is too small to purchase tokens.");
+  const minTokensOut = amount.muln(99).divn(100);
+  if (minTokensOut.isZero()) throw Error("The SOL amount is too small to purchase tokens.");
+  const create2 = await buildPumpInstruction(args, sdk);
+  const ata = ataInstruction(args.wallet, args.mint, tokenProgram);
+  const buy = await sdk.getBuyExactQuoteInV3InstructionRaw({ user: args.wallet, mint: args.mint, spendableQuoteIn: quoteAmount, minTokensOut, tokenProgram });
+  return [create2, ata, buy];
 }
 
 // src/ui.mjs
-var import_web327 = __toESM(require_index_browser_cjs(), 1);
-
-// node_modules/@pump-fun/pump-sdk/dist/esm/index.js
-init_polyfill();
+var import_bn18 = __toESM(require_bn(), 1);
 
 // node_modules/@solana/spl-token/lib/esm/constants.js
 init_polyfill();
-var import_web33 = __toESM(require_index_browser_cjs(), 1);
-var TOKEN_PROGRAM_ID = new import_web33.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
-var TOKEN_2022_PROGRAM_ID = new import_web33.PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
-var ASSOCIATED_TOKEN_PROGRAM_ID = new import_web33.PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
-var NATIVE_MINT = new import_web33.PublicKey("So11111111111111111111111111111111111111112");
-var NATIVE_MINT_2022 = new import_web33.PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXejP");
+var import_web32 = __toESM(require_index_browser_cjs(), 1);
+var TOKEN_PROGRAM_ID = new import_web32.PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+var TOKEN_2022_PROGRAM_ID = new import_web32.PublicKey("TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb");
+var ASSOCIATED_TOKEN_PROGRAM_ID = new import_web32.PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
+var NATIVE_MINT = new import_web32.PublicKey("So11111111111111111111111111111111111111112");
+var NATIVE_MINT_2022 = new import_web32.PublicKey("9pan9bMn5HatX4EJdBwg9VgCa7Uz5HL8N1m5D3NdXejP");
 
 // node_modules/@solana/buffer-layout-utils/lib/esm/index.mjs
 init_polyfill();
@@ -29976,14 +29959,14 @@ var bool = (property) => {
 // node_modules/@solana/buffer-layout-utils/lib/esm/web3.mjs
 init_polyfill();
 var import_buffer_layout3 = __toESM(require_Layout(), 1);
-var import_web34 = __toESM(require_index_browser_cjs(), 1);
+var import_web33 = __toESM(require_index_browser_cjs(), 1);
 var publicKey = (property) => {
   const layout = (0, import_buffer_layout3.blob)(32, property);
   const { encode, decode: decode2 } = encodeDecode(layout);
   const publicKeyLayout = layout;
   publicKeyLayout.decode = (buffer, offset2) => {
     const src = decode2(buffer, offset2);
-    return new import_web34.PublicKey(src);
+    return new import_web33.PublicKey(src);
   };
   publicKeyLayout.encode = (publicKey4, buffer, offset2) => {
     const src = publicKey4.toBuffer();
@@ -30089,7 +30072,7 @@ var TokenInstruction;
 // node_modules/@solana/spl-token/lib/esm/state/mint.js
 init_polyfill();
 var import_buffer_layout6 = __toESM(require_Layout(), 1);
-var import_web36 = __toESM(require_index_browser_cjs(), 1);
+var import_web35 = __toESM(require_index_browser_cjs(), 1);
 
 // node_modules/@solana/spl-token/lib/esm/extensions/accountType.js
 init_polyfill();
@@ -30181,13 +30164,13 @@ function unpackAccount(address, info, programId = TOKEN_PROGRAM_ID) {
 
 // node_modules/@solana/spl-token/lib/esm/instructions/internal.js
 init_polyfill();
-var import_web35 = __toESM(require_index_browser_cjs(), 1);
+var import_web34 = __toESM(require_index_browser_cjs(), 1);
 function addSigners(keys, ownerOrAuthority, multiSigners) {
   if (multiSigners.length) {
     keys.push({ pubkey: ownerOrAuthority, isSigner: false, isWritable: false });
     for (const signer of multiSigners) {
       keys.push({
-        pubkey: signer instanceof import_web35.PublicKey ? signer : signer.publicKey,
+        pubkey: signer instanceof import_web34.PublicKey ? signer : signer.publicKey,
         isSigner: true,
         isWritable: false
       });
@@ -30238,16 +30221,16 @@ function unpackMint(address, info, programId = TOKEN_PROGRAM_ID) {
   };
 }
 function getAssociatedTokenAddressSync(mint, owner, allowOwnerOffCurve = false, programId = TOKEN_PROGRAM_ID, associatedTokenProgramId = ASSOCIATED_TOKEN_PROGRAM_ID) {
-  if (!allowOwnerOffCurve && !import_web36.PublicKey.isOnCurve(owner.toBuffer()))
+  if (!allowOwnerOffCurve && !import_web35.PublicKey.isOnCurve(owner.toBuffer()))
     throw new TokenOwnerOffCurveError();
-  const [address] = import_web36.PublicKey.findProgramAddressSync([owner.toBuffer(), programId.toBuffer(), mint.toBuffer()], associatedTokenProgramId);
+  const [address] = import_web35.PublicKey.findProgramAddressSync([owner.toBuffer(), programId.toBuffer(), mint.toBuffer()], associatedTokenProgramId);
   return address;
 }
 
 // node_modules/@solana/spl-token/lib/esm/instructions/closeAccount.js
 init_polyfill();
 var import_buffer_layout7 = __toESM(require_Layout(), 1);
-var import_web37 = __toESM(require_index_browser_cjs(), 1);
+var import_web36 = __toESM(require_index_browser_cjs(), 1);
 var closeAccountInstructionData = (0, import_buffer_layout7.struct)([(0, import_buffer_layout7.u8)("instruction")]);
 function createCloseAccountInstruction(account, destination, authority, multiSigners = [], programId = TOKEN_PROGRAM_ID) {
   const keys = addSigners([
@@ -30256,12 +30239,12 @@ function createCloseAccountInstruction(account, destination, authority, multiSig
   ], authority, multiSigners);
   const data = import_buffer.Buffer.alloc(closeAccountInstructionData.span);
   closeAccountInstructionData.encode({ instruction: TokenInstruction.CloseAccount }, data);
-  return new import_web37.TransactionInstruction({ keys, programId, data });
+  return new import_web36.TransactionInstruction({ keys, programId, data });
 }
 
 // node_modules/@solana/spl-token/lib/esm/instructions/associatedTokenAccount.js
 init_polyfill();
-var import_web38 = __toESM(require_index_browser_cjs(), 1);
+var import_web37 = __toESM(require_index_browser_cjs(), 1);
 function createAssociatedTokenAccountIdempotentInstruction(payer, associatedToken, owner, mint, programId = TOKEN_PROGRAM_ID, associatedTokenProgramId = ASSOCIATED_TOKEN_PROGRAM_ID) {
   return buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, mint, import_buffer.Buffer.from([1]), programId, associatedTokenProgramId);
 }
@@ -30271,10 +30254,10 @@ function buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, m
     { pubkey: associatedToken, isSigner: false, isWritable: true },
     { pubkey: owner, isSigner: false, isWritable: false },
     { pubkey: mint, isSigner: false, isWritable: false },
-    { pubkey: import_web38.SystemProgram.programId, isSigner: false, isWritable: false },
+    { pubkey: import_web37.SystemProgram.programId, isSigner: false, isWritable: false },
     { pubkey: programId, isSigner: false, isWritable: false }
   ];
-  return new import_web38.TransactionInstruction({
+  return new import_web37.TransactionInstruction({
     keys,
     programId: associatedTokenProgramId,
     data: instructionData
@@ -30284,16 +30267,64 @@ function buildAssociatedTokenAccountInstruction(payer, associatedToken, owner, m
 // node_modules/@solana/spl-token/lib/esm/instructions/syncNative.js
 init_polyfill();
 var import_buffer_layout8 = __toESM(require_Layout(), 1);
-var import_web39 = __toESM(require_index_browser_cjs(), 1);
+var import_web38 = __toESM(require_index_browser_cjs(), 1);
 var syncNativeInstructionData = (0, import_buffer_layout8.struct)([(0, import_buffer_layout8.u8)("instruction")]);
 function createSyncNativeInstruction(account, programId = TOKEN_PROGRAM_ID) {
   const keys = [{ pubkey: account, isSigner: false, isWritable: true }];
   const data = import_buffer.Buffer.alloc(syncNativeInstructionData.span);
   syncNativeInstructionData.encode({ instruction: TokenInstruction.SyncNative }, data);
-  return new import_web39.TransactionInstruction({ keys, programId, data });
+  return new import_web38.TransactionInstruction({ keys, programId, data });
 }
 
+// src/solana.mjs
+init_polyfill();
+var import_web39 = __toESM(require_index_browser_cjs(), 1);
+var MAINNET_GENESIS = "5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d";
+async function prepareSolanaLaunch(input, quote, uri, wallet2, { connection, buildInstruction, buildInstructions }) {
+  if (await connection.getGenesisHash() !== MAINNET_GENESIS) throw Error("Wallet launch requires the Solana mainnet network.");
+  const mint = import_web39.Keypair.generate();
+  const args = { name: input.name.trim(), symbol: input.symbol.trim(), uri, wallet: wallet2, mint: mint.publicKey, quote, buyLamports: input.buyLamports || 0 };
+  const instructions = buildInstructions ? await buildInstructions(args) : [await buildInstruction(args)];
+  const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
+  const message = new import_web39.TransactionMessage({ payerKey: wallet2, recentBlockhash: blockhash, instructions }).compileToV0Message();
+  const transaction = new import_web39.VersionedTransaction(message);
+  transaction.sign([mint]);
+  try {
+    if (transaction.serialize().length > 1232) throw Error();
+  } catch {
+    throw Error("Token launch transaction is too large. Shorten the token name or ticker.");
+  }
+  const balance = await connection.getBalance(wallet2, "confirmed");
+  const sim = await connection.simulateTransaction(transaction, { commitment: "confirmed", sigVerify: false, accounts: { encoding: "base64", addresses: [wallet2.toBase58()] } });
+  if (sim.value.err) throw Error("Transaction simulation failed. Check your balance and token details.");
+  const post = sim.value.accounts?.[0]?.lamports;
+  const networkFee = (await connection.getFeeForMessage(message, "confirmed")).value;
+  if (!Number.isSafeInteger(post) || networkFee === null || !Number.isSafeInteger(balance) || post > balance) throw Error("Unable to estimate the full launch cost. Please try again.");
+  const fee2 = balance - post;
+  if (fee2 < networkFee) throw Error("Unable to estimate the full launch cost. Please try again.");
+  return { transaction, mint: mint.publicKey.toBase58(), fee: fee2, balance, blockhash, lastValidBlockHeight };
+}
+async function verifySignedTransaction(transaction, expectedMessage, cryptoApi = crypto) {
+  try {
+    const message = transaction.message.serialize();
+    if (message.length !== expectedMessage.length || !message.every((v2, i2) => v2 === expectedMessage[i2])) return false;
+    const n = transaction.message.header.numRequiredSignatures;
+    if (transaction.signatures.length !== n) return false;
+    for (let i2 = 0; i2 < n; i2++) {
+      const key = await cryptoApi.subtle.importKey("raw", transaction.message.staticAccountKeys[i2].toBytes(), { name: "Ed25519" }, false, ["verify"]);
+      if (!await cryptoApi.subtle.verify("Ed25519", key, transaction.signatures[i2], message)) return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// src/ui.mjs
+var import_web327 = __toESM(require_index_browser_cjs(), 1);
+
 // node_modules/@pump-fun/pump-sdk/dist/esm/index.js
+init_polyfill();
 var import_web322 = __toESM(require_index_browser_cjs());
 var import_bn13 = __toESM(require_bn());
 var import_web323 = __toESM(require_index_browser_cjs());
@@ -67125,6 +67156,96 @@ var SOL_LIKE_QUOTE_MINTS2 = Object.freeze([
 var STABLE_QUOTE_MINTS2 = Object.freeze([
   new import_web323.PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
 ]);
+function isSolLikeQuoteMint2(quoteMint) {
+  return SOL_LIKE_QUOTE_MINTS2.some((mint) => mint.equals(quoteMint));
+}
+function isStableQuoteMint2(quoteMint) {
+  return STABLE_QUOTE_MINTS2.some((mint) => mint.equals(quoteMint));
+}
+function computeFeesBps2({
+  global: global2,
+  feeConfig,
+  mintSupply,
+  virtualQuoteReserves,
+  virtualTokenReserves,
+  quoteMint,
+  creatorFeeBps
+}) {
+  const schedule = scheduleFeesBps({
+    global: global2,
+    feeConfig,
+    mintSupply,
+    virtualQuoteReserves,
+    virtualTokenReserves,
+    quoteMint
+  });
+  if (!global2.creatorFeeConfigurable || creatorFeeBps == null || creatorFeeBps.isZero()) {
+    return schedule;
+  }
+  return { protocolFeeBps: schedule.protocolFeeBps, creatorFeeBps };
+}
+function scheduleFeesBps({
+  global: global2,
+  feeConfig,
+  mintSupply,
+  virtualQuoteReserves,
+  virtualTokenReserves,
+  quoteMint
+}) {
+  if (feeConfig != null) {
+    const marketCap = bondingCurveMarketCap({
+      mintSupply,
+      virtualQuoteReserves,
+      virtualTokenReserves
+    });
+    return selectCurveFeeSchedule({
+      feeConfig,
+      quoteMint: quoteMint ?? import_web323.PublicKey.default,
+      marketCap
+    });
+  }
+  return {
+    protocolFeeBps: global2.feeBasisPoints,
+    creatorFeeBps: global2.creatorFeeBasisPoints
+  };
+}
+function selectCurveFeeSchedule({
+  feeConfig,
+  quoteMint,
+  marketCap
+}) {
+  if (isSolLikeQuoteMint2(quoteMint)) {
+    return calculateFeeTier2({ feeTiers: feeConfig.feeTiers, marketCap });
+  }
+  if (isStableQuoteMint2(quoteMint)) {
+    return calculateFeeTier2({
+      feeTiers: feeConfig.stableFeeTiers.length > 0 ? feeConfig.stableFeeTiers : feeConfig.feeTiers,
+      marketCap
+    });
+  }
+  return isZeroFees2(feeConfig.exoticFlatFees) ? feeConfig.flatFees : feeConfig.exoticFlatFees;
+}
+function isZeroFees2({ lpFeeBps, protocolFeeBps, creatorFeeBps }) {
+  return lpFeeBps.isZero() && protocolFeeBps.isZero() && creatorFeeBps.isZero();
+}
+function calculateFeeTier2({
+  feeTiers,
+  marketCap
+}) {
+  if (feeTiers.length === 0) {
+    throw new Error("Fee tiers cannot be empty");
+  }
+  const firstTier = feeTiers[0];
+  if (marketCap.lt(firstTier.marketCapLamportsThreshold)) {
+    return firstTier.fees;
+  }
+  for (const tier of feeTiers.slice().reverse()) {
+    if (marketCap.gte(tier.marketCapLamportsThreshold)) {
+      return tier.fees;
+    }
+  }
+  return firstTier.fees;
+}
 function getFeeRecipient2(global2, mayhemMode) {
   const [primary, ...others] = mayhemMode ? [global2.reservedFeeRecipient, ...global2.reservedFeeRecipients] : [global2.feeRecipient, ...global2.feeRecipients];
   const feeRecipients = [primary, ...others].filter(
@@ -87798,6 +87919,38 @@ var donationRelayMintWhitelistPda = (donationRelayProgramId) => {
 var donationRelayEventAuthorityPda = (donationRelayProgramId) => {
   return getEventAuthorityPda(donationRelayProgramId);
 };
+function initialVirtualQuoteReservesFor(global2, quoteMint, quoteControl, pumpQuote) {
+  if (isLegacyQuoteMint(quoteMint)) {
+    return global2.initialVirtualSolReserves;
+  }
+  if (quoteControl === void 0 && pumpQuote?.quoteControl !== void 0) {
+    quoteControl = pumpQuote.quoteControl;
+  }
+  if (quoteMint.equals(NATIVE_MINT_2022)) {
+    throw new UnsupportedQuoteMintError(quoteMint);
+  }
+  if (global2.whitelistedQuoteMints.some((mint) => mint.equals(quoteMint))) {
+    return global2.initialVirtualQuoteReserves;
+  }
+  const entry = quoteControl?.mints.find(
+    (candidate) => candidate.mint.equals(quoteMint)
+  );
+  if (entry) {
+    return entry.initialVirtualQuoteReserves;
+  }
+  if (pumpQuote) {
+    if (!pumpQuote.mint.equals(quoteMint)) {
+      throw new Error(
+        `pumpQuote is for ${pumpQuote.mint.toBase58()}, not the quote mint ${quoteMint.toBase58()}`
+      );
+    }
+    return pumpQuoteReserves(global2, pumpQuote, quoteControl).virtualQuoteReserves;
+  }
+  if (quoteControl !== void 0) {
+    throw new UnsupportedQuoteMintError(quoteMint);
+  }
+  return global2.initialVirtualQuoteReserves;
+}
 var MAX_CURVE_DEPTH = 5;
 function isBondingCurveMigrated(bondingCurve) {
   return bondingCurve.realQuoteReserves.isZero() && bondingCurve.virtualQuoteReserves.isZero() && bondingCurve.realTokenReserves.isZero() && bondingCurve.virtualTokenReserves.isZero();
@@ -87953,6 +88106,39 @@ function pumpQuoteReserves(global2, quote, quoteControl) {
   }
   return { virtualQuoteReserves: derived, depth };
 }
+function newBondingCurve(global2, quoteMint = import_web322.PublicKey.default, quoteControl, creatorFeeBps, isHolderReward = false, pumpQuote) {
+  const quote = quoteMint ?? import_web322.PublicKey.default;
+  const virtualQuoteReserves = initialVirtualQuoteReservesFor(
+    global2,
+    quote,
+    quoteControl,
+    pumpQuote ?? void 0
+  );
+  const listedIn = quoteControl !== void 0 ? quoteControl : pumpQuote?.quoteControl;
+  const isPumpQuoted = pumpQuote != null && !isLegacyQuoteMint(quote) && !global2.whitelistedQuoteMints.some((mint) => mint.equals(quote)) && !listedIn?.mints.some((entry) => entry.mint.equals(quote));
+  return {
+    virtualTokenReserves: global2.initialVirtualTokenReserves,
+    virtualQuoteReserves,
+    realTokenReserves: global2.initialRealTokenReserves,
+    realQuoteReserves: new import_bn13.default(0),
+    tokenTotalSupply: global2.tokenTotalSupply,
+    complete: false,
+    creator: import_web322.PublicKey.default,
+    isMayhemMode: global2.mayhemModeEnabled,
+    isCashbackCoin: false,
+    // Stored the way the program stores it: the zero key for SOL curves.
+    quoteMint: isLegacyQuoteMint(quote) ? import_web322.PublicKey.default : quote,
+    creatorFeeBps: creatorFeeBps ?? new import_bn13.default(0),
+    canEditCreatorFee: false,
+    isHolderReward,
+    creatorFee: new import_bn13.default(0),
+    protocolFees: new import_bn13.default(0),
+    depth: isPumpQuoted ? pumpQuote.bondingCurve.depth + 1 : 0,
+    initialVirtualQuoteReserves: virtualQuoteReserves,
+    postCompleteBaseOut: new import_bn13.default(0),
+    postCompleteQuoteIn: new import_bn13.default(0)
+  };
+}
 function getBuySolAmountFromTokenAmountQuote({
   minAmount,
   virtualTokenReserves,
@@ -88000,6 +88186,109 @@ var CURRENT_FEE_RECIPIENTS_FOR_BUYBACK = [
   "5eHhjP8JaYkz83CWwvGU2uMUXefd3AazWGx4gpcuEEYD",
   "A7hAgCzFw14fejgCp387JUJRMNyz4j89JKnhtKU8piqW"
 ];
+function bondingCurveMarketCap({
+  mintSupply,
+  virtualQuoteReserves,
+  virtualTokenReserves
+}) {
+  if (virtualTokenReserves.isZero()) {
+    throw new Error("Division by zero: virtual token reserves cannot be zero");
+  }
+  return virtualQuoteReserves.mul(mintSupply).div(virtualTokenReserves);
+}
+function v3Rates(global2, feeConfig, mintSupply, bondingCurve) {
+  const { protocolFeeBps, creatorFeeBps } = computeFeesBps2({
+    global: global2,
+    feeConfig,
+    mintSupply: bondingCurve.isMayhemMode ? mintSupply : ONE_BILLION_SUPPLY,
+    virtualQuoteReserves: bondingCurve.virtualQuoteReserves,
+    virtualTokenReserves: bondingCurve.virtualTokenReserves,
+    quoteMint: bondingCurve.quoteMint,
+    creatorFeeBps: bondingCurve.creatorFeeBps
+  });
+  return {
+    protocolFeeBps,
+    creatorFeeBps: bondingCurve.creator.equals(import_web322.PublicKey.default) ? new import_bn13.default(0) : creatorFeeBps
+  };
+}
+function ceilFee(amount, bps) {
+  return amount.mul(bps).addn(9999).divn(1e4);
+}
+function v3Fees(amount, rates) {
+  return ceilFee(amount, rates.protocolFeeBps).add(
+    ceilFee(amount, rates.creatorFeeBps)
+  );
+}
+function v3ExactQuoteInNet(budget, rates) {
+  const totalBps = rates.protocolFeeBps.add(rates.creatorFeeBps);
+  let net = totalBps.isZero() ? budget : budget.muln(1e4).div(totalBps.addn(1e4));
+  const cost = net.add(v3Fees(net, rates));
+  if (cost.gt(budget)) {
+    net = net.sub(cost.sub(budget));
+  }
+  return net;
+}
+function poolToBe(global2, bondingCurve, curveBaseTokenBalance, curveTokens, curveNetQuote) {
+  const raised = bondingCurve.realQuoteReserves.add(curveNetQuote);
+  const base2 = curveBaseTokenBalance.sub(curveTokens);
+  const quote = isLegacyQuoteMint(bondingCurve.quoteMint) ? raised.sub(global2.poolMigrationFee) : raised;
+  if (base2.lten(0) || quote.lten(0)) {
+    throw new Error(
+      `Empty pool-to-be (base ${base2.toString()}, quote ${quote.toString()}): check curveBaseTokenBalance`
+    );
+  }
+  return { base: base2, quote };
+}
+function getBuyV3TokenAmountFromQuoteAmount({
+  global: global2,
+  feeConfig,
+  mintSupply,
+  bondingCurve,
+  amount,
+  curveBaseTokenBalance
+}) {
+  if (amount.isZero() || bondingCurve.complete || bondingCurve.virtualTokenReserves.isZero()) {
+    return new import_bn13.default(0);
+  }
+  const rates = v3Rates(global2, feeConfig, mintSupply, bondingCurve);
+  const net = v3ExactQuoteInNet(amount, rates);
+  if (net.lten(1)) {
+    return new import_bn13.default(0);
+  }
+  const tokens = getBuyTokenAmountFromSolAmountQuote({
+    inputAmount: net.subn(1),
+    virtualTokenReserves: bondingCurve.virtualTokenReserves,
+    virtualQuoteReserves: bondingCurve.virtualQuoteReserves
+  });
+  const remaining = bondingCurve.realTokenReserves;
+  if (tokens.lte(remaining) || bondingCurve.isMayhemMode) {
+    return import_bn13.default.min(tokens, remaining);
+  }
+  const curveNet = getBuySolAmountFromTokenAmountQuote({
+    minAmount: remaining,
+    virtualTokenReserves: bondingCurve.virtualTokenReserves,
+    virtualQuoteReserves: bondingCurve.virtualQuoteReserves
+  });
+  const budgetLeft = amount.sub(curveNet.add(v3Fees(curveNet, rates)));
+  if (budgetLeft.lten(0)) {
+    return remaining;
+  }
+  const totalBps = rates.protocolFeeBps.add(rates.creatorFeeBps);
+  const afterFees = totalBps.isZero() ? budgetLeft : budgetLeft.muln(1e4).div(totalBps.addn(1e4));
+  if (afterFees.ltn(2)) {
+    return remaining;
+  }
+  const legNet = v3ExactQuoteInNet(budgetLeft, rates);
+  const pool = poolToBe(
+    global2,
+    bondingCurve,
+    curveBaseTokenBalance,
+    remaining,
+    curveNet
+  );
+  const legTokens = legNet.subn(1).mul(pool.base).div(pool.quote.add(legNet.subn(1)));
+  return remaining.add(legTokens);
+}
 
 // src/ui.mjs
 if (!globalThis.Buffer) globalThis.Buffer = import_buffer6.Buffer;
@@ -88107,7 +88396,14 @@ form.addEventListener("submit", async (event) => {
   if (!metadataService) return;
   const fields = new FormData(form);
   const input = { name: String(fields.get("name") || ""), symbol: String(fields.get("symbol") || ""), description: String(fields.get("description") || ""), website: String(fields.get("website") || ""), social: String(fields.get("social") || "").trim(), image: form.elements.image.files[0], quote: fields.get("quote") === "custom" ? String(fields.get("quoteAddress") || "").trim() : "" };
+  try {
+    input.buyLamports = parseInitialBuy(fields.get("initialBuy"));
+  } catch (e) {
+    status.textContent = e.message;
+    return;
+  }
   const errors = validateToken(input);
+  if (input.buyLamports && fields.get("quote") === "custom") errors.buy = "The initial SOL purchase requires a SOL trading pair.";
   if (fields.get("quote") === "custom" && !input.quote) errors.quote = "Enter a quote token mint address.";
   if (Object.keys(errors).length) {
     status.textContent = Object.values(errors).join(" ");
@@ -88124,13 +88420,17 @@ form.addEventListener("submit", async (event) => {
     const connection = new import_web327.Connection(solanaRpc, "confirmed"), online = new OnlinePumpSdk(connection);
     const publicKey4 = wallet.publicKey;
     const result = await launchToken(input, { wallet, getWalletKey: () => wallet.publicKey, resolveQuote: (address) => resolveQuote(address, online, (x) => new import_web327.PublicKey(x)), uploadMetadata: (values) => uploadMetadata(values, wallet, metadataService), prepare: async (values, quote, uri) => {
-      const p2 = await prepareSolanaLaunch(values, quote, uri, publicKey4, { connection, buildInstruction: (args) => buildPumpInstruction(args, PUMP_SDK) });
+      const p2 = await prepareSolanaLaunch(values, quote, uri, publicKey4, { connection, buildInstructions: async (args) => {
+        if (!args.buyLamports) return buildPumpInstructions(args, PUMP_SDK);
+        const [global2, feeConfig] = await Promise.all([online.fetchGlobal(), online.fetchFeeConfig()]);
+        return buildPumpInstructions(args, PUMP_SDK, { global: global2, feeConfig, makeAmount: (n) => new import_bn18.default(n), getTokens: getBuyV3TokenAmountFromQuoteAmount, newCurve: newBondingCurve, nativeMint: new import_web327.PublicKey("So11111111111111111111111111111111111111112"), tokenProgram: TOKEN_2022_PROGRAM_ID, ataInstruction: (owner, mint, program) => createAssociatedTokenAccountIdempotentInstruction(owner, getAssociatedTokenAddressSync(mint, owner, true, program), owner, mint, program) });
+      } });
       p2.expectedMessage = p2.transaction.message.serialize();
       return p2;
     }, simulate: async (tx) => {
       const sim = await connection.simulateTransaction(tx, { commitment: "confirmed", sigVerify: false });
       if (sim.value.err) throw Error("Transaction simulation failed.");
-    }, approveFee: async (lamports) => window.confirm(`Estimated total launch cost: ${(lamports / 1e9).toFixed(9)} SOL, including network fees and account costs. This estimate can change. Continue to your wallet?`), verifySigned: (tx, p2) => verifySignedTransaction(tx, p2.expectedMessage), transactionSignature: (tx) => esm_default2.encode(tx.signatures[0]), registerLaunch: async (record) => {
+    }, approveFee: async (lamports) => window.confirm(`Initial token purchase: ${(input.buyLamports / 1e9).toFixed(9)} SOL maximum. Estimated total wallet cost: ${(lamports / 1e9).toFixed(9)} SOL, including the purchase, network fees and account costs. This estimate can change. Continue to your wallet?`), verifySigned: (tx, p2) => verifySignedTransaction(tx, p2.expectedMessage), transactionSignature: (tx) => esm_default2.encode(tx.signatures[0]), registerLaunch: async (record) => {
       const r = await fetch(`${metadataService}/register`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(record) });
       if (!r.ok) throw Error("Launch directory unavailable. Please try again.");
     }, submit: (tx) => connection.sendRawTransaction(tx.serialize(), { skipPreflight: false, maxRetries: 0 }), confirm: async (signature, p2) => {
