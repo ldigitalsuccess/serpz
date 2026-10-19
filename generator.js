@@ -1,27 +1,28 @@
-const ENDPOINT = 'https://serpz-generator.ldigitalsuccess.workers.dev/generate';
-const form=document.querySelector('#generator-form');
-const description=document.querySelector('#description');
-const status=document.querySelector('#status');
-const result=document.querySelector('#result');
-const save=document.querySelector('#save');
-let imageBlob=null;
-description.addEventListener('input',()=>{document.querySelector('#count').textContent=description.value.length;});
-form.addEventListener('submit',async event=>{
-  event.preventDefault();
-  if (!description.value.trim()) {status.textContent='Please describe your SERPZ first.';return;}
-  const button=form.querySelector('button');button.disabled=true;status.textContent='Creating your SERPZ… this can take a minute.';
-  try {
-    const response=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({description:description.value.trim()})});
-    const data=await response.json();if(!response.ok) throw new Error(data.error||'Unable to create your SERPZ.');
-    const binary=atob(data.image);const bytes=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
-    const blob=new Blob([bytes],{type:'image/png'});if(result.dataset.url)URL.revokeObjectURL(result.dataset.url);
-    imageBlob=blob;result.dataset.url=URL.createObjectURL(blob);result.src=result.dataset.url;result.hidden=false;
-    document.querySelector('#placeholder').hidden=true;save.hidden=false;document.querySelector('#save-hint').hidden=false;status.textContent='Your SERPZ is ready!';
-  } catch(error) {status.textContent=error.message||'Something went wrong. Please try again.';} finally {button.disabled=false;}
+const form = document.querySelector('#generator-form');
+const description = document.querySelector('#description');
+const output = document.querySelector('#prompt-output');
+const status = document.querySelector('#status');
+const copyStatus = document.querySelector('#copy-status');
+
+description.addEventListener('input', () => {
+  document.querySelector('#count').textContent = description.value.length;
 });
-save.addEventListener('click',async()=>{
-  if(!imageBlob)return;
-  const file=new File([imageBlob],'my-serpz.png',{type:'image/png'});
-  if(navigator.canShare?.({files:[file]}) && navigator.share){try{await navigator.share({files:[file],title:'My SERPZ character'});return;}catch(error){if(error.name==='AbortError')return;}}
-  const link=document.createElement('a');link.href=result.dataset.url;link.download='my-serpz.png';document.body.append(link);link.click();link.remove();
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  const details = description.value.trim();
+  if (!details) { status.textContent = 'Please describe your SERPZ first.'; return; }
+  output.value = `Create an original SERPZ gang character: a charismatic anthropomorphic cobra with detailed scales and expressive eyes. Make it a cinematic, detailed 3D animated character portrait with a western outlaw atmosphere, dramatic lighting, and richly textured clothing. Show one character centered in a square image. Do not add words, letters, logos, or watermarks.\n\nMy character: ${details}`;
+  document.querySelector('#prompt-result').hidden = false;
+  copyStatus.textContent = '';
+  status.textContent = 'Your prompt is ready. Copy it and open ChatGPT to create your image.';
+});
+document.querySelector('#copy-prompt').addEventListener('click', async () => {
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(output.value);
+    copyStatus.textContent = 'Prompt copied! Open ChatGPT and paste it into a new message.';
+  } catch {
+    output.focus(); output.select();
+    copyStatus.textContent = 'Select and copy the prompt above, then paste it into ChatGPT.';
+  }
 });
